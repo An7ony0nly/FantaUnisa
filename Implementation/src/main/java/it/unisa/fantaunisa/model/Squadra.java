@@ -4,15 +4,15 @@ import java.util.List;
 
 public class Squadra {
     private int id;
-    private int idUtente;
+    private String idUtente; //email dell'utente
     private String nomeSquadra;
     private List<Giocatore> rosa;
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getIdUtente() { return idUtente; }
-    public void setIdUtente(int idUtente) { this.idUtente = idUtente; }
+    public String getIdUtente() { return idUtente; }
+    public void setIdUtente(String idUtente) { this.idUtente = idUtente; }
 
     public String getNomeSquadra() { return nomeSquadra; }
     public void setNomeSquadra(String nomeSquadra) { this.nomeSquadra = nomeSquadra; }

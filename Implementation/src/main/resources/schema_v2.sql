@@ -8,12 +8,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 CREATE TABLE Utente (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    ruolo ENUM('Fantallenatore', 'Gestore') NOT NULL DEFAULT 'Fantallenatore',
-    punteggio_reputazione INT DEFAULT 0
+    password VARCHAR(255) NOT NULL, -- Hash
+    nome VARCHAR(50),
+    cognome VARCHAR(50),
+    ruolo VARCHAR(20) NOT NULL DEFAULT 'Fantallenatore', -- Enum gestito come stringa
+    punteggio_reputazione INT DEFAULT 0 -- Campo extra per il nostro sottosistema
 );
 
 CREATE TABLE Calciatore (
@@ -29,9 +30,9 @@ CREATE TABLE Calciatore (
 -- Tabella Squadra (La rosa dell'utente)
 CREATE TABLE Squadra (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_utente INT NOT NULL,
+    id_utente VARCHAR(100) NOT NULL, -- FK verso email
     nome_squadra VARCHAR(50) NOT NULL,
-    FOREIGN KEY (id_utente) REFERENCES Utente(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utente) REFERENCES Utente(email) ON DELETE CASCADE
 );
 
 -- Tabella di relazione Squadra-Calciatore
@@ -53,17 +54,17 @@ CREATE TABLE Formazione (
     FOREIGN KEY (id_squadra) REFERENCES Squadra(id) ON DELETE CASCADE
 );
 
--- Tabella di relazione Formazione-Calciatore (Titolari e Panchina)
+-- Tabella di relazione Formazione-Calciatore
 CREATE TABLE Formazione_Calciatore (
     id_formazione INT NOT NULL,
     id_calciatore INT NOT NULL,
-    titolare BOOLEAN DEFAULT TRUE, -- TRUE = Titolare, FALSE = Riserva
+    titolare BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (id_formazione, id_calciatore),
     FOREIGN KEY (id_formazione) REFERENCES Formazione(id) ON DELETE CASCADE,
     FOREIGN KEY (id_calciatore) REFERENCES Calciatore(id) ON DELETE CASCADE
 );
 
--- Tabella Statistica (Voti settimanali)
+-- Tabella Statistica
 CREATE TABLE Statistica (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_calciatore INT NOT NULL,
@@ -91,7 +92,6 @@ CREATE TABLE ConfigurazioneAlgoritmo (
     descrizione VARCHAR(255)
 );
 
--- Inserimento valori di default
 INSERT INTO ConfigurazioneAlgoritmo (chiave, valore, descrizione) VALUES
 ('P_PESO_MV', 0.60, 'Peso Media Voto Portiere'),
 ('P_PESO_GS', 0.30, 'Peso Gol Subiti Portiere'),
@@ -101,24 +101,24 @@ INSERT INTO ConfigurazioneAlgoritmo (chiave, valore, descrizione) VALUES
 ('M_PESO_GOL', 0.15, 'Peso Bonus Gol'),
 ('M_PESO_ASSIST', 0.05, 'Peso Bonus Assist');
 
--- Tabella Commento (Consiglio su una formazione)
+-- Tabella Commento
 CREATE TABLE Commento (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_formazione INT NOT NULL,
-    id_utente INT NOT NULL,
+    id_utente VARCHAR(100) NOT NULL, -- FK verso email
     contenuto TEXT NOT NULL,
     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_formazione) REFERENCES Formazione(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_utente) REFERENCES Utente(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utente) REFERENCES Utente(email) ON DELETE CASCADE
 );
 
--- Tabella Reazione (Voto al consiglio)
+-- Tabella Reazione
 CREATE TABLE Reazione (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_commento INT NOT NULL,
-    id_utente INT NOT NULL,
-    voto INT NOT NULL, -- +1 o -1
+    id_utente VARCHAR(100) NOT NULL, -- FK verso email
+    voto INT NOT NULL,
     UNIQUE KEY unique_reazione (id_commento, id_utente),
     FOREIGN KEY (id_commento) REFERENCES Commento(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_utente) REFERENCES Utente(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utente) REFERENCES Utente(email) ON DELETE CASCADE
 );

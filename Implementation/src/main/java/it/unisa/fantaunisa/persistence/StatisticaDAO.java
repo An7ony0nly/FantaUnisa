@@ -18,7 +18,7 @@ public class StatisticaDAO {
         }
     }
 
-    //metodo legacy (apre nuova connessione)
+
     public void doSave(Statistiche stat) {
         try (Connection con = DBConnection.getConnection()) {
             doSave(con, stat);
