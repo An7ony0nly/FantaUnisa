@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS squad;
 DROP TABLE IF EXISTS statistic;
 DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS report;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -31,7 +32,12 @@ CREATE TABLE player (
    id INT PRIMARY KEY,
    nome VARCHAR(100) NOT NULL,
    squadra_seriea VARCHAR(50) NOT NULL,
-   ruolo VARCHAR(1) NOT NULL
+   ruolo VARCHAR(1) NOT NULL,
+   media_voto FLOAT DEFAULT 0.0,
+   fantamedia FLOAT DEFAULT 0.0,
+   gol_fatti INT DEFAULT 0,
+   gol_subiti INT DEFAULT 0,
+   assist INT DEFAULT 0
 );
 
 -- Tabella STATISTICHE
