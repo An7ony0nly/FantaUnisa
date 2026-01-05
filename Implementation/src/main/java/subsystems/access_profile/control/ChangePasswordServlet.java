@@ -1,0 +1,72 @@
+package subsystems.access_profile.control;
+
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import subsystems.access_profile.model.User;
+import subsystems.access_profile.model.UserDAO;
+import utils.PasswordHasher;
+
+
+@WebServlet("/ChangePasswordServlet")
+public class ChangePasswordServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String oldPassword = request.getParameter("oldPassword");
+        String newPassword = request.getParameter("newPassword");
+
+        if (oldPassword == null || newPassword == null ||
+                oldPassword.trim().isEmpty() || newPassword.trim().isEmpty()) {
+            redirectError(request, response, "Devi inserire entrambe le password.");
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            redirectError(request, response, "La nuova password deve essere di almeno 6 caratteri.");
+            return;
+        }
+
+        String hashedOldInput = PasswordHasher.hash(oldPassword);
+
+        if (!hashedOldInput.equals(user.getPassword())) {
+            redirectError(request, response, "La vecchia password non è corretta.");
+            return;
+        }
+
+        try {
+            UserDAO userDAO = new UserDAO();
+            String hashedNewPassword = PasswordHasher.hash(newPassword);
+
+            userDAO.updatePassword(user.getEmail(), hashedNewPassword);
+
+            user.setPassword(hashedNewPassword);
+
+            response.sendRedirect("profilo.jsp?msg=PasswordChanged");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectError(request, response, "Errore di sistema.");
+        }
+    }
+
+    private void redirectError(HttpServletRequest request, HttpServletResponse response, String errorMsg)
+            throws ServletException, IOException {
+        request.setAttribute("errorPassword", errorMsg);
+        request.getRequestDispatcher("profilo.jsp").forward(request, response);
+    }
+}

@@ -1,6 +1,7 @@
 package subsystems.access_profile.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Rappresenta l'utente registrato nel sistema.
@@ -13,6 +14,10 @@ public class User implements Serializable {
     private String username;
     private String password; // Hash della password
     private Role role;
+    private boolean is_active;
+    private String verificationToken;
+    private String resetToken;
+    private Date resetExpiry;
 
     public User() {}
 
@@ -71,6 +76,38 @@ public class User implements Serializable {
 
     public void setCognome(String cognome) {
         this.cognome = cognome;
+    }
+
+    public boolean is_Active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verification_token) {
+        this.verificationToken = verification_token;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public Date getResetExpiry() {
+        return resetExpiry;
+    }
+
+    public void setResetExpiry(Date resetExpiry) {
+        this.resetExpiry = resetExpiry;
     }
 
     @Override

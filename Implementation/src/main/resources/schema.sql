@@ -24,7 +24,11 @@ CREATE TABLE user (
    password VARCHAR(64) NOT NULL,
    nome VARCHAR(50) NOT NULL,
    cognome VARCHAR(50) NOT NULL,
-   ruolo VARCHAR(20) NOT NULL
+   ruolo VARCHAR(20) NOT NULL,
+   is_active BOOLEAN DEFAULT FALSE,
+   verification_token VARCHAR(64),
+   reset_token VARCHAR(64) DEFAULT NULL,
+   reset_expiry TIMESTAMP DEFAULT NULL
 );
 
 -- Tabella CALCIATORI

@@ -37,22 +37,25 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         UserDAO userDAO = new UserDAO();
-        User user = userDAO.doRetrieveByEmail(email);
 
-        boolean passwordValida = false;
+        String hashedPassword = PasswordHasher.hash(password);
+
+        User user = userDAO.doRetrieveByEmailAndPassword(email, hashedPassword);
+
         if (user != null) {
-
-            passwordValida = PasswordHasher.verify(password, user.getPassword());
-        }
-
-        if (user != null && passwordValida) {
-            session = request.getSession(true);
+            if (!user.is_Active()) {
+                request.setAttribute("error", "Account non attivo. Controlla la mail.");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+            session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("role", user.getRole());
 
             NavigationUtils.redirectBasedOnRole(user.getRole(), response);
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenziali non valide.");
+            request.setAttribute("error", "Email o Password errati.");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 }
