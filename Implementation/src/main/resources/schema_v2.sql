@@ -17,6 +17,11 @@ CREATE TABLE Utente (
     punteggio_reputazione INT DEFAULT 0 -- Campo extra per il nostro sottosistema
 );
 
+-- Tabella Squadre di Serie A (Nuova)
+CREATE TABLE SquadraSerieA (
+    nome VARCHAR(50) PRIMARY KEY
+);
+
 CREATE TABLE Calciatore (
     id INT PRIMARY KEY, -- ID proveniente dal CSV
     nome VARCHAR(100) NOT NULL,
@@ -24,7 +29,8 @@ CREATE TABLE Calciatore (
     ruolo ENUM('P', 'D', 'C', 'A') NOT NULL,
     quotazione INT DEFAULT 1,
     INDEX idx_nome (nome),
-    INDEX idx_ruolo (ruolo)
+    INDEX idx_ruolo (ruolo),
+    FOREIGN KEY (squadra) REFERENCES SquadraSerieA(nome) ON UPDATE CASCADE
 );
 
 -- Tabella Squadra (La rosa dell'utente)
@@ -82,6 +88,7 @@ CREATE TABLE Statistica (
     ammonizioni INT DEFAULT 0,
     espulsioni INT DEFAULT 0,
     autogol INT DEFAULT 0,
+    UNIQUE KEY unique_statistica (id_calciatore, giornata),
     FOREIGN KEY (id_calciatore) REFERENCES Calciatore(id) ON DELETE CASCADE
 );
 

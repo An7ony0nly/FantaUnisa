@@ -1,8 +1,7 @@
 package it.unisa.fantaunisa.logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import it.unisa.fantaunisa.model.Giocatore;
 import it.unisa.fantaunisa.model.Statistiche;
@@ -10,9 +9,18 @@ import it.unisa.fantaunisa.model.AlgoritmoConfig;
 
 public class CalcolaFormazione {
 
+    private static final List<String> MODULI_AMMESSI = Arrays.asList(
+        "3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-3-2", "5-4-1"
+    );
+
     public List<Giocatore> calcolaFormazione(List<Giocatore> rosa, String modulo, int giornataCorrente, AlgoritmoConfig config) {
         
-        //creiamo 4 liste separate per ruolo
+        //validazione modulo
+        if (!MODULI_AMMESSI.contains(modulo)) {
+            throw new IllegalArgumentException("Modulo non valido: \" + modulo");
+        }
+
+        //1. dividiamo la rosa in 4 liste per ruolo
         List<Giocatore> portieri = new ArrayList<>();
         List<Giocatore> difensori = new ArrayList<>();
         List<Giocatore> centrocampisti = new ArrayList<>();
@@ -46,7 +54,7 @@ public class CalcolaFormazione {
 
         //inseriamo i titolari
         //portiere titolare (sempre 1)
-        if (portieri.size() > 0) {
+        if (!portieri.isEmpty()) {
             formazioneFinale.add(portieri.get(0));
         }
 
@@ -90,16 +98,10 @@ public class CalcolaFormazione {
     }
 
     private void ordinaLista(List<Giocatore> lista, int giornata, AlgoritmoConfig config) {
-        Collections.sort(lista, new Comparator<Giocatore>() {
-            @Override
-            public int compare(Giocatore g1, Giocatore g2) {
-                double p1 = calcolaPunteggio(g1, giornata, config);
-                double p2 = calcolaPunteggio(g2, giornata, config);
-                
-                if (p1 < p2) return 1;
-                if (p1 > p2) return -1;
-                return 0;
-            }
+        lista.sort((g1, g2) -> {
+            double p1 = calcolaPunteggio(g1, giornata, config);
+            double p2 = calcolaPunteggio(g2, giornata, config);
+            return Double.compare(p2, p1);
         });
     }
 
@@ -107,7 +109,7 @@ public class CalcolaFormazione {
         Statistiche s = g.getStatistiche();
         if (s == null) return 0.0; 
 
-        double score = 0.0;
+        double score;
         
         //calcolo costanza
         double costanza = ((double) s.getPartiteVoto() / giornataCorrente) * 100.0;
