@@ -1,7 +1,7 @@
 package subsystems.statistics_import;
 
-import it.unisa.fantaunisa.model.Giocatore;
-import it.unisa.fantaunisa.model.Statistiche;
+import subsystems.calcolo_formazione.Statistiche;
+import subsystems.team_management.model.Player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,14 +12,14 @@ import java.util.List;
 
 public class CsvParser {
 
-    //classe interna per contenere i dati parsati di una riga
+    //classe interna per contenere i dati di una riga
     public static class ImportData {
-        public Giocatore giocatore;
+        public Player player;
         public Statistiche statistiche;
 
-        public ImportData(Giocatore g, Statistiche s) {
-            this.giocatore = g;
-            this.statistiche = s;
+        public ImportData(Player player, Statistiche statistiche) {
+            this.player = player;
+            this.statistiche = statistiche;
         }
     }
 
@@ -51,17 +51,22 @@ public class CsvParser {
                     String nome = parts[2];
                     String squadra = parts[3];
 
-                    Giocatore g = new Giocatore();
-                    g.setId(id);
-                    g.setNome(nome);
-                    g.setRuolo(ruolo);
-                    g.setSquadraSerieA(squadra);
+                    Player p = new Player();
+                    p.setId(id);
+                    p.setNome(nome);
+                    p.setRuolo(ruolo);
+                    p.setSquadra(squadra);
+                    p.setMediaVoto((float) parseDouble(parts[5]));
+                    p.setFantamedia((float) parseDouble(parts[6]));
+                    p.setGolFatti(Integer.parseInt(parts[7]));
+                    p.setGolSubiti(Integer.parseInt(parts[8]));
+                    p.setAssist(Integer.parseInt(parts[13]));
 
-                    //parsing statistiche
+                    //ricavo statistiche
                     Statistiche s = new Statistiche();
                     s.setIdCalciatore(id);
                     s.setGiornata(giornata);
-                    
+
                     s.setPartiteVoto(Integer.parseInt(parts[4]));
                     s.setMediaVoto(parseDouble(parts[5]));
                     s.setFantaMedia(parseDouble(parts[6]));
@@ -76,7 +81,7 @@ public class CsvParser {
                     s.setEspulsioni(Integer.parseInt(parts[15]));
                     s.setAutogol(Integer.parseInt(parts[16]));
 
-                    list.add(new ImportData(g, s));
+                    list.add(new ImportData(p, s));
 
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Errore numerico alla riga " + lineNum + ": " + e.getMessage());

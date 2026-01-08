@@ -1,16 +1,12 @@
 package subsystems.statistics_import;
 
 import connection.DBConnection;
-import it.unisa.fantaunisa.persistence.GiocatoreDAO;
-import it.unisa.fantaunisa.persistence.StatisticaDAO;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
@@ -53,23 +49,12 @@ public class StatisticsImportServlet extends HttpServlet {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
-            GiocatoreDAO giocatoreDAO = new GiocatoreDAO();
-            StatisticaDAO statisticaDAO = new StatisticaDAO();
-            SquadraSerieADAO squadraSerieADAO = new SquadraSerieADAO();
+            PlayerImportDAO playerDAO = new PlayerImportDAO();
+            StatisticheImportDAO statisticheDAO = new StatisticheImportDAO();
 
-            // 1. Estrai e salva le squadre di Serie A uniche
-            Set<String> squadreSerieA = new HashSet<>();
             for (CsvParser.ImportData item : dati) {
-                squadreSerieA.add(item.giocatore.getSquadraSerieA());
-            }
-            for (String nomeSquadra : squadreSerieA) {
-                squadraSerieADAO.doSave(con, nomeSquadra);
-            }
-
-            // 2. Salva giocatori e statistiche
-            for (CsvParser.ImportData item : dati) {
-                giocatoreDAO.doSave(con, item.giocatore);
-                statisticaDAO.doSave(con, item.statistiche);
+                playerDAO.doSaveOrUpdate(con, item.player);
+                statisticheDAO.doSaveOrUpdate(con, item.statistiche);
             }
 
             con.commit();
