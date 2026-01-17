@@ -21,8 +21,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet("/import-statistiche")
-@MultipartConfig
+@WebServlet("/StatisticsImportServlet")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 15
+)
 public class StatisticsImportServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(StatisticsImportServlet.class.getName());
@@ -81,12 +85,13 @@ public class StatisticsImportServlet extends HttpServlet {
             }
 
             con.commit();
-            response.getWriter().write("OK");
+            response.getWriter().write("Importazione completata con successo! Righe: " + dati.size());
 
         } catch (Exception e) {
             if (con != null) {
                 try {
                     con.rollback();
+                    System.err.println("Rollback effettuato.");
                 } catch (SQLException ex) {
                     LOGGER.log(Level.SEVERE, "Errore durante il rollback", ex);
                 }
