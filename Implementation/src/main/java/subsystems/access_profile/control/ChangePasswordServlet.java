@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import service.ChangePasswordService;
 import subsystems.access_profile.model.User;
 import subsystems.access_profile.model.UserDAO;
 import utils.PasswordHasher;
@@ -49,12 +50,9 @@ public class ChangePasswordServlet extends HttpServlet {
         }
 
         try {
-            UserDAO userDAO = new UserDAO();
             String hashedNewPassword = PasswordHasher.hash(newPassword);
 
-            userDAO.updatePassword(user.getEmail(), hashedNewPassword);
-
-            user.setPassword(hashedNewPassword);
+            ChangePasswordService.getInstance().updatePassword(user, hashedNewPassword);
 
             response.sendRedirect("profilo.jsp?msg=PasswordChanged");
 
