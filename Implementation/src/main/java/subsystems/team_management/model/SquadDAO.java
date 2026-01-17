@@ -49,51 +49,45 @@ public class SquadDAO {
 
     /**
      * Aggiorna la rosa: Cancella tutto e riscrive i 25 giocatori scelti.
-     * (Logica "Wipe and Rewrite" per evitare problemi di concorrenza sui singoli acquisti)
      */
     public void doUpdateSquad(String userEmail, List<Integer> playerIds) {
         String deleteQuery = "DELETE FROM squad WHERE user_email = ?";
         String insertQuery = "INSERT INTO squad (user_email, player_id) VALUES (?, ?)";
 
-        Connection con = null;
-        try {
-            con = DBConnection.getConnection();
-            con.setAutoCommit(false); // TRANSAZIONE ATOMICA
+        // 1. TRY ESTERNO: Gestisce il ciclo di vita della connessione
+        try (Connection con = DBConnection.getConnection()) {
 
-            // 1. Reset della rosa attuale
-            try (PreparedStatement psDelete = con.prepareStatement(deleteQuery)) {
-                psDelete.setString(1, userEmail);
-                psDelete.executeUpdate();
-            }
+            con.setAutoCommit(false); // INIZIO TRANSAZIONE
 
-            // 2. Inserimento massivo della nuova rosa
-            try (PreparedStatement psInsert = con.prepareStatement(insertQuery)) {
-                for (Integer pId : playerIds) {
-                    psInsert.setString(1, userEmail);
-                    psInsert.setInt(2, pId);
-                    psInsert.addBatch();
+            // 2. TRY INTERNO (Logico): Serve a catturare errori per fare il ROLLBACK
+            try {
+
+                // A. Reset della rosa (Delete)
+                try (PreparedStatement psDelete = con.prepareStatement(deleteQuery)) {
+                    psDelete.setString(1, userEmail);
+                    psDelete.executeUpdate();
                 }
-                psInsert.executeBatch();
-            }
 
-            con.commit(); // Conferma modifiche
+                // B. Inserimento nuova rosa (Insert Batch)
+                // psInsert si chiude da solo alla fine di questo piccolo blocco
+                try (PreparedStatement psInsert = con.prepareStatement(insertQuery)) {
+                    for (Integer pId : playerIds) {
+                        psInsert.setString(1, userEmail);
+                        psInsert.setInt(2, pId);
+                        psInsert.addBatch();
+                    }
+                    psInsert.executeBatch();
+                }
+
+                con.commit();
+
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
 
         } catch (SQLException e) {
-            try {
-                if (con != null) con.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
             throw new RuntimeException("Errore salvataggio rosa", e);
-        } finally {
-            try {
-                if (con != null) {
-                    con.setAutoCommit(true);
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

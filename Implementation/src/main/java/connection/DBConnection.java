@@ -30,14 +30,4 @@ public class DBConnection {
         }
         return ds.getConnection();
     }
-
-    public static void releaseConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

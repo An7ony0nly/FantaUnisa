@@ -1,65 +1,55 @@
 package subsystems.team_management.model;
 
 import connection.DBConnection;
-
 import java.sql.*;
 import java.util.Map;
 
 public class FormationDAO {
 
     public int doSave(Formation formation) {
-        Connection con = null;
-        PreparedStatement psHeader = null;
-        PreparedStatement psDetail = null;
-        ResultSet rs = null;
-
         String queryHeader = "INSERT INTO formation (user_email, giornata, modulo) VALUES (?, ?, ?)";
-        // Assumiamo che la tabella di dettaglio si chiami formation_player
         String queryDetail = "INSERT INTO formation_player (formation_id, player_id, ruolo_schierato) VALUES (?, ?, ?)";
 
-        try {
-            con = DBConnection.getConnection();
-            con.setAutoCommit(false); // INIZIO TRANSAZIONE
+        // 1. TRY ESTERNO: Gestisce SOLO la Connessione
+        try (Connection con = DBConnection.getConnection()) {
 
-            psHeader = con.prepareStatement(queryHeader, Statement.RETURN_GENERATED_KEYS);
-            psHeader.setString(1, formation.getUserEmail());
-            psHeader.setInt(2, formation.getGiornata());
-            psHeader.setString(3, formation.getModulo());
-            psHeader.executeUpdate();
+            con.setAutoCommit(false); // Inizio Transazione
 
-            rs = psHeader.getGeneratedKeys();
-            int formationId = -1;
-            if (rs.next()) {
-                formationId = rs.getInt(1);
-            } else {
-                throw new SQLException("Fallimento creazione ID formazione.");
+            // 2. TRY INTERNO: Gestisce Statement e ResultSet
+            try (PreparedStatement psHeader = con.prepareStatement(queryHeader, Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement psDetail = con.prepareStatement(queryDetail)) {
+
+                // --- HEADER ---
+                psHeader.setString(1, formation.getUserEmail());
+                psHeader.setInt(2, formation.getGiornata());
+                psHeader.setString(3, formation.getModulo());
+                psHeader.executeUpdate();
+
+                try (ResultSet rs = psHeader.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        formation.setId(rs.getInt(1));
+                    } else {
+                        throw new SQLException("Fallimento creazione ID formazione.");
+                    }
+                }
+
+                for (Map.Entry<Integer, String> entry : formation.getPlayersMap().entrySet()) {
+                    psDetail.setInt(1, formation.getId());
+                    psDetail.setInt(2, entry.getKey()); // Player ID
+                    psDetail.setString(3, entry.getValue()); // Ruolo
+                    psDetail.addBatch();
+                }
+                psDetail.executeBatch();
+
+                con.commit();
+                return formation.getId();
+
+            } catch (SQLException e) {
+                con.rollback();
+                throw e; // Rilanciamo l'errore per gestirlo fuori o loggarlo
             }
-            formation.setId(formationId);
-
-            psDetail = con.prepareStatement(queryDetail);
-
-            for (Map.Entry<Integer, String> entry : formation.getPlayersMap().entrySet()) {
-                psDetail.setInt(1, formationId);
-                psDetail.setInt(2, entry.getKey()); // Player ID
-                psDetail.setString(3, entry.getValue()); // "T" o "P"
-                psDetail.addBatch();
-            }
-            psDetail.executeBatch();
-
-            con.commit(); // CONFERMA TRANSAZIONE
-            return formationId;
-
         } catch (SQLException e) {
-            try {
-                if (con != null) con.rollback(); // ROLLBACK IN CASO DI ERRORE
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
             throw new RuntimeException("Errore salvataggio formazione", e);
-        } finally {
-            try {
-                if (con != null) { con.setAutoCommit(true); con.close(); }
-            } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 }
