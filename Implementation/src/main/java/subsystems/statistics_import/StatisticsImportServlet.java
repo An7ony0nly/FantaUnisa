@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
+import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 import utils.CsvParser;
 
@@ -76,7 +77,7 @@ public class StatisticsImportServlet extends HttpServlet {
             con.setAutoCommit(false);
 
             PlayerDAO playerDAO = new PlayerDAO();
-            StatisticheImportDAO statisticheDAO = new StatisticheImportDAO();
+            StatisticheDAO statisticheDAO = new StatisticheDAO();
 
             for (CsvParser.ImportData item : dati) {
 
@@ -88,6 +89,11 @@ public class StatisticsImportServlet extends HttpServlet {
 
             con.commit();
             response.getWriter().write("Importazione completata con successo! Righe: " + dati.size());
+
+            PlayerDAO pDao = new PlayerDAO();
+            List<Player> listaAggiornata = pDao.doRetrieveAll();
+
+            getServletContext().setAttribute("LISTA_GIOCATORI_CACHE", listaAggiornata);
 
         } catch (Exception e) {
             if (con != null) {

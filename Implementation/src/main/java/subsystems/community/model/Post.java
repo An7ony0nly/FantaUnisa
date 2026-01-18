@@ -1,5 +1,7 @@
 package subsystems.community.model;
 
+import subsystems.team_management.model.Player;
+
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ public class Post {
     private String testo;
     private Timestamp dataOra;
     private Integer formationId; // Integer (oggetto) perché può essere NULL
+    private Map<String, List<Player>> formationDetails;
     private List<Comment> comments;
     private Map<String, Integer> reactionCounts;
     private String currentUserReaction;
@@ -86,6 +89,14 @@ public class Post {
 
     public void setCurrentUserReaction(String currentUserReaction) {
         this.currentUserReaction = currentUserReaction;
+    }
+
+    public Map<String, List<Player>> getFormationDetails() {
+        return formationDetails;
+    }
+
+    public void setFormationDetails(Map<String, List<Player>> formationDetails) {
+        this.formationDetails = formationDetails;
     }
 
     public int getLikeCount() {

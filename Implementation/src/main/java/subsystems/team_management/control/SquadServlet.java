@@ -30,17 +30,21 @@ public class SquadServlet extends HttpServlet {
             return;
         }
 
-        PlayerDAO playerDAO = new PlayerDAO();
-        SquadDAO squadDAO = new SquadDAO();
 
         // 1. Recupera TUTTI i giocatori disponibili
-        List<Player> allPlayers = playerDAO.doRetrieveByFilter(null, null);
+        List<Player> allPlayers = (List<Player>) getServletContext().getAttribute("LISTA_GIOCATORI_CACHE");
+        if (allPlayers == null) {
+            PlayerDAO playerDAO = new PlayerDAO();
+            allPlayers = playerDAO.doRetrieveAll();
+            getServletContext().setAttribute("LISTA_GIOCATORI_CACHE", allPlayers);
+        }
 
-        List<Player> currentList = squadDAO.doRetrieveByEmail(user.getEmail());
-        Squad mySquad = new Squad(user.getEmail(), currentList);
+        SquadDAO squadDAO = new SquadDAO();
+        List<Player> mySquadList = squadDAO.doRetrieveByEmail(user.getEmail());
 
         request.setAttribute("allPlayers", allPlayers);
-        request.setAttribute("mySquad", mySquad);
+        request.setAttribute("mySquadList", mySquadList);
+        request.setAttribute("squadCount", mySquadList.size());
         request.getRequestDispatcher("gestione_rosa.jsp").forward(request, response);
     }
 

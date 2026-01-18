@@ -23,11 +23,11 @@ class StatisticheImportDAOTest {
     @Mock
     private PreparedStatement preparedStatement;
     
-    private StatisticheImportDAO statisticheImportDAO;
+    private StatisticheDAO statisticheImportDAO;
 
     @BeforeEach
     void setUp() throws SQLException {
-        statisticheImportDAO = new StatisticheImportDAO();
+        statisticheImportDAO = new StatisticheDAO();
         lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
     }
 

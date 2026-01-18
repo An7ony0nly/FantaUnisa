@@ -7,6 +7,10 @@ import observer_pattern.LogObserver;
 import observer_pattern.PasswordChangeObserverInterface;
 import observer_pattern.SecurityEmailObserver;
 import service.ChangePasswordService;
+import subsystems.team_management.model.Player;
+import subsystems.team_management.model.PlayerDAO;
+
+import java.util.List;
 
 @WebListener
 public class AppInitializer implements ServletContextListener {
@@ -26,7 +30,13 @@ public class AppInitializer implements ServletContextListener {
 
         // 2. Popolamento Database (DBPopulator)
         System.out.println("2. Verifica dati iniziali (DBPopulator)...");
-        DBPopulator.ensureGestoreUtentiExists(); // Chiamata alla nuova classe
+        DBPopulator.ensureGestoreUtentiExists();
+
+        // 3. Caricamento giocatori all'avvio
+        PlayerDAO playerDAO = new PlayerDAO();
+        List<Player> tuttiIGiocatori = playerDAO.doRetrieveAll();
+
+        sce.getServletContext().setAttribute("LISTA_GIOCATORI_CACHE", tuttiIGiocatori);
 
         System.out.println("--------------------------------------------------");
         System.out.println("   SYSTEM READY - SERVER AVVIATO                  ");

@@ -1,9 +1,13 @@
 package subsystems.community.model;
 
 import connection.DBConnection;
+import subsystems.team_management.model.FormationDAO;
+import subsystems.team_management.model.Player;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PostDAO {
 
@@ -49,6 +53,9 @@ public class PostDAO {
                 int formationId = rs.getInt("formation_id");
                 if (!rs.wasNull()) {
                     post.setFormationId(formationId);
+                    FormationDAO fDao = new FormationDAO();
+                    Map<String, List<Player>> details = fDao.doRetrieveDetailById(formationId);
+                    post.setFormationDetails(details);
                 }
 
                 posts.add(post);

@@ -43,6 +43,25 @@ public class PlayerDAO {
         }
     }
 
+    public List<Player> doRetrieveAll() {
+        List<Player> players = new ArrayList<>();
+        String query = "SELECT * FROM player ORDER BY nome ASC";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                players.add(mapRowToPlayer(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Errore recupero lista completa giocatori", e);
+        }
+        return players;
+    }
+
     /**
      * Recupera giocatori filtrati per Ruolo e/o Squadra.
      * Se i parametri sono null o "Tutti", ignora il filtro.

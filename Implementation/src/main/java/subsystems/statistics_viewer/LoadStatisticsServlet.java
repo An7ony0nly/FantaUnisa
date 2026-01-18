@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import subsystems.calcolo_formazione.Statistiche;
-import subsystems.calcolo_formazione.StatisticheDAO;
+import subsystems.statistics_import.StatisticheDAO;
 
 import java.io.IOException;
 import java.util.List;
