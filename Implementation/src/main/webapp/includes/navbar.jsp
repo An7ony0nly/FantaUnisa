@@ -1,0 +1,310 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<style>
+    .header-hero {
+        position: relative;
+        width: 100%;
+        height: 380px;
+        overflow: hidden;
+    }
+
+
+    .header-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('${pageContext.request.contextPath}/images/messi.jpeg');
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+        filter: blur(.9px) brightness(0.7);
+        transform: scale(1.05);
+    }
+
+    .header-hero::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: linear-gradient(to top, rgba(28, 33, 46, .7), transparent);
+        z-index: 0;
+    }
+
+    .auth-btn-top {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #F58428;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        transition: transform 0.2s, background-color 0.2s;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .auth-btn-top:hover {
+        background-color: #d35400;
+        transform: translateY(-2px);
+    }
+
+    .navbar-wrapper {
+        width: 80%;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        margin: 0 auto
+    }
+
+    .navbar-container {
+        position: relative;
+        width: 100%;
+        height: 140px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0 10px;
+    }
+
+
+    .navbar-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: rgba(30, 41, 59, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-top: none;
+        z-index: 1;
+    }
+
+
+    .navbar-grid {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px 20px 0 20px;
+    }
+
+
+    .level-low {
+        margin-top: 0;
+    }
+
+    .level-high {
+        margin-top: 35px;
+    }
+
+    .level-top {
+        margin-top: 50px;
+    }
+
+    /* STILE LOGO */
+    .logo-btn {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #ffffff, #e2e8f0);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        border: 5px solid #0f172a;
+        font-size: 40px;
+        text-decoration: none;
+        transition: transform 0.2s;
+        color: #0f172a;
+    }
+    .palla{
+        width: 90%;
+    }
+
+    .top-logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        z-index: 10;
+        transition: transform 0.2s;
+    }
+
+    .top-logo:hover {
+        transform: scale(1.05);
+    }
+
+    .logo-circle-small {
+        width: 40px;
+        height: 40px;
+        background: white;
+        color: #F58428;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
+        &> img{
+            width: 90%;
+            border-radius: 100%;
+        }
+    }
+
+    .logo-text-small {
+        color: white;
+        font-weight: 800;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+        font-family: 'Montserrat', sans-serif;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    }
+
+    .logo-btn:hover {
+        transform: scale(1.05);
+    }
+
+
+    .nav-btn {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background-color: #e0f2fe;
+        color: #0f172a;
+        text-decoration: none;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 15px;
+        min-width: 110px;
+        height: 45px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+        background-color: #ffffff;
+        transform: translateY(3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+
+    .btn-icon {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+
+    @media (max-width: 600px) {
+        .nav-btn span {
+            display: none;
+        }
+        .nav-btn {
+            min-width: auto;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            padding: 0;
+        }
+        .level-high {
+            margin-top: 25px;
+        }
+        .level-top {
+            margin-top: 40px;
+        }
+        .navbar-container {
+            height: 120px;
+        }
+    }
+</style>
+
+<div class="header-hero">
+
+    <a href="${pageContext.request.contextPath}/view/index.jsp" class="top-logo">
+        <div class="logo-circle-small"><img src="${pageContext.request.contextPath}/images/logox.jpeg"></div>
+        <span class="logo-text-small">FANTAUNISA</span>
+    </a>
+
+    <c:choose>
+        <%-- Se l'utente è loggato --%>
+        <c:when test="${not empty sessionScope.user}">
+            <a href="${pageContext.request.contextPath}/LogoutServlet" class="auth-btn-top" style="background-color: #e74c3c;">
+                ESCI <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </c:when>
+
+        <%-- Se l'utente NON è loggato --%>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/view/login.jsp" class="auth-btn-top">
+                ACCEDI / REGISTRATI <i class="fas fa-user"></i>
+            </a>
+        </c:otherwise>
+    </c:choose>
+
+</div>
+
+<div class="navbar-wrapper">
+    <div class="navbar-container">
+
+        <div class="navbar-bg"></div>
+
+        <div class="navbar-grid">
+
+            <a href="${pageContext.request.contextPath}/social.jsp" class="nav-btn level-low">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 22h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM19 8v2h-4V8h4zm-6 0v2H9V8h4zm-8 6h14v2H5v-2zm0-4h2v2H5v-2z"/></svg>
+                <span>Community</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/view/rosa.jsp" class="nav-btn level-high">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span>Gestisci Rosa</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/view/index.jsp" class="logo-btn level-top">
+                <img class="palla" src="${pageContext.request.contextPath}/images/palla.png">
+            </a>
+
+            <a href="${pageContext.request.contextPath}/view/statistiche.jsp" class="nav-btn level-high">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                <span>Statistiche</span>
+            </a>
+
+            <a href="${pageContext.request.contextPath}/view/formazione.jsp" class="nav-btn level-low">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                <span>Formazione</span>
+            </a>
+
+        </div>
+    </div>
+</div>
