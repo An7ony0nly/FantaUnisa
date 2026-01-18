@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Rappresenta l'utente registrato nel sistema.
  */
-public class User implements Serializable {
+public class User{
 
     private String nome;
     private String cognome;
@@ -21,13 +21,17 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String email, String username, String password, String nome, String cognome, Role role) {
+    public User(String nome, String cognome, String email, String username, String password, Role role, boolean is_active, String verificationToken, Date resetExpiry, String resetToken) {
+        this.nome = nome;
+        this.cognome = cognome;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.nome = nome;
-        this.cognome = cognome;
         this.role = role;
+        this.is_active = is_active;
+        this.verificationToken = verificationToken;
+        this.resetExpiry = resetExpiry;
+        this.resetToken = resetToken;
     }
 
     public String getEmail() {

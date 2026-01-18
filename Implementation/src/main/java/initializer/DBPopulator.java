@@ -21,8 +21,9 @@ public class DBPopulator {
             User gestore_utenti = new User();
 
             gestore_utenti.setNome("Super");
-            gestore_utenti.setCognome("Admin");
+            gestore_utenti.setCognome("Gestore");
             gestore_utenti.setEmail(gestore_utentiEmail);
+            gestore_utenti.setUsername("gestore_utenti99");
             gestore_utenti.setPassword(PasswordHasher.hash("admin123"));
             gestore_utenti.setRole(Role.GESTORE_UTENTI);
             gestore_utenti.setIs_active(true);

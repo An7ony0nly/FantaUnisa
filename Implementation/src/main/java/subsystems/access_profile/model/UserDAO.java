@@ -27,8 +27,8 @@ public class UserDAO {
             ps.setString(4, user.getUsername());
             ps.setString(5, user.getPassword()); // Hash già calcolato
             ps.setString(6, user.getRole().name());
-            ps.setString(7, user.getVerificationToken());
-            ps.setBoolean(8, false);
+            ps.setBoolean(7, false);
+            ps.setString(8, user.getVerificationToken());
 
             ps.executeUpdate();
 
