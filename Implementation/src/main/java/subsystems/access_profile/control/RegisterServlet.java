@@ -24,6 +24,7 @@ public class RegisterServlet extends HttpServlet {
         String cognome = request.getParameter("cognome");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String username = request.getParameter("username");
 
         UserDAO userDAO = new UserDAO();
 
@@ -40,6 +41,7 @@ public class RegisterServlet extends HttpServlet {
             user.setEmail(email);
             String hashedPassword = PasswordHasher.hash(password);
             user.setPassword(hashedPassword);
+            user.setUsername(username);
             user.setRole(Role.FANTALLENATORE); // Default
             String token = UUID.randomUUID().toString();
             user.setVerificationToken(token);
