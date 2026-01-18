@@ -1,16 +1,28 @@
-# Compiled class file
+### IntelliJ IDEA (FONDAMENTALE: evita che si rompano i moduli) ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+### Maven (Evita di caricare file compilati inutili) ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+### File compilati Java (Backup se finiscono fuori da target) ###
 *.class
 
-# Log file
+### Log e file temporanei ###
 *.log
+*.tmp
 
-# BlueJ files
+### BlueJ files (Dal tuo vecchio file) ###
 *.ctxt
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+### Package Files (Non vogliamo jar/war nel repo, li gestisce Maven) ###
 *.jar
 *.war
 *.nar
@@ -19,6 +31,10 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+### File di Sistema Operativo ###
+.DS_Store
+Thumbs.db
+
+### Errori JVM ###
 hs_err_pid*
 replay_pid*
