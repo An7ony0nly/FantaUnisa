@@ -83,6 +83,6 @@ class PlayerDAOTest {
         
         when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Database error"));
         
-        assertThrows(SQLException.class, () -> playerImportDAO.doSaveOrUpdate(connection, player));
+        assertThrows(RuntimeException.class, () -> playerImportDAO.doSaveOrUpdate(connection, player));
     }
 }
