@@ -1,4 +1,4 @@
-package subsystems.statistics_import;
+package utils;
 
 import subsystems.calcolo_formazione.Statistiche;
 import subsystems.team_management.model.Player;

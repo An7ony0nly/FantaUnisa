@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import subsystems.team_management.model.Player;
+import subsystems.team_management.model.PlayerDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,18 +17,18 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PlayerImportDAOTest {
+class PlayerDAOTest {
 
     @Mock
     private Connection connection;
     @Mock
     private PreparedStatement preparedStatement;
     
-    private PlayerImportDAO playerImportDAO;
+    private PlayerDAO playerImportDAO;
 
     @BeforeEach
     void setUp() throws SQLException {
-        playerImportDAO = new PlayerImportDAO();
+        playerImportDAO = new PlayerDAO();
         lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
     }
 

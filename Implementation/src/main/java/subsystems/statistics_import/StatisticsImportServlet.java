@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
+import subsystems.team_management.model.PlayerDAO;
+import utils.CsvParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +75,7 @@ public class StatisticsImportServlet extends HttpServlet {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
-            PlayerImportDAO playerDAO = new PlayerImportDAO();
+            PlayerDAO playerDAO = new PlayerDAO();
             StatisticheImportDAO statisticheDAO = new StatisticheImportDAO();
 
             for (CsvParser.ImportData item : dati) {

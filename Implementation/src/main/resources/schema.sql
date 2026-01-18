@@ -46,12 +46,23 @@ CREATE TABLE player (
 
 -- Tabella STATISTICHE
 CREATE TABLE statistic (
-   player_id INT,
-   giornata INT,
-   voto FLOAT DEFAULT 6.0,
-   bonus FLOAT DEFAULT 0.0,
-   malus FLOAT DEFAULT 0.0,
-   PRIMARY KEY (player_id, giornata),
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   player_id INT NOT NULL,
+   giornata INT NOT NULL,
+   partite_voto INT DEFAULT 0,
+   media_voto DECIMAL(5,2) DEFAULT 0,
+   fanta_media DECIMAL(5,2) DEFAULT 0,
+   gol_fatti INT DEFAULT 0,
+   gol_subiti INT DEFAULT 0,
+   rigori_parati INT DEFAULT 0,
+   rigori_calciati INT DEFAULT 0,
+   rigori_segnati INT DEFAULT 0,
+   rigori_sbagliati INT DEFAULT 0,
+   assist INT DEFAULT 0,
+   ammonizioni INT DEFAULT 0,
+   espulsioni INT DEFAULT 0,
+   autogol INT DEFAULT 0,
+   UNIQUE KEY idx_player_giornata (player_id, giornata),
    FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE
 );
 
@@ -78,8 +89,8 @@ CREATE TABLE formation (
 CREATE TABLE formation_player (
    formation_id INT,
    player_id INT,
-   tipo VARCHAR(10) NOT NULL,          -- Valori: 'TITOLARE', 'PANCHINA'
-   posizione INT NOT NULL,             -- Ordine (es. 1-11 titolari, 1-7 panchina)
+   tipo VARCHAR(10) NOT NULL,  -- Valori: 'TITOLARE', 'PANCHINA'
+   posizione INT NOT NULL,     -- Ordine (es. 1-11 titolari, 1-7 panchina)
    PRIMARY KEY (formation_id, player_id),
    FOREIGN KEY (formation_id) REFERENCES formation(id) ON DELETE CASCADE,
    FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE
@@ -91,7 +102,7 @@ CREATE TABLE post (
    user_email VARCHAR(100) NOT NULL,
    testo TEXT,
    data_ora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   formation_id INT,                   -- Allegato formazione
+   formation_id INT,
    FOREIGN KEY (user_email) REFERENCES user(email) ON DELETE CASCADE,
    FOREIGN KEY (formation_id) REFERENCES formation(id) ON DELETE SET NULL
 );

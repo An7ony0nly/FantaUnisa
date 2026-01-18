@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet("/load-statistiche")
+@WebServlet("/LoadStatisticsServlet")
 public class LoadStatisticsServlet extends HttpServlet {
 
     @Override
