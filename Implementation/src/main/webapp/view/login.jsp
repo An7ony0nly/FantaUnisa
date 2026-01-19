@@ -309,7 +309,7 @@
         </div>
       </c:if>
 
-      <form action="LoginServlet" method="post">
+      <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
         <div class="form-group">
           <label>Email</label>
           <div style="position:relative">
@@ -339,7 +339,7 @@
       <h2>Registrati</h2>
       <p class="subtitle">Nuovo su FantaUnisa? Crea il tuo account.</p>
 
-      <form action="RegisterServlet" method="post">
+      <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
         <div class="row-inputs">
           <div class="form-group">
             <label>Nome</label>
@@ -349,6 +349,11 @@
             <label>Cognome</label>
             <input type="text" name="cognome" placeholder="Rossi" required>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="MarioRossi00" required>
         </div>
 
         <div class="form-group">

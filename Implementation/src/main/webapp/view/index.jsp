@@ -269,7 +269,7 @@
         <p>Crea la tua rosa, confrontati con i tuoi amici e metti alla prova le tue previsioni!</p>
 
         <div class="cta-group">
-            <a href="login.jsp" class="btn-large btn-primary">Inizia Ora</a>
+            <a href="${pageContext.request.contextPath}/view/login.jsp" class="btn-large btn-primary">Inizia Ora</a>
             <a href="#" class="btn-large btn-outline">Scopri di più</a>
         </div>
     </div>

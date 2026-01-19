@@ -59,7 +59,7 @@ public class ReportServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null || user.getRole() != Role.GESTORE_UTENTI) {
-            response.sendRedirect("home.jsp");
+            response.sendRedirect(request.getContextPath()+"/view/login.jsp");
             return;
         }
 
@@ -76,7 +76,7 @@ public class ReportServlet extends HttpServlet {
         } else {
             List<Report> reports = reportDAO.doRetrieveAll();
             request.setAttribute("reports", reports);
-            request.getRequestDispatcher("admin/gestione_segnalazioni.jsp").forward(request, response);
+            request.getRequestDispatcher(request.getContextPath()+"view/admin_moderation.jsp").forward(request, response);
         }
     }
 }

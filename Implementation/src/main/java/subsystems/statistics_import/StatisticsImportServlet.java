@@ -1,3 +1,4 @@
+//package subsystems.statistics_import;
 
 package subsystems.statistics_import;
 
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
-import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 import utils.CsvParser;
 
@@ -77,7 +77,8 @@ public class StatisticsImportServlet extends HttpServlet {
             con.setAutoCommit(false);
 
             PlayerDAO playerDAO = new PlayerDAO();
-            StatisticheDAO statisticheDAO = new StatisticheDAO();
+           StatisticheDAO statisticheDAO = new StatisticheDAO();
+
 
             for (CsvParser.ImportData item : dati) {
 
@@ -88,12 +89,8 @@ public class StatisticsImportServlet extends HttpServlet {
             }
 
             con.commit();
-            response.getWriter().write("Importazione completata con successo! Righe: " + dati.size());
-
-            PlayerDAO pDao = new PlayerDAO();
-            List<Player> listaAggiornata = pDao.doRetrieveAll();
-
-            getServletContext().setAttribute("LISTA_GIOCATORI_CACHE", listaAggiornata);
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().write("Importazione completata con successo! Righe: " + dati.size() + "<br><a href='"+request.getContextPath()+"/view/admin_upload.jsp'>Torna alla pagina di gestione</a>");
 
         } catch (Exception e) {
             if (con != null) {
@@ -118,3 +115,4 @@ public class StatisticsImportServlet extends HttpServlet {
         }
     }
 }
+

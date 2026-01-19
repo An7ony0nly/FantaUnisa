@@ -1,3 +1,4 @@
+<%@ page import="subsystems.access_profile.model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <style>
@@ -252,25 +253,28 @@
 <div class="header-hero">
 
     <a href="${pageContext.request.contextPath}/view/index.jsp" class="top-logo">
-        <div class="logo-circle-small"><img src="${pageContext.request.contextPath}/images/logox.jpeg"></div>
+        <div class="logo-circle-small">
+            <img src="${pageContext.request.contextPath}/images/logox.jpeg">
+        </div>
         <span class="logo-text-small">FANTAUNISA</span>
     </a>
 
-    <c:choose>
-        <%-- Se l'utente è loggato --%>
-        <c:when test="${not empty sessionScope.user}">
-            <a href="${pageContext.request.contextPath}/LogoutServlet" class="auth-btn-top" style="background-color: #e74c3c;">
-                ESCI <i class="fas fa-sign-out-alt"></i>
-            </a>
-        </c:when>
-
-        <%-- Se l'utente NON è loggato --%>
-        <c:otherwise>
-            <a href="${pageContext.request.contextPath}/view/login.jsp" class="auth-btn-top">
-                ACCEDI / REGISTRATI <i class="fas fa-user"></i>
-            </a>
-        </c:otherwise>
-    </c:choose>
+    <%
+        User user = (User) session.getAttribute("user");
+        if (user!= null){
+    %>
+    <a href="${pageContext.request.contextPath}/LogoutServlet" class="auth-btn-top" style="background-color: #e74c3c;">
+        ESCI <i class="fas fa-sign-out-alt"></i>
+    </a>
+    <%
+        }else{
+    %>
+    <a href="${pageContext.request.contextPath}/view/login.jsp" class="auth-btn-top">
+        ACCEDI / REGISTRATI <i class="fas fa-user"></i>
+    </a>
+    <%
+        }
+    %>
 
 </div>
 
@@ -281,7 +285,7 @@
 
         <div class="navbar-grid">
 
-            <a href="${pageContext.request.contextPath}/social.jsp" class="nav-btn level-low">
+            <a href="${pageContext.request.contextPath}/view/community.jsp" class="nav-btn level-low">
                 <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 22h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM19 8v2h-4V8h4zm-6 0v2H9V8h4zm-8 6h14v2H5v-2zm0-4h2v2H5v-2z"/></svg>
                 <span>Community</span>
             </a>

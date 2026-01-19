@@ -23,15 +23,15 @@ public class NavigationUtils {
 
         switch (role) {
             case FANTALLENATORE:
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("view/formazione.jsp");
                 break;
 
             case GESTORE_UTENTI:
-                response.sendRedirect("dashboard.jsp");
+                response.sendRedirect("view/admin_moderation.jsp");
                 break;
 
             case GESTORE_DATI:
-                response.sendRedirect("data_management.jsp");
+                response.sendRedirect("view/admin_upload.jsp");
                 break;
         }
     }

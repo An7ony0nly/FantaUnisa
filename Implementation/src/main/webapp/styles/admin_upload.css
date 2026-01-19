@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+    min-height: 100vh;
+}
+
+.esci-btn {
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.user-button {
+    background: #ff8c42;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-icon {
+    font-size: 18px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 50px;
+}
+
+.admin-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.admin-tab-btn {
+    background: #2c3e50;
+    border: none;
+    padding: 15px 50px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.admin-tab-btn.active {
+    background: white;
+    color: #2c3e50;
+}
+
+.admin-tab-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.upload-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 30px;
+}
+
+.upload-container h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+.file-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.file-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #f5f5f5;
+}
+
+.select-file-btn {
+    background: #5a7a9e;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.select-file-btn:hover {
+    background: #4a6a8e;
+}
+
+input[type="text"],
+.file-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+}
+
+input[type="text"]:focus,
+.file-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Placeholder per dare aria */
+#giornata {
+    max-width: 150px; /* Non serve lunghissimo */
+}
+
+.upload-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.upload-btn {
+    background: rgba(200, 220, 240, 0.5);
+    border: none;
+    padding: 15px 35px;
+    border-radius: 10px;
+    color: #2c3e50;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+.upload-btn:hover {
+    background: rgba(200, 220, 240, 0.7);
+}
+
+.spinner {
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.cancel-btn {
+    background: #555;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cancel-btn:hover {
+    background: #444;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-label {
+    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background: #ddd;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5a7a9e 0%, #4a6a8e 100%);
+    width: 5%;
+    transition: width 0.3s;
+    border-radius: 15px;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    padding: 15px 50px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 40px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.preview-container {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-top: 30px;
+}
+
+.close-preview {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ff4444;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.close-preview:hover {
+    background: #cc0000;
+    transform: scale(1.1);
+}
+
+.excel-preview {
+    overflow-x: auto;
+}
+
+.preview-header {
+    text-align: right;
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.excel-title {
+    background: #f0f0f0;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #2c3e50;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.excel-table th,
+.excel-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.excel-table th {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.excel-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.excel-section {
+    margin-top: 30px;
+}
+
+.section-title {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.rose-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.rose-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.legend {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    font-size: 13px;
+}

@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
             user.setRole(Role.FANTALLENATORE); // Default
             String token = UUID.randomUUID().toString();
             user.setVerificationToken(token);
-            user.setIs_active(false);
+            user.setIs_active(true);
 
             userDAO.doSave(user);
 
@@ -53,7 +53,7 @@ public class RegisterServlet extends HttpServlet {
                 EmailSender.sendVerificationEmail(email, token);
             }).start();
 
-            response.sendRedirect("registrazione_successo.jsp");
+            response.sendRedirect(request.getContextPath()+"/view/login.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();
