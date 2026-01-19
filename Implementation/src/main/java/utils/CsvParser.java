@@ -1,6 +1,6 @@
 package utils;
 
-import subsystems.calcolo_formazione.Statistiche;
+import subsystems.statistics_viewer.model.Statistiche;
 import subsystems.team_management.model.Player;
 
 import java.io.BufferedReader;

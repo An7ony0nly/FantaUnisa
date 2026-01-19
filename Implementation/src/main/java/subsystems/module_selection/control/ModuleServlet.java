@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-@WebServlet("/modules")
+@WebServlet("/ModuleServlet")
 public class ModuleServlet extends HttpServlet {
 
     @Override

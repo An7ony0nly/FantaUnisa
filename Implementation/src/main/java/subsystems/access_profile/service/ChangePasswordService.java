@@ -1,13 +1,14 @@
-package service;
+package subsystems.access_profile.service;
 
 import observer_pattern.PasswordChangeObserverInterface;
+import observer_pattern.Subject;
 import subsystems.access_profile.model.User;
 import subsystems.access_profile.model.UserDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangePasswordService {
+public class ChangePasswordService implements Subject {
 
     private static ChangePasswordService instance = new ChangePasswordService();
     private ChangePasswordService() {}
@@ -15,15 +16,18 @@ public class ChangePasswordService {
 
     private List<PasswordChangeObserverInterface> iscritti = new ArrayList<>();
 
-    public void addObserver(PasswordChangeObserverInterface obs) {
+    @Override
+    public void attach(PasswordChangeObserverInterface obs) {
         iscritti.add(obs);
     }
 
-    public void detachObserver(PasswordChangeObserverInterface obs) {
+    @Override
+    public void detach(PasswordChangeObserverInterface obs) {
         iscritti.remove(obs);
     }
 
-    private void notifyObservers(User user, String eventType) {
+    @Override
+    public void notifyObservers(User user, String eventType) {
         for (PasswordChangeObserverInterface observer : iscritti) {
             observer.onPasswordUpdate(user, eventType);
         }

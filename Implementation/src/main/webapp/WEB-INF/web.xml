@@ -14,7 +14,7 @@
     </resource-ref>
 
     <welcome-file-list>
-        <welcome-file></welcome-file>
+        <welcome-file>view/login.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>

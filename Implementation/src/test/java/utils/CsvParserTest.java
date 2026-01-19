@@ -1,9 +1,8 @@
-package subsystems.statistics_import;
+package utils;
 
 import org.junit.jupiter.api.Test;
-import subsystems.calcolo_formazione.Statistiche;
+import subsystems.statistics_viewer.model.Statistiche;
 import subsystems.team_management.model.Player;
-import utils.CsvParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

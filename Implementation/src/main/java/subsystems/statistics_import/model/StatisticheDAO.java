@@ -1,7 +1,7 @@
-package subsystems.statistics_import;
+package subsystems.statistics_import.model;
 
 import connection.DBConnection;
-import subsystems.calcolo_formazione.Statistiche;
+import subsystems.statistics_viewer.model.Statistiche;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -117,6 +117,24 @@ public List<Statistiche> findByPlayerAndRange(int playerId, Integer fromGiornata
         return result;
     }
 
+    public Statistiche findLastStatByPlayer(int playerId) {
+        String sql = "SELECT * FROM statistic WHERE player_id = ? ORDER BY giornata DESC LIMIT 1";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, playerId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Errore nel recupero dell'ultima statistica per playerId=" + playerId, e);
+        }
+        return null;
+    }
    
     public Statistiche findByPlayerAndGiornata(int playerId, int giornata) {
         String sql = "SELECT * FROM statistic WHERE player_id = ? AND giornata = ?";

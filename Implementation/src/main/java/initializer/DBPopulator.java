@@ -1,6 +1,5 @@
 package initializer;
 
-
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
 import subsystems.access_profile.model.UserDAO;
@@ -8,39 +7,67 @@ import utils.PasswordHasher;
 
 public class DBPopulator {
 
-    public static void ensureGestoreUtentiExists() {
+    public static void ensureGestoriExist() {
         UserDAO userDAO = new UserDAO();
 
-        String gestore_utentiEmail = "gestoreutenti@fantaunisa.it";
+        System.out.println("[DBPopulator] Verifica esistenza account amministrativi...");
 
-        // Controlliamo se esiste già
-        if (userDAO.doRetrieveByEmail(gestore_utentiEmail) == null) {
+        checkAndCreateUser(
+                userDAO,
+                "gestoreutenti@fantaunisa.it", // Email
+                "gestore_utenti99",            // Username
+                "admin123",                    // Password
+                Role.GESTORE_UTENTI,           // Ruolo
+                "Super",                       // Nome
+                "Gestore"                      // Cognome
+        );
 
-            System.out.println("[DBPopulator] GESTORE UTENTI non trovato. Creazione in corso...");
+        checkAndCreateUser(
+                userDAO,
+                "gestoredati@fantaunisa.it",   // Email
+                "gestore_dati99",              // Username
+                "stats123",                    // Password
+                Role.GESTORE_DATI,             // Ruolo
+                "Master",                      // Nome
+                "Statistico"                   // Cognome
+        );
 
-            User gestore_utenti = new User();
+        System.out.println("[DBPopulator] Verifica completata.");
+    }
 
-            gestore_utenti.setNome("Super");
-            gestore_utenti.setCognome("Gestore");
-            gestore_utenti.setEmail(gestore_utentiEmail);
-            gestore_utenti.setUsername("gestore_utenti99");
-            gestore_utenti.setPassword(PasswordHasher.hash("admin123"));
-            gestore_utenti.setRole(Role.GESTORE_UTENTI);
-            gestore_utenti.setIs_active(true);
-            gestore_utenti.setVerificationToken(null);
-            gestore_utenti.setResetToken(null);
-            gestore_utenti.setResetExpiry(null);
+    /**
+     * Metodo helper privato per evitare duplicazione di codice.
+     * Controlla se un utente esiste tramite email, altrimenti lo crea.
+     */
+    private static void checkAndCreateUser(UserDAO userDAO, String email, String username, String password, Role role, String nome, String cognome) {
+
+        // Controlliamo se esiste già nel DB
+        if (userDAO.doRetrieveByEmail(email) == null) {
+
+            System.out.println("[DBPopulator] " + role + " non trovato. Creazione in corso...");
+
+            User newGestore = new User();
+            newGestore.setNome(nome);
+            newGestore.setCognome(cognome);
+            newGestore.setEmail(email);
+            newGestore.setUsername(username);
+            newGestore.setPassword(PasswordHasher.hash(password)); // Hash della password
+            newGestore.setRole(role);
+            newGestore.setIs_active(true);
+            newGestore.setVerificationToken(null);
+            newGestore.setResetToken(null);
+            newGestore.setResetExpiry(null);
 
             try {
-                userDAO.doSave(gestore_utenti);
-                System.out.println("[DBPopulator] Gestore Utenti creato con successo.");
+                userDAO.doSave(newGestore);
+                System.out.println("[DBPopulator] " + role + " (" + email + ") creato con successo.");
             } catch (Exception e) {
-                System.err.println("[DBPopulator] Errore creazione Gestore Utenti: " + e.getMessage());
+                System.err.println("[DBPopulator] Errore critico creazione " + role + ": " + e.getMessage());
                 e.printStackTrace();
             }
 
         } else {
-            System.out.println("[DBPopulator] Gestore Utenti già presente nel database.");
+            System.out.println("[DBPopulator] " + role + " (" + email + ") già presente nel database.");
         }
     }
 }

@@ -1,4 +1,4 @@
-package subsystems.calcolo_formazione;
+package subsystems.statistics_viewer.model;
 
 public class Statistiche {
     private int id;
