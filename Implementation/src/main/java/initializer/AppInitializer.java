@@ -30,7 +30,7 @@ public class AppInitializer implements ServletContextListener {
 
         // 2. Popolamento Database (DBPopulator)
         System.out.println("2. Verifica dati iniziali (DBPopulator)...");
-        DBPopulator.ensureGestoreUtentiExists();
+        DBPopulator.ensureGestoriExist();
 
         // 3. Caricamento giocatori all'avvio
         PlayerDAO playerDAO = new PlayerDAO();
