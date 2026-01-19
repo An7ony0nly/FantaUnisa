@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import subsystems.statistics_viewer.model.Statistiche;
 import subsystems.statistics_import.model.StatisticheDAO;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -28,61 +27,31 @@ public class LoadStatisticsServlet extends HttpServlet {
             return;
         }
 
-        int playerId;
         try {
-            playerId = Integer.parseInt(playerIdStr);
+            int playerId = Integer.parseInt(playerIdStr);
+
+            Integer fromGiornata = (fromStr != null && !fromStr.isEmpty()) ? Integer.parseInt(fromStr) : null;
+            Integer toGiornata = (toStr != null && !toStr.isEmpty()) ? Integer.parseInt(toStr) : null;
+
+            StatisticheDAO dao = new StatisticheDAO();
+
+            List<Statistiche> stats = dao.findByPlayerAndRange(playerId, fromGiornata, toGiornata);
+
+            Statistiche lastStat = dao.findLastStatByPlayer(playerId);
+
+            request.setAttribute("statisticheList", stats);
+
+            request.setAttribute("lastStat", lastStat);
+
+            request.setAttribute("selectedPlayerId", playerId);
+
+            request.getRequestDispatcher("/WEB-INF/views/statistiche_view.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "playerId non valido");
-            return;
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Formato parametri non valido");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore recupero statistiche");
         }
-
-        Integer fromGiornata = null;
-        Integer toGiornata = null;
-        try {
-            if (fromStr != null && !fromStr.isEmpty()) {
-                fromGiornata = Integer.parseInt(fromStr);
-            }
-            if (toStr != null && !toStr.isEmpty()) {
-                toGiornata = Integer.parseInt(toStr);
-            }
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Intervallo giornate non valido");
-            return;
-        }
-
-        StatisticheDAO dao = new StatisticheDAO();
-        List<Statistiche> stats = dao.findByPlayerAndRange(playerId, fromGiornata, toGiornata);
-
-        response.setContentType("text/html;charset=UTF-8");
-        var out = response.getWriter();
-
-        out.println("<html><head><title>Statistiche giocatore</title></head><body>");
-        out.println("<h1>Statistiche giocatore ID " + playerId + "</h1>");
-
-        if (stats.isEmpty()) {
-            out.println("<p>Nessuna statistica disponibile per i filtri selezionati.</p>");
-        } else {
-            out.println("<table border='1'>");
-            out.println("<tr><th>Giornata</th><th>Partite voto</th><th>MV</th><th>FM</th>" +
-                    "<th>Gol fatti</th><th>Gol subiti</th><th>Assist</th>" +
-                    "<th>Ammonizioni</th><th>Espulsioni</th><th>Autogol</th></tr>");
-            for (Statistiche s : stats) {
-                out.println("<tr>");
-                out.println("<td>" + s.getGiornata() + "</td>");
-                out.println("<td>" + s.getPartiteVoto() + "</td>");
-                out.println("<td>" + s.getMediaVoto() + "</td>");
-                out.println("<td>" + s.getFantaMedia() + "</td>");
-                out.println("<td>" + s.getGolFatti() + "</td>");
-                out.println("<td>" + s.getGolSubiti() + "</td>");
-                out.println("<td>" + s.getAssist() + "</td>");
-                out.println("<td>" + s.getAmmonizioni() + "</td>");
-                out.println("<td>" + s.getEspulsioni() + "</td>");
-                out.println("<td>" + s.getAutogol() + "</td>");
-                out.println("</tr>");
-            }
-            out.println("</table>");
-        }
-
-        out.println("</body></html>");
     }
 }
