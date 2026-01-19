@@ -4,9 +4,8 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.annotation.WebListener;
 import observer_pattern.LogObserver;
-import observer_pattern.PasswordChangeObserverInterface;
 import observer_pattern.SecurityEmailObserver;
-import service.ChangePasswordService;
+import subsystems.access_profile.service.ChangePasswordService;
 import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 
@@ -24,8 +23,8 @@ public class AppInitializer implements ServletContextListener {
         // 1. Configurazione Observer (Design Pattern)
         System.out.println("1. Registrazione Observer...");
         ChangePasswordService service = ChangePasswordService.getInstance();
-        service.addObserver(new SecurityEmailObserver());
-        service.addObserver(new LogObserver());
+        service.attach(new SecurityEmailObserver());
+        service.attach(new LogObserver());
         System.out.println("   OK -> Observer attivi.");
 
         // 2. Popolamento Database (DBPopulator)
