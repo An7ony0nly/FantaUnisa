@@ -1,4 +1,4 @@
-package subsystems.statistics_import;
+package subsystems.statistics_import.control;
 
 import connection.DBConnection;
 import jakarta.servlet.ServletException;

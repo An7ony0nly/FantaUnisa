@@ -1,5 +1,5 @@
 
-package subsystems.statistics_import;
+package subsystems.statistics_import.control;
 
 import connection.DBConnection;
 import jakarta.servlet.ServletException;
@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
+import subsystems.statistics_import.model.StatisticheDAO;
 import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 import utils.CsvParser;

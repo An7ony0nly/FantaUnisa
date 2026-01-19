@@ -1,12 +1,10 @@
-package subsystems.statistics_import;
+package subsystems.team_management.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import subsystems.team_management.model.Player;
-import subsystems.team_management.model.PlayerDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

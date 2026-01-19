@@ -1,11 +1,11 @@
-package subsystems.statistics_import;
+package subsystems.statistics_import.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import subsystems.calcolo_formazione.Statistiche;
+import subsystems.statistics_viewer.model.Statistiche;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StatisticheImportDAOTest {
+class StatisticheDAOTest {
 
     @Mock
     private Connection connection;

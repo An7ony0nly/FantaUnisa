@@ -1,12 +1,12 @@
-package subsystems.statistics_viewer;
+package subsystems.statistics_viewer.control;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import subsystems.calcolo_formazione.Statistiche;
-import subsystems.statistics_import.StatisticheDAO;
+import subsystems.statistics_viewer.model.Statistiche;
+import subsystems.statistics_import.model.StatisticheDAO;
 
 import java.io.IOException;
 import java.util.List;

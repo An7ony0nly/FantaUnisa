@@ -1,7 +1,7 @@
-package subsystems.statistics_import;
+package subsystems.statistics_import.model;
 
 import connection.DBConnection;
-import subsystems.calcolo_formazione.Statistiche;
+import subsystems.statistics_viewer.model.Statistiche;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

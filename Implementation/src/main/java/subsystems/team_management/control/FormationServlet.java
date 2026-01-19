@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import subsystems.access_profile.model.User;
-import subsystems.statistics_import.StatisticheDAO;
+import subsystems.statistics_import.model.StatisticheDAO;
 import subsystems.team_management.model.*;
 import subsystems.module_selection.model.Module;
 import utils.RandomFormation;
