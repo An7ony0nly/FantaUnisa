@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
             user.setRole(Role.FANTALLENATORE); // Default
             String token = UUID.randomUUID().toString();
             user.setVerificationToken(token);
-            user.setIs_active(true);
+            user.setIs_active(false);
 
             userDAO.doSave(user);
 

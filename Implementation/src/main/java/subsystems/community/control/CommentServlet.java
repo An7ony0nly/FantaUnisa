@@ -32,7 +32,7 @@ public class CommentServlet extends HttpServlet {
         String formationIdStr = request.getParameter("formationId"); // Recupero parametro formazione
 
         if (postIdStr == null) {
-            response.sendRedirect("community.jsp?error=InvalidPostId");
+            response.sendRedirect("view/community.jsp?error=InvalidPostId");
             return;
         }
 
@@ -54,7 +54,7 @@ public class CommentServlet extends HttpServlet {
             boolean hasFormation = (formationId != null);
 
             if (!hasText && !hasFormation) {
-                response.sendRedirect("community.jsp?error=EmptyComment");
+                response.sendRedirect("view/community.jsp?error=EmptyComment");
                 return;
             }
 
@@ -68,7 +68,7 @@ public class CommentServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            response.sendRedirect("community.jsp?error=InvalidInput");
+            response.sendRedirect("view/community.jsp?error=InvalidInput");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore salvataggio commento");

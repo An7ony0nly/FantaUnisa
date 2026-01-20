@@ -20,7 +20,7 @@ public class ReactionServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -30,7 +30,7 @@ public class ReactionServlet extends HttpServlet {
         String reactionType = request.getParameter("tipo"); // "LIKE", "DISLIKE"
 
         if (postIdStr == null || reactionType == null) {
-            response.sendRedirect("community.jsp?error=InvalidReaction");
+            response.sendRedirect("view/community.jsp?error=InvalidReaction");
             return;
         }
 
@@ -55,7 +55,7 @@ public class ReactionServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("community.jsp?error=ServerReaction");
+            response.sendRedirect("view/community.jsp?error=ServerReaction");
         }
     }
 }

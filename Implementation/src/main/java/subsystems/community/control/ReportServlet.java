@@ -25,7 +25,7 @@ public class ReportServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -48,7 +48,7 @@ public class ReportServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        response.sendRedirect("community.jsp?error=ReportFailed");
+        response.sendRedirect("view/community.jsp?error=ReportFailed");
     }
 
     @Override

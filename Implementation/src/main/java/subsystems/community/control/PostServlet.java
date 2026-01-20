@@ -25,7 +25,7 @@ public class PostServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -48,7 +48,7 @@ public class PostServlet extends HttpServlet {
         boolean hasFormation = (formationId != null);
 
         if (!hasText && !hasFormation) {
-            response.sendRedirect("community.jsp?error=EmptyContent");
+            response.sendRedirect("view/community.jsp?error=EmptyContent");
             return;
         }
 
@@ -92,6 +92,6 @@ public class PostServlet extends HttpServlet {
             }
         }
         request.setAttribute("posts", posts);
-        request.getRequestDispatcher("community.jsp").forward(request, response);
+        request.getRequestDispatcher("view/community.jsp").forward(request, response);
     }
 }
