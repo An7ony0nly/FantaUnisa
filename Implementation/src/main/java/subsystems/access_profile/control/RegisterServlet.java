@@ -30,7 +30,7 @@ public class RegisterServlet extends HttpServlet {
 
         if (userDAO.doRetrieveByEmail(email) != null) {
             request.setAttribute("error", "Email già registrata!");
-            request.getRequestDispatcher("registrazione.jsp").forward(request, response);
+            request.getRequestDispatcher("view/registrazione.jsp").forward(request, response);
             return;
         }
 
@@ -58,7 +58,7 @@ public class RegisterServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Errore durante la registrazione. Riprova.");
-            request.getRequestDispatcher("registrazione.jsp").forward(request, response);
+            request.getRequestDispatcher("view/registrazione.jsp").forward(request, response);
         }
     }
 }
