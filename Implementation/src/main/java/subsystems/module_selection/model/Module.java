@@ -2,7 +2,7 @@ package subsystems.module_selection.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*+*/
 public class Module {
     private String id; // Es. "3-4-3"
     private int difensori;

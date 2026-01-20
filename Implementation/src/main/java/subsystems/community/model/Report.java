@@ -1,7 +1,7 @@
 package subsystems.community.model;
 
 import java.sql.Timestamp;
-
+/*+*/
 public class Report {
     private int id;
     private String userEmail;

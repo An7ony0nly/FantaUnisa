@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import subsystems.access_profile.model.User;
 import subsystems.community.model.Comment;
 import subsystems.community.model.CommentDAO;
-
+/*+*/
 @WebServlet("/CommentServlet")
 public class CommentServlet extends HttpServlet {
 

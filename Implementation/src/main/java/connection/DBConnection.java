@@ -11,7 +11,7 @@ import javax.sql.DataSource;
  * Gestisce la connessione al database tramite Connection Pool (Tomcat).
  */
 public class DBConnection {
-
+/*+*/
     private static DataSource ds;
 
     static {

@@ -9,7 +9,7 @@ import subsystems.statistics_viewer.model.Statistiche;
 import subsystems.statistics_import.model.StatisticheDAO;
 import java.io.IOException;
 import java.util.List;
-
+/*+*/
 
 @WebServlet("/LoadStatisticsServlet")
 public class LoadStatisticsServlet extends HttpServlet {

@@ -2,7 +2,7 @@ package subsystems.access_profile.model;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/*+*/
 /**
  * Rappresenta l'utente registrato nel sistema.
  */

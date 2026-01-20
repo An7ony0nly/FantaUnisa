@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import subsystems.access_profile.model.User;
 import subsystems.community.model.Reaction;
 import subsystems.community.model.ReactionDAO;
-
+/*+*/
 @WebServlet("/ReactionServlet")
 public class ReactionServlet extends HttpServlet {
 

@@ -1,5 +1,5 @@
 package subsystems.community.model;
-
+/*+*/
 import connection.DBConnection;
 import java.sql.*;
 import java.util.HashMap;

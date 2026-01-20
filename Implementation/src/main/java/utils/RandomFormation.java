@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/*+*/
 public class RandomFormation {
 
     public static void generateRandomLineup(Formation formation, List<Player> rosa, Module modulo) {

@@ -1,7 +1,7 @@
 package subsystems.team_management.model;
 
 import java.util.Objects;
-
+/*+*/
 public class Player {
     private int id;
     private String nome;

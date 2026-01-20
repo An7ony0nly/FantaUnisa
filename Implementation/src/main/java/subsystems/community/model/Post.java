@@ -5,7 +5,7 @@ import subsystems.team_management.model.Player;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
-
+/*+*/
 public class Post {
     private int id;
     private String userEmail; // Autore del post

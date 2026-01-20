@@ -1,7 +1,7 @@
 package observer_pattern;
 
 import subsystems.access_profile.model.User;
-
+/*+*/
 public class LogObserver implements PasswordChangeObserverInterface {
 
     @Override

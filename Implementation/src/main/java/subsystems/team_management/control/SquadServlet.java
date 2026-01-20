@@ -14,7 +14,7 @@ import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 import subsystems.team_management.model.Squad;
 import subsystems.team_management.model.SquadDAO;
-
+/*+*/
 @WebServlet("/SquadServlet")
 public class SquadServlet extends HttpServlet {
 

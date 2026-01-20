@@ -13,7 +13,7 @@ import subsystems.community.model.Comment;
 import subsystems.community.model.CommentDAO;
 import subsystems.community.model.Post;
 import subsystems.community.model.PostDAO;
-
+/*+*/
 @WebServlet("/DeleteContentServlet")
 public class DeleteContentServlet extends HttpServlet {
 

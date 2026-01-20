@@ -7,7 +7,7 @@ import subsystems.access_profile.model.UserDAO;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*+*/
 public class ChangePasswordService implements Subject {
 
     private static ChangePasswordService instance = new ChangePasswordService();

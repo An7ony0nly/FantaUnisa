@@ -1,7 +1,7 @@
 package subsystems.community.model;
 
 import java.sql.Timestamp;
-
+/*+*/
 public class Comment {
     private int id;
     private int postId;

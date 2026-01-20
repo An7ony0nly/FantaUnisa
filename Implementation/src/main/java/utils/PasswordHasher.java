@@ -3,7 +3,7 @@ package utils;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+/*+*/
 /**
  * Descrizione: Classe di utilità che fornisce algoritmi crittografici per l'hashing sicuro delle password.
  */

@@ -3,7 +3,7 @@ package subsystems.team_management.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+/*+*/
 /**
  * Rappresenta l'insieme dei calciatori posseduti da un utente.
  */

@@ -2,7 +2,7 @@ package observer_pattern;
 
 import subsystems.access_profile.model.User;
 import utils.EmailSender;
-
+/*+*/
 public class SecurityEmailObserver implements PasswordChangeObserverInterface {
 
     @Override

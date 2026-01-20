@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+/*+*/
 /**
  * Descrizione: Gestisce la persistenza dei dati anagrafici e delle credenziali utente.
  */

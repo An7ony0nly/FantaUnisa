@@ -1,5 +1,5 @@
 package subsystems.access_profile.model;
-
+/*+*/
 /**
  * Rappresenta i ruoli disponibili nel sistema.
  */

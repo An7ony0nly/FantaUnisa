@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import subsystems.access_profile.model.UserDAO;
-
+/*+*/
 @WebServlet("/ActivationServlet")
 public class ActivationServlet extends HttpServlet {
 

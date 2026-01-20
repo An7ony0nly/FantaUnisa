@@ -4,7 +4,7 @@ import connection.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/*+*/
 public class CommentDAO {
 
     public void doSave(Comment comment) {

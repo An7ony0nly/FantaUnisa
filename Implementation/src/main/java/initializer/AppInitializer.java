@@ -10,7 +10,7 @@ import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 
 import java.util.List;
-
+/*+*/
 @WebListener
 public class AppInitializer implements ServletContextListener {
 
