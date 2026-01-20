@@ -23,7 +23,7 @@ public class ProfileServlet extends HttpServlet {
         // 1. Verifica Pre-condizioni: L'utente deve possedere un token di sessione valido.
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -40,10 +40,10 @@ public class ProfileServlet extends HttpServlet {
             // Opzionale: Aggiorno anche la sessione se i dati fossero cambiati
             session.setAttribute("user", updatedUser);
 
-            request.getRequestDispatcher("profile.jsp").forward(request, response);
+            request.getRequestDispatcher("view/profile.jsp").forward(request, response);
         } else {
             session.invalidate();
-            response.sendRedirect("login.jsp?error=UserNotFound");
+            response.sendRedirect("view/login.jsp?error=UserNotFound");
         }
     }
 

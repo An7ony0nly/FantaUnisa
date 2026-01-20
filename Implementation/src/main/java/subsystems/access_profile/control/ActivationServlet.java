@@ -18,7 +18,7 @@ public class ActivationServlet extends HttpServlet {
         String token = request.getParameter("token");
 
         if (token == null || token.isEmpty()) {
-            response.sendRedirect("login.jsp?error=InvalidToken");
+            response.sendRedirect("view/login.jsp?error=InvalidToken");
             return;
         }
 
@@ -27,10 +27,10 @@ public class ActivationServlet extends HttpServlet {
 
         if (activated) {
             // Successo: Account attivo, ora può fare login
-            response.sendRedirect("login.jsp?msg=AccountActivated");
+            response.sendRedirect("view/login.jsp?msg=AccountActivated");
         } else {
             // Fallimento: Token scaduto o errato
-            response.sendRedirect("login.jsp?error=ActivationFailed");
+            response.sendRedirect("view/login.jsp?error=ActivationFailed");
         }
     }
 }

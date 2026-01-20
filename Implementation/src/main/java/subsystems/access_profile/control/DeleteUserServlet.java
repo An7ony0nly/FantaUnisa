@@ -22,7 +22,7 @@ public class DeleteUserServlet extends HttpServlet {
         User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (currentUser == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -46,13 +46,13 @@ public class DeleteUserServlet extends HttpServlet {
             if (isSelfDelete) {
                 // Caso 1: Mi sono cancellato -> Logout forzato
                 session.invalidate();
-                response.sendRedirect("login.jsp?msg=AccountDeleted");
+                response.sendRedirect("view/login.jsp?msg=AccountDeleted");
             } else {
                 // Caso 2: Admin ha cancellato qualcun altro -> Torna alla dashboard admin
                 response.sendRedirect("admin/gestione_utenti.jsp?msg=UserDeleted");
             }
         } else {
-            response.sendRedirect("home_utente.jsp?error=Unauthorized");
+            response.sendRedirect("view/home_utente.jsp?error=Unauthorized");
         }
     }
 }

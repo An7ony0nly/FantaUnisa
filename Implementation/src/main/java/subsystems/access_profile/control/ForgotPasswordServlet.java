@@ -30,6 +30,6 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         request.setAttribute("msg", "Se l'indirizzo esiste, riceverai una mail con le istruzioni.");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("view/login.jsp").forward(request, response);
     }
 }

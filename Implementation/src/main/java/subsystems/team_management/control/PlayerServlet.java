@@ -21,7 +21,7 @@ public class PlayerServlet extends HttpServlet {
         // Controllo Sessione (opzionale, se vuoi che il listone sia pubblico toglilo)
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -38,6 +38,6 @@ public class PlayerServlet extends HttpServlet {
         request.setAttribute("selectedRuolo", ruolo);
         request.setAttribute("selectedSquadra", squadra);
 
-        request.getRequestDispatcher("listone_giocatori.jsp").forward(request, response);
+        request.getRequestDispatcher("view/listone_giocatori.jsp").forward(request, response);
     }
 }

@@ -24,7 +24,7 @@ public class DeleteContentServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -32,7 +32,7 @@ public class DeleteContentServlet extends HttpServlet {
         String idStr = request.getParameter("id");
 
         if (idStr == null || type == null) {
-            response.sendRedirect("community.jsp?error=InvalidParams");
+            response.sendRedirect("view/community.jsp?error=InvalidParams");
             return;
         }
 
@@ -47,7 +47,7 @@ public class DeleteContentServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("community.jsp?error=DeleteFailed");
+            response.sendRedirect("view/community.jsp?error=DeleteFailed");
         }
     }
 
@@ -56,7 +56,7 @@ public class DeleteContentServlet extends HttpServlet {
         Post post = postDAO.doRetrieveById(postId);
 
         if (post == null) {
-            response.sendRedirect("community.jsp?error=NotFound");
+            response.sendRedirect("view/community.jsp?error=NotFound");
             return;
         }
 
@@ -68,7 +68,7 @@ public class DeleteContentServlet extends HttpServlet {
             postDAO.doDelete(postId);
             response.sendRedirect("PostServlet?msg=Deleted");
         } else {
-            response.sendRedirect("community.jsp?error=Unauthorized");
+            response.sendRedirect("view/community.jsp?error=Unauthorized");
         }
     }
 
@@ -77,7 +77,7 @@ public class DeleteContentServlet extends HttpServlet {
         Comment comment = commentDAO.doRetrieveById(commentId);
 
         if (comment == null) {
-            response.sendRedirect("community.jsp");
+            response.sendRedirect("view/community.jsp");
             return;
         }
 
@@ -89,7 +89,7 @@ public class DeleteContentServlet extends HttpServlet {
             commentDAO.doDelete(commentId);
             response.sendRedirect("PostServlet?msg=CommentDeleted#" + comment.getPostId());
         } else {
-            response.sendRedirect("community.jsp?error=Unauthorized");
+            response.sendRedirect("view/community.jsp?error=Unauthorized");
         }
     }
 }

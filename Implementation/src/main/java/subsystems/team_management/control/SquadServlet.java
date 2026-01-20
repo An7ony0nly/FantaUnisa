@@ -26,7 +26,7 @@ public class SquadServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -45,7 +45,7 @@ public class SquadServlet extends HttpServlet {
         request.setAttribute("allPlayers", allPlayers);
         request.setAttribute("mySquadList", mySquadList);
         request.setAttribute("squadCount", mySquadList.size());
-        request.getRequestDispatcher("gestione_rosa.jsp").forward(request, response);
+        request.getRequestDispatcher("view/gestione_rosa.jsp").forward(request, response);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SquadServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 

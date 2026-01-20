@@ -24,10 +24,10 @@ public class ResetPasswordServlet extends HttpServlet {
         if (user != null) {
             // Token valido: Mostra la pagina di reset
             request.setAttribute("token", token); // Passiamo il token al form
-            request.getRequestDispatcher("reset_password.jsp").forward(request, response);
+            request.getRequestDispatcher("view/reset_password.jsp").forward(request, response);
         } else {
             // Token scaduto o errato
-            response.sendRedirect("login.jsp?error=TokenExpired");
+            response.sendRedirect("view/login.jsp?error=TokenExpired");
         }
     }
 

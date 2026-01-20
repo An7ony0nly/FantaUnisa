@@ -23,7 +23,7 @@ public class ChangePasswordServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -53,7 +53,7 @@ public class ChangePasswordServlet extends HttpServlet {
 
             ChangePasswordService.getInstance().updatePassword(user, hashedNewPassword);
 
-            response.sendRedirect("profilo.jsp?msg=PasswordChanged");
+            response.sendRedirect("view/profilo.jsp?msg=PasswordChanged");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,6 +64,6 @@ public class ChangePasswordServlet extends HttpServlet {
     private void redirectError(HttpServletRequest request, HttpServletResponse response, String errorMsg)
             throws ServletException, IOException {
         request.setAttribute("errorPassword", errorMsg);
-        request.getRequestDispatcher("profilo.jsp").forward(request, response);
+        request.getRequestDispatcher("view/profilo.jsp").forward(request, response);
     }
 }

@@ -32,7 +32,7 @@ public class EmailSender {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Conferma Registrazione FantaUnisa");
 
-            String link = "http://localhost:80/FantaUnisa/ActivationServlet?token=" + token;
+            String link = "http://localhost:80/FantaUnisa_war_exploded/ActivationServlet?token=" + token;
 
             String htmlContent = "<h3>Benvenuto nel Fantacalcio!</h3>"
                     + "<p>Clicca sul link sottostante per attivare il tuo account:</p>"

@@ -22,7 +22,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("view/login.jsp");
             return;
         }
 
@@ -50,13 +50,13 @@ public class UpdateProfileServlet extends HttpServlet {
 
                 session.setAttribute("user", currentUser);
 
-                response.sendRedirect("profilo.jsp?msg=ProfileUpdated");
+                response.sendRedirect("view/profilo.jsp?msg=ProfileUpdated");
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect("profilo.jsp?error=UpdateFailed");
+                response.sendRedirect("view/profilo.jsp?error=UpdateFailed");
             }
         } else {
-            response.sendRedirect("profilo.jsp");
+            response.sendRedirect("view/profilo.jsp");
         }
     }
 }

@@ -26,7 +26,7 @@ public class FormationServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user == null) { response.sendRedirect("login.jsp"); return; }
+        if (user == null) { response.sendRedirect("view/login.jsp"); return; }
 
         SquadDAO squadDAO = new SquadDAO();
         List<Player> mySquadList = squadDAO.doRetrieveByEmail(user.getEmail());
@@ -42,7 +42,7 @@ public class FormationServlet extends HttpServlet {
 
         request.setAttribute("currentGiornata", nextGiornata);
 
-        request.getRequestDispatcher("schiera_formazione.jsp").forward(request, response);
+        request.getRequestDispatcher("view/schiera_formazione.jsp").forward(request, response);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class FormationServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user == null) { response.sendRedirect("login.jsp"); return; }
+        if (user == null) { response.sendRedirect("view/login.jsp"); return; }
 
         try {
             String moduloId = request.getParameter("modulo");
@@ -81,7 +81,7 @@ public class FormationServlet extends HttpServlet {
             request.setAttribute("panchina", dettagliFormazione.get("PANCHINA"));
             request.setAttribute("formationId", savedId);
             request.setAttribute("moduloScelto", moduloId);
-            request.getRequestDispatcher("/WEB-INF/views/formazione_saved.jsp").forward(request, response);
+            request.getRequestDispatcher("view/formazione_saved.jsp").forward(request, response);
 
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());

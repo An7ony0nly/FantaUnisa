@@ -45,7 +45,7 @@ public class LoadStatisticsServlet extends HttpServlet {
 
             request.setAttribute("selectedPlayerId", playerId);
 
-            request.getRequestDispatcher("/WEB-INF/views/statistiche_view.jsp").forward(request, response);
+            request.getRequestDispatcher("view/statistiche_view.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Formato parametri non valido");
