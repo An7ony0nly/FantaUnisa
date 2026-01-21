@@ -34,7 +34,6 @@ public class CommentServletTest {
         MockitoAnnotations.openMocks(this);
         servlet = new CommentServlet();
 
-        // Setup base: Utente loggato
         User user = new User();
         user.setEmail("user@test.it");
         when(request.getSession(false)).thenReturn(session);
@@ -47,19 +46,16 @@ public class CommentServletTest {
         doPost.invoke(servlet, request, response);
     }
 
-    // --- TC1: Commento OK (Testo valido) ---
     @Test
     void testTC1_CommentoOK() throws Exception {
         try (MockedConstruction<CommentDAO> mockedDAO = mockConstruction(CommentDAO.class)) {
 
-            // Input Validi
             when(request.getParameter("postId")).thenReturn("10");
             when(request.getParameter("testo")).thenReturn("Bel centrocampo!");
             when(request.getParameter("formationId")).thenReturn(null);
 
             executeDoPost();
 
-            // Verifiche
             CommentDAO dao = mockedDAO.constructed().get(0);
             ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
             verify(dao).doSave(commentCaptor.capture());
@@ -73,33 +69,26 @@ public class CommentServletTest {
         }
     }
 
-    // --- TC2: Commento Vuoto ---
     @Test
     void testTC2_CommentoVuoto() throws Exception {
         try (MockedConstruction<CommentDAO> mockedDAO = mockConstruction(CommentDAO.class)) {
 
-            // Input: Testo vuoto e Nessuna formazione
             when(request.getParameter("postId")).thenReturn("10");
             when(request.getParameter("testo")).thenReturn("   ");
             when(request.getParameter("formationId")).thenReturn(null);
 
             executeDoPost();
 
-            // --- CORREZIONE QUI ---
-            // La servlet fa return PRIMA di fare "new CommentDAO()".
-            // Quindi non dobbiamo cercare di prenderlo con .get(0), ma verificare che NON esista.
-            assertTrue(mockedDAO.constructed().isEmpty(), "Il DAO non dovrebbe essere creato se l'input non è valido");
+            assertTrue(mockedDAO.constructed().isEmpty());
 
             verify(response).sendRedirect("view/community.jsp?error=EmptyComment");
         }
     }
 
-    // --- TC3: Post Non Trovato (Simulazione Errore DB) ---
     @Test
     void testTC3_PostNonTrovato() throws Exception {
         try (MockedConstruction<CommentDAO> mockedDAO = mockConstruction(CommentDAO.class,
                 (mock, context) -> {
-                    // Simuliamo errore salvataggio
                     doThrow(new RuntimeException("Post non trovato")).when(mock).doSave(any());
                 })) {
 
@@ -108,10 +97,7 @@ public class CommentServletTest {
 
             executeDoPost();
 
-            // La servlet cattura l'eccezione e manda un errore 500
             verify(response).sendError(eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), contains("Errore salvataggio commento"));
         }
     }
-
-
 }

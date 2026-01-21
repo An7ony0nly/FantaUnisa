@@ -36,7 +36,6 @@ public class ResetPasswordServletTest {
         when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
     }
 
-    // Metodi helper per invocare doGet e doPost
     private void executeDoGet() throws Exception {
         Method doGet = ResetPasswordServlet.class.getDeclaredMethod("doGet", HttpServletRequest.class, HttpServletResponse.class);
         doGet.setAccessible(true);
@@ -49,13 +48,10 @@ public class ResetPasswordServletTest {
         doPost.invoke(servlet, request, response);
     }
 
-    // --- TEST doGet (Visualizzazione Pagina Reset) ---
-
     @Test
     void testDoGet_TokenValido() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Simula token valido (utente trovato)
                     when(mock.findByResetToken("valid-token")).thenReturn(new User());
                 })) {
 
@@ -63,7 +59,6 @@ public class ResetPasswordServletTest {
 
             executeDoGet();
 
-            // Verifica che il token venga passato alla JSP
             verify(request).setAttribute("token", "valid-token");
             verify(request).getRequestDispatcher("view/reset_password.jsp");
             verify(dispatcher).forward(request, response);
@@ -74,7 +69,6 @@ public class ResetPasswordServletTest {
     void testDoGet_TokenScadutoOErrato() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Simula token non trovato
                     when(mock.findByResetToken("invalid-token")).thenReturn(null);
                 })) {
 
@@ -82,12 +76,9 @@ public class ResetPasswordServletTest {
 
             executeDoGet();
 
-            // Verifica redirect errore
             verify(response).sendRedirect("view/login.jsp?error=TokenExpired");
         }
     }
-
-    // --- TEST doPost (Aggiornamento Password) ---
 
     @Test
     void testDoPost_Success() throws Exception {
@@ -95,30 +86,23 @@ public class ResetPasswordServletTest {
                 (mock, context) -> {
                     User user = new User();
                     user.setEmail("user@test.it");
-                    // Simula che il token corrisponda a questo utente
                     when(mock.findByResetToken("valid-token")).thenReturn(user);
                 });
              MockedStatic<PasswordHasher> hasherMock = mockStatic(PasswordHasher.class)) {
 
-            // Mock dell'hashing statico
             hasherMock.when(() -> PasswordHasher.hash("NewPass1!")).thenReturn("HASHED_PASS");
 
-            // Input
             when(request.getParameter("token")).thenReturn("valid-token");
             when(request.getParameter("password")).thenReturn("NewPass1!");
 
             executeDoPost();
 
-            // Verifiche
             UserDAO dao = mockedDAO.constructed().get(0);
 
-            // 1. Verifica che venga cercato l'utente col token
             verify(dao).findByResetToken("valid-token");
 
-            // 2. Verifica che la password venga aggiornata (con l'hash)
             verify(dao).updatePassword("user@test.it", "HASHED_PASS");
 
-            // 3. Verifica redirect successo
             verify(response).sendRedirect("login.jsp?msg=PasswordUpdated");
         }
     }
@@ -127,7 +111,6 @@ public class ResetPasswordServletTest {
     void testDoPost_ErrorUpdating_InvalidToken() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Simula token non trovato al momento del submit
                     when(mock.findByResetToken("invalid-token")).thenReturn(null);
                 });
              MockedStatic<PasswordHasher> hasherMock = mockStatic(PasswordHasher.class)) {
@@ -137,12 +120,10 @@ public class ResetPasswordServletTest {
 
             executeDoPost();
 
-            // Verifica che NON venga chiamato l'update
             if (!mockedDAO.constructed().isEmpty()) {
                 verify(mockedDAO.constructed().get(0), never()).updatePassword(anyString(), anyString());
             }
 
-            // Verifica redirect errore
             verify(response).sendRedirect("login.jsp?error=ErrorUpdating");
         }
     }

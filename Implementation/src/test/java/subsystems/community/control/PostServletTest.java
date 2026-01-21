@@ -41,11 +41,10 @@ public class PostServletTest {
         MockitoAnnotations.openMocks(this);
         servlet = new PostServlet();
 
-        // Setup base: Utente loggato
         User user = new User();
         user.setEmail("user@test.it");
         when(request.getSession(false)).thenReturn(session);
-        when(request.getSession()).thenReturn(session); // Per doGet
+        when(request.getSession()).thenReturn(session);
         when(session.getAttribute("user")).thenReturn(user);
         when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
     }
@@ -62,14 +61,10 @@ public class PostServletTest {
         doGet.invoke(servlet, request, response);
     }
 
-    // --- TEST CASE CREAZIONE (UC10) ---
-
-    // TC1: Testo presente, Allegato Null -> Pubblicato
     @Test
     void testTC1_SoloTesto() throws Exception {
         try (MockedConstruction<PostDAO> mockedDAO = mockConstruction(PostDAO.class)) {
 
-            // Input
             when(request.getAttribute("testo")).thenReturn(null);
             when(request.getParameter("testo")).thenReturn("Ciao a tutti!");
             when(request.getAttribute("formationId")).thenReturn(null);
@@ -77,7 +72,6 @@ public class PostServletTest {
 
             executeDoPost();
 
-            // Verifiche
             PostDAO dao = mockedDAO.constructed().get(0);
             ArgumentCaptor<Post> postCaptor = ArgumentCaptor.forClass(Post.class);
             verify(dao).doSave(postCaptor.capture());
@@ -90,12 +84,10 @@ public class PostServletTest {
         }
     }
 
-    // TC2: Testo Null, Allegato Formazione -> Pubblicato
     @Test
     void testTC2_SoloFormazione() throws Exception {
         try (MockedConstruction<PostDAO> mockedDAO = mockConstruction(PostDAO.class)) {
 
-            // Input
             when(request.getParameter("testo")).thenReturn("");
             when(request.getParameter("formationId")).thenReturn("10");
 
@@ -113,7 +105,6 @@ public class PostServletTest {
         }
     }
 
-    // TC3: Testo e Allegato presenti -> Pubblicato
     @Test
     void testTC3_Completo() throws Exception {
         try (MockedConstruction<PostDAO> mockedDAO = mockConstruction(PostDAO.class)) {
@@ -133,35 +124,27 @@ public class PostServletTest {
         }
     }
 
-    // TC4: Testo Null, Allegato Null -> Errore Vuoto
     @Test
     void testTC4_PostVuoto() throws Exception {
         try (MockedConstruction<PostDAO> mockedDAO = mockConstruction(PostDAO.class)) {
 
-            // Input vuoti
             when(request.getParameter("testo")).thenReturn(null);
             when(request.getParameter("formationId")).thenReturn(null);
 
             executeDoPost();
 
-            // --- CORREZIONE QUI ---
-            // La servlet fa return prima di creare il DAO.
-            // Quindi la lista constructed() è vuota.
-            assertTrue(mockedDAO.constructed().isEmpty(), "Il DAO non deve essere creato se il post è vuoto");
+            assertTrue(mockedDAO.constructed().isEmpty());
 
-            // Verifica: Redirect errore
             verify(response).sendRedirect("view/community.jsp?error=EmptyContent");
         }
     }
 
-    // TC5: Provenienza da FormationServlet (Uso attributi request)
     @Test
     void testTC5_FromAttributes() throws Exception {
         try (MockedConstruction<PostDAO> mockedDAO = mockConstruction(PostDAO.class)) {
 
-            // Simuliamo attributi settati da un forward precedente
             when(request.getAttribute("testo")).thenReturn("Post automatico");
-            when(request.getAttribute("formationId")).thenReturn(100); // Integer Object
+            when(request.getAttribute("formationId")).thenReturn(100);
 
             executeDoPost();
 
@@ -175,10 +158,8 @@ public class PostServletTest {
         }
     }
 
-    // --- TEST CASE VISUALIZZAZIONE (doGet) ---
     @Test
     void testDoGet_VisualizzaBacheca() throws Exception {
-        // Dobbiamo mockare la costruzione di 3 DAO diversi + ReactionUtils statico
         try (MockedConstruction<PostDAO> mockedPostDAO = mockConstruction(PostDAO.class,
                 (mock, context) -> {
                     List<Post> posts = new ArrayList<>();
@@ -193,16 +174,12 @@ public class PostServletTest {
                      (mock, context) -> when(mock.doRetrieveUserReaction(anyString(), anyInt())).thenReturn("LIKE"));
              MockedStatic<ReactionUtils> utilsMock = mockStatic(ReactionUtils.class)) {
 
-            // Mock ReactionUtils
             utilsMock.when(() -> ReactionUtils.calculateReactionCounts(anyInt())).thenReturn(new HashMap<>());
 
             executeDoGet();
 
-            // Verifiche
             verify(request).setAttribute(eq("posts"), anyList());
             verify(dispatcher).forward(request, response);
         }
     }
-
-
 }

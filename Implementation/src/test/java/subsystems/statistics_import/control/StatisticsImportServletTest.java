@@ -39,32 +39,30 @@ import java.util.List;
 
 public class StatisticsImportServletTest {
 
-    // --- SOLUZIONE PER "NoInitialContextException" ---
-    // 1. Definiamo una Factory finta che crea un contesto JNDI mockato
+
     public static class MockJndiFactory implements InitialContextFactory {
         @Override
         public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
-            // Creiamo i mock necessari per simulare la catena di lookup
+
             Context rootContext = mock(Context.class);
             Context envContext = mock(Context.class);
             DataSource dataSource = mock(DataSource.class);
 
-            // Simuliamo: new InitialContext().lookup("java:comp/env") -> restituisce envContext
+
             when(rootContext.lookup("java:comp/env")).thenReturn(envContext);
 
-            // Simuliamo: envContext.lookup("jdbc/FantaUnisa") -> restituisce dataSource
-            // Usiamo anyString() per essere sicuri di catturare qualsiasi nome JNDI usiate
+
             when(envContext.lookup(anyString())).thenReturn(dataSource);
 
             return rootContext;
         }
     }
 
-    // 2. Registriamo la nostra Factory nelle proprietà di sistema PRIMA che qualsiasi classe venga caricata
+
     static {
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, MockJndiFactory.class.getName());
     }
-    // -------------------------------------------------
+
 
     private StatisticsImportServlet servlet;
 
@@ -148,12 +146,11 @@ public class StatisticsImportServletTest {
         try (MockedStatic<DBConnection> dbMock = mockStatic(DBConnection.class);
              MockedConstruction<CsvParser> parserMock = mockConstruction(CsvParser.class,
                      (mock, context) -> {
-                         // Simuliamo errore durante il parsing (PRIMA della connessione)
+
                          when(mock.parse(any(), anyInt())).thenThrow(new RuntimeException("Formato CSV non valido"));
                      })) {
 
-            // Nota: In questo caso DBConnection.getConnection() NON viene mai chiamato
-            // perché l'eccezione avviene prima.
+
 
             when(request.getParameter("giornata")).thenReturn("1");
             when(request.getPart("file")).thenReturn(filePart);
@@ -161,9 +158,7 @@ public class StatisticsImportServletTest {
 
             executeDoPost();
 
-            // CORREZIONE LOGICA:
-            // Poiché l'errore avviene prima di aprire la connessione, 'con' è null.
-            // Quindi il blocco "if (con != null) con.rollback()" non viene eseguito.
+
             verify(connection, never()).rollback();
 
             verify(response).sendError(eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), anyString());
