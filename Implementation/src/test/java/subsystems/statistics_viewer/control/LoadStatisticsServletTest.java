@@ -44,28 +44,23 @@ public class LoadStatisticsServletTest {
         doGet.invoke(servlet, request, response);
     }
 
-    // --- TC1: Caricamento Standard (Solo PlayerID) ---
-    // Oracolo: Recupera statistiche, setta attributi, forward alla JSP
     @Test
     void testTC1_LoadSuccess() throws Exception {
         try (MockedConstruction<StatisticheDAO> mockedDAO = mockConstruction(StatisticheDAO.class,
                 (mock, context) -> {
-                    // Prepariamo dati finti
                     List<Statistiche> stats = new ArrayList<>();
-                    stats.add(new Statistiche()); // Statistica finta
+                    stats.add(new Statistiche());
 
                     when(mock.findByPlayerAndRange(eq(10), any(), any())).thenReturn(stats);
                     when(mock.findLastStatByPlayer(10)).thenReturn(new Statistiche());
                 })) {
 
-            // Input
             when(request.getParameter("playerId")).thenReturn("10");
             when(request.getParameter("fromGiornata")).thenReturn(null);
             when(request.getParameter("toGiornata")).thenReturn(null);
 
             executeDoGet();
 
-            // Verifiche
             verify(request).setAttribute(eq("statisticheList"), anyList());
             verify(request).setAttribute(eq("lastStat"), any(Statistiche.class));
             verify(request).setAttribute(eq("selectedPlayerId"), eq(10));
@@ -74,10 +69,6 @@ public class LoadStatisticsServletTest {
         }
     }
 
-
-
-    // --- TC2: Parametro Mancante (ID Null) ---
-    // Oracolo: Errore 400 Bad Request
     @Test
     void testTC2_MissingPlayerId() throws Exception {
         when(request.getParameter("playerId")).thenReturn(null);
@@ -85,19 +76,15 @@ public class LoadStatisticsServletTest {
         executeDoGet();
 
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro playerId mancante");
-        verifyNoInteractions(dispatcher); // Nessun forward
+        verifyNoInteractions(dispatcher);
     }
 
-    // --- TC3: Formato Invalido (ID non numerico) ---
-    // Oracolo: Errore 400 Bad Request (NumberFormatException catch)
     @Test
     void testTC3_InvalidFormat() throws Exception {
-        when(request.getParameter("playerId")).thenReturn("abc"); // Non è un numero
+        when(request.getParameter("playerId")).thenReturn("abc");
 
         executeDoGet();
 
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Formato parametri non valido");
     }
-
-
 }

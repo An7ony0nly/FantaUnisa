@@ -36,55 +36,42 @@ public class LoginServletTest {
         MockitoAnnotations.openMocks(this);
         servlet = new LoginServlet();
 
-        // Setup base request/session
         when(request.getSession()).thenReturn(session);
-        when(request.getSession(false)).thenReturn(session); // Simula sessione esistente
+        when(request.getSession(false)).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
     }
 
     private void executeDoPost() throws Exception {
-        // Usa Reflection per chiamare il metodo protected doPost
         Method doPost = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
         doPost.setAccessible(true);
         doPost.invoke(servlet, request, response);
     }
 
-    // --- TC1: Login OK ---
     @Test
     void testTC1_LoginOK() throws Exception {
-        // 1. Mockiamo la creazione del DAO (perché la servlet fa 'new UserDAO()' locale)
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Prepariamo un utente valido
                     User u = new User();
                     u.setEmail("mario@test.it");
                     u.setPassword("HASHED_PWD");
                     u.setRole(Role.FANTALLENATORE);
-                    u.setIs_active(true); // Utente ATTIVO
+                    u.setIs_active(true);
 
-                    // Quando il DAO cerca, trova l'utente
                     when(mock.doRetrieveByEmailAndPassword(anyString(), anyString())).thenReturn(u);
                 });
-             // 2. Mockiamo le classi statiche (Hasher e Navigation)
              MockedStatic<PasswordHasher> hasherMock = mockStatic(PasswordHasher.class);
              MockedStatic<NavigationUtils> navMock = mockStatic(NavigationUtils.class)) {
 
-            // Configurazione Input
             when(request.getParameter("email")).thenReturn("mario@test.it");
             when(request.getParameter("password")).thenReturn("Password1!");
 
-            // Mock Hash
             hasherMock.when(() -> PasswordHasher.hash("Password1!")).thenReturn("HASHED_PWD");
 
-            // Esecuzione
             executeDoPost();
 
-            // VERIFICHE
-            // 1. L'utente è in sessione?
             verify(session).setAttribute(eq("user"), any(User.class));
             verify(session).setAttribute(eq("role"), eq(Role.FANTALLENATORE));
 
-            // 2. Redirect chiamato correttamente (con 3 argomenti come nella tua servlet!)
             navMock.verify(() -> NavigationUtils.redirectBasedOnRole(
                     eq(Role.FANTALLENATORE),
                     eq(request),
@@ -93,12 +80,10 @@ public class LoginServletTest {
         }
     }
 
-    // --- TC2: Utente Non Trovato / Password Errata ---
     @Test
     void testTC23_CredenzialiErrate() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Il DAO restituisce NULL (utente non trovato o pwd errata)
                     when(mock.doRetrieveByEmailAndPassword(anyString(), anyString())).thenReturn(null);
                 });
              MockedStatic<PasswordHasher> hasherMock = mockStatic(PasswordHasher.class)) {
@@ -110,22 +95,19 @@ public class LoginServletTest {
 
             executeDoPost();
 
-            // Verifiche
-            verify(session, never()).setAttribute(eq("user"), any()); // Niente sessione
-            verify(request).setAttribute(eq("error"), contains("Email o Password errati")); // Messaggio errore
-            verify(dispatcher).forward(request, response); // Forward a login.jsp
+            verify(session, never()).setAttribute(eq("user"), any());
+            verify(request).setAttribute(eq("error"), contains("Email o Password errati"));
+            verify(dispatcher).forward(request, response);
         }
     }
 
-    // --- TC4: Account Non Attivo ---
     @Test
     void testTC4_NonAttivo() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Utente trovato ma NON attivo
                     User u = new User();
                     u.setEmail("mario@test.it");
-                    u.setIs_active(false); // <--- INATTIVO
+                    u.setIs_active(false);
 
                     when(mock.doRetrieveByEmailAndPassword(anyString(), anyString())).thenReturn(u);
                 });
@@ -138,9 +120,8 @@ public class LoginServletTest {
 
             executeDoPost();
 
-            // Verifiche
-            verify(session, never()).setAttribute(eq("user"), any()); // Niente login
-            verify(request).setAttribute(eq("error"), contains("Account non attivo")); // Errore specifico
+            verify(session, never()).setAttribute(eq("user"), any());
+            verify(request).setAttribute(eq("error"), contains("Account non attivo"));
             verify(dispatcher).forward(request, response);
         }
     }
