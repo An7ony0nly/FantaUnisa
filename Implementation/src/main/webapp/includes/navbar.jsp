@@ -287,12 +287,10 @@
         <div class="navbar-grid">
 
             <a href="${pageContext.request.contextPath}/PostServlet" class="nav-btn level-low">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M5 22h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2zM19 8v2h-4V8h4zm-6 0v2H9V8h4zm-8 6h14v2H5v-2zm0-4h2v2H5v-2z"/></svg>
                 <span>Community</span>
             </a>
 
             <a href="${pageContext.request.contextPath}/SquadServlet" class="nav-btn level-high">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 <span>Gestisci Rosa</span>
             </a>
 
@@ -319,12 +317,10 @@
                 }
             %>
             <a href="${pageContext.request.contextPath}/view/statistiche.jsp" class="nav-btn level-high">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 <span>Statistiche</span>
             </a>
 
             <a href="${pageContext.request.contextPath}/FormationServlet" class="nav-btn level-low">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
                 <span>Formazione</span>
             </a>
 
