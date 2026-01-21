@@ -38,7 +38,6 @@ public class SquadServletTest {
         MockitoAnnotations.openMocks(this);
         servlet = new SquadServlet();
 
-        // Setup User Session
         User user = new User();
         user.setEmail("mister@test.it");
         when(request.getSession(false)).thenReturn(session);
@@ -59,7 +58,6 @@ public class SquadServletTest {
         doPost.invoke(servlet, request, response);
     }
 
-    // --- TEST doGet (Visualizzazione Rosa) ---
     @Test
     void testDoGet_ViewSquad() throws Exception {
         try (MockedConstruction<PlayerDAO> mockedPlayerDAO = mockConstruction(PlayerDAO.class,
@@ -69,7 +67,6 @@ public class SquadServletTest {
 
             executeDoGet();
 
-            // Verifiche
             verify(request).setAttribute(eq("allPlayers"), anyList());
             verify(request).setAttribute(eq("mySquad"), any(Squad.class));
             verify(request).getRequestDispatcher("/view/rosa.jsp");
@@ -77,13 +74,10 @@ public class SquadServletTest {
         }
     }
 
-    // --- TEST doPost - TC1: Salvataggio OK (25 Giocatori) ---
-    // Corrisponde al caso di successo dell'UC3
     @Test
     void testTC1_SquadSaved() throws Exception {
         try (MockedConstruction<SquadDAO> mockedSquadDAO = mockConstruction(SquadDAO.class)) {
 
-            // Generiamo 25 ID fittizi
             String[] ids = new String[25];
             for (int i = 0; i < 25; i++) { ids[i] = String.valueOf(i + 1); }
 
@@ -91,7 +85,6 @@ public class SquadServletTest {
 
             executeDoPost();
 
-            // Verifica chiamata al DAO
             SquadDAO dao = mockedSquadDAO.constructed().get(0);
             ArgumentCaptor<List<Integer>> listCaptor = ArgumentCaptor.forClass(List.class);
             verify(dao).doUpdateSquad(eq("mister@test.it"), listCaptor.capture());
@@ -101,10 +94,8 @@ public class SquadServletTest {
         }
     }
 
-    // --- TEST doPost - TC2: Errore Conteggio (< 25 Giocatori) ---
     @Test
     void testTC2_CountError() throws Exception {
-        // Input: Solo 20 giocatori selezionati
         String[] ids = new String[20];
         for (int i = 0; i < 20; i++) { ids[i] = String.valueOf(i + 1); }
 
@@ -112,18 +103,15 @@ public class SquadServletTest {
 
         executeDoPost();
 
-        // Verifica Redirect Errore
         verify(response).sendRedirect(contains("error=CountError"));
         verify(response).sendRedirect(contains("count=20"));
     }
 
-    // --- TEST doPost: Dati Non Validi (Parsing Error) ---
     @Test
     void testInvalidData() throws Exception {
-        // Input: 25 elementi ma uno non è un numero
         String[] ids = new String[25];
         for (int i = 0; i < 24; i++) { ids[i] = "1"; }
-        ids[24] = "invalid"; // Errore qui
+        ids[24] = "invalid";
 
         when(request.getParameterValues("selectedPlayers")).thenReturn(ids);
 
@@ -132,13 +120,10 @@ public class SquadServletTest {
         verify(response).sendRedirect("SquadServlet?error=InvalidData");
     }
 
-    // --- TEST doPost: Errore Database (o Validazione DAO) ---
-    // Copre i casi in cui il DAO rifiuta i dati (es. duplicati, ruoli errati se gestiti nel DAO) o il DB fallisce
     @Test
     void testTC34_RuoliErrati() throws Exception {
         try (MockedConstruction<SquadDAO> mockedSquadDAO = mockConstruction(SquadDAO.class,
                 (mock, context) -> {
-                    // Simuliamo eccezione durante il salvataggio
                     doThrow(new RuntimeException("DB Connection Fail")).when(mock).doUpdateSquad(anyString(), anyList());
                 })) {
 
@@ -151,6 +136,4 @@ public class SquadServletTest {
             verify(response).sendRedirect("SquadServlet?error=DbError");
         }
     }
-
-
 }

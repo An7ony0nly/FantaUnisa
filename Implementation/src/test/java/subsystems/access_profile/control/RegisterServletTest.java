@@ -36,26 +36,21 @@ public class RegisterServletTest {
         MockitoAnnotations.openMocks(this);
         servlet = new RegisterServlet();
 
-        // Setup base request
         when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
         when(request.getContextPath()).thenReturn("/FantaUnisa");
     }
 
     private void executeDoPost() throws Exception {
-        // Usiamo la Reflection per chiamare il metodo 'protected doPost'
         Method doPost = RegisterServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
         doPost.setAccessible(true);
         doPost.invoke(servlet, request, response);
     }
 
-    // --- TC1: Registrazione OK ---
     @Test
     void testTC1_RegOK() throws Exception {
-        // Intercetta "new UserDAO()" dentro la servlet!
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // Quando la servlet chiede se l'email esiste, rispondi null (non esiste)
                     when(mock.doRetrieveByEmail("new@test.it")).thenReturn(null);
                 });
              MockedStatic<PasswordHasher> hasherMock = mockStatic(PasswordHasher.class);
@@ -71,19 +66,16 @@ public class RegisterServletTest {
 
             executeDoPost();
 
-            // Verifica che il salvataggio sia avvenuto sul mock creato internamente
             UserDAO createdMock = mockedDAO.constructed().get(0);
             verify(createdMock).doSave(any(User.class));
             verify(response).sendRedirect(contains("/view/login.jsp"));
         }
     }
 
-    // --- TC2: Email Duplicata ---
     @Test
     void testTC2_EmailDup() throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> {
-                    // L'email esiste già
                     when(mock.doRetrieveByEmail("m.rossi@unisa.it")).thenReturn(new User());
                 })) {
 
@@ -92,13 +84,11 @@ public class RegisterServletTest {
             executeDoPost();
 
             UserDAO createdMock = mockedDAO.constructed().get(0);
-            verify(createdMock, never()).doSave(any()); // NON deve salvare
+            verify(createdMock, never()).doSave(any());
             verify(request).setAttribute(eq("error"), contains("Email già registrata"));
         }
     }
 
-    // --- TC3, TC4, TC5 (Password errate) ---
-    // Usiamo il trucco dell'eccezione sull'hash per simulare il fallimento
     @Test
     void testTC3_PassCorta() throws Exception {
         testPasswordFailure("new@test.it", "Short1!", "Password troppo corta");
@@ -114,7 +104,6 @@ public class RegisterServletTest {
         testPasswordFailure("marco@test.it", "passwordlunga", "Errore Complessità Pass");
     }
 
-    // Metodo helper per evitare di riscrivere lo stesso codice 3 volte
     private void testPasswordFailure(String email, String password, String errorMsg) throws Exception {
         try (MockedConstruction<UserDAO> mockedDAO = mockConstruction(UserDAO.class,
                 (mock, context) -> when(mock.doRetrieveByEmail(anyString())).thenReturn(null));
@@ -123,7 +112,6 @@ public class RegisterServletTest {
             when(request.getParameter("email")).thenReturn(email);
             when(request.getParameter("password")).thenReturn(password);
 
-            // Facciamo fallire l'hashing per simulare password non valida
             hasherMock.when(() -> PasswordHasher.hash(password))
                     .thenThrow(new RuntimeException(errorMsg));
 
@@ -131,7 +119,6 @@ public class RegisterServletTest {
 
             UserDAO createdMock = mockedDAO.constructed().get(0);
             verify(createdMock, never()).doSave(any());
-            // La servlet cattura l'eccezione e setta un errore generico o specifico
             verify(request).setAttribute(eq("error"), anyString());
         }
     }
