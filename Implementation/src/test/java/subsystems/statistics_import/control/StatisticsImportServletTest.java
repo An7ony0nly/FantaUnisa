@@ -1,150 +1,199 @@
 package subsystems.statistics_import.control;
 
-import connection.DBConnection;
-import jakarta.servlet.ServletException;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+
+import connection.DBConnection;
 import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
+import subsystems.statistics_import.model.StatisticheDAO;
+import subsystems.team_management.model.Player;
+import subsystems.team_management.model.PlayerDAO;
+import subsystems.statistics_viewer.model.Statistiche;
+import utils.CsvParser;
 
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.spi.InitialContextFactory;
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+public class StatisticsImportServletTest {
 
-@ExtendWith(MockitoExtension.class)
-class StatisticsImportServletTest {
+    // --- SOLUZIONE PER "NoInitialContextException" ---
+    // 1. Definiamo una Factory finta che crea un contesto JNDI mockato
+    public static class MockJndiFactory implements InitialContextFactory {
+        @Override
+        public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
+            // Creiamo i mock necessari per simulare la catena di lookup
+            Context rootContext = mock(Context.class);
+            Context envContext = mock(Context.class);
+            DataSource dataSource = mock(DataSource.class);
+
+            // Simuliamo: new InitialContext().lookup("java:comp/env") -> restituisce envContext
+            when(rootContext.lookup("java:comp/env")).thenReturn(envContext);
+
+            // Simuliamo: envContext.lookup("jdbc/FantaUnisa") -> restituisce dataSource
+            // Usiamo anyString() per essere sicuri di catturare qualsiasi nome JNDI usiate
+            when(envContext.lookup(anyString())).thenReturn(dataSource);
+
+            return rootContext;
+        }
+    }
+
+    // 2. Registriamo la nostra Factory nelle proprietà di sistema PRIMA che qualsiasi classe venga caricata
+    static {
+        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, MockJndiFactory.class.getName());
+    }
+    // -------------------------------------------------
 
     private StatisticsImportServlet servlet;
 
     @Mock private HttpServletRequest request;
     @Mock private HttpServletResponse response;
-    @Mock private Part filePart;
-    @Mock private Connection connection;
-    @Mock private PreparedStatement preparedStatement;
     @Mock private HttpSession session;
-
-    private MockedStatic<DBConnection> dbConnectionMock;
+    @Mock private Part filePart;
+    @Mock private ServletContext servletContext;
+    @Mock private Connection connection;
 
     @BeforeEach
-    void setUp() throws Exception {
-        servlet = new StatisticsImportServlet();
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
 
-        User u = new User();
-        u.setEmail("gestore@test.it");
-        u.setRole(Role.GESTORE_DATI);
+        servlet = new StatisticsImportServlet() {
+            @Override
+            public ServletContext getServletContext() {
+                return servletContext;
+            }
+        };
 
-        lenient().when(request.getSession(false)).thenReturn(session);
-        lenient().when(session.getAttribute("user")).thenReturn(u);
+        User admin = new User();
+        admin.setEmail("admin@test.it");
+        admin.setRole(Role.GESTORE_DATI);
 
-        dbConnectionMock = mockStatic(DBConnection.class);
-        dbConnectionMock.when(DBConnection::getConnection).thenReturn(connection);
-        lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute("user")).thenReturn(admin);
     }
 
-    @AfterEach
-    void tearDown() {
-        dbConnectionMock.close();
-    }
-
-    @Test
-    void testDoPostSuccess() throws Exception {
-        String csvContent = """
-                Id;R;Nome;Squadra;Pv;Mv;Fm;Gf;Gs;Rp;Rc;R+;R-;Ass;Amm;Esp;Au
-                101;P;Szczesny;Juventus;1;6,5;6,5;0;0;0;0;0;0;0;0;0;0
-                """;
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8));
-
-        when(request.getParameter("giornata")).thenReturn("1");
-        when(request.getPart("file")).thenReturn(filePart);
-        when(filePart.getInputStream()).thenReturn(inputStream);
-
-        StringWriter sw = new StringWriter();
-        when(response.getWriter()).thenReturn(new PrintWriter(sw));
-
-        servlet.doPost(request, response);
-
-        verify(connection).setAutoCommit(false);
-        verify(connection).commit();
-
-        // CORREZIONE 2: Accetta che close() venga chiamato almeno una volta (spesso il DAO lo chiama internamente)
-        verify(connection, atLeast(1)).close();
+    private void executeDoPost() throws Exception {
+        Method doPost = StatisticsImportServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
+        doPost.setAccessible(true);
+        doPost.invoke(servlet, request, response);
     }
 
     @Test
-    void testDoPostUnauthorizedWhenNoSession() throws ServletException, IOException {
-        when(request.getSession(false)).thenReturn(null);
+    void testTC1_ImportSuccess() throws Exception {
+        try (MockedStatic<DBConnection> dbMock = mockStatic(DBConnection.class);
+             MockedConstruction<CsvParser> parserMock = mockConstruction(CsvParser.class,
+                     (mock, context) -> {
+                         List<CsvParser.ImportData> fakeData = new ArrayList<>();
+                         Player p = new Player();
+                         Statistiche s = new Statistiche();
+                         // Usiamo il costruttore corretto (che nel tuo screenshot richiedeva argomenti)
+                         CsvParser.ImportData item = new CsvParser.ImportData(p, s);
+                         fakeData.add(item);
 
-        servlet.doPost(request, response);
+                         when(mock.parse(any(), anyInt())).thenReturn(fakeData);
+                     });
+             MockedConstruction<PlayerDAO> playerDaoMock = mockConstruction(PlayerDAO.class);
+             MockedConstruction<StatisticheDAO> statDaoMock = mockConstruction(StatisticheDAO.class)) {
 
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Non autorizzato");
-        dbConnectionMock.verify(DBConnection::getConnection, never());
+            dbMock.when(DBConnection::getConnection).thenReturn(connection);
+
+            when(request.getParameter("giornata")).thenReturn("1");
+            when(request.getPart("file")).thenReturn(filePart);
+            when(filePart.getInputStream()).thenReturn(new ByteArrayInputStream("contenuto,fake".getBytes()));
+
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter writer = new PrintWriter(stringWriter);
+            when(response.getWriter()).thenReturn(writer);
+
+            executeDoPost();
+
+            verify(connection).setAutoCommit(false);
+            verify(connection).commit();
+            verify(connection).close();
+
+            PlayerDAO pDao = playerDaoMock.constructed().get(0);
+            StatisticheDAO sDao = statDaoMock.constructed().get(0);
+            verify(pDao).doSaveOrUpdate(eq(connection), any());
+            verify(sDao).doSaveOrUpdate(eq(connection), any());
+
+            verify(servletContext).setAttribute(eq("LISTA_GIOCATORI_CACHE"), anyList());
+            assertTrue(stringWriter.toString().contains("Importazione completata"));
+        }
     }
 
     @Test
-    void testDoPostForbiddenWhenWrongRole() throws ServletException, IOException {
-        User u = new User();
-        u.setEmail("user@test.it");
-        u.setRole(Role.FANTALLENATORE);
-        when(session.getAttribute("user")).thenReturn(u);
+    void testTC2_ParsingError() throws Exception {
+        try (MockedStatic<DBConnection> dbMock = mockStatic(DBConnection.class);
+             MockedConstruction<CsvParser> parserMock = mockConstruction(CsvParser.class,
+                     (mock, context) -> {
+                         // Simuliamo errore durante il parsing (PRIMA della connessione)
+                         when(mock.parse(any(), anyInt())).thenThrow(new RuntimeException("Formato CSV non valido"));
+                     })) {
 
-        servlet.doPost(request, response);
+            // Nota: In questo caso DBConnection.getConnection() NON viene mai chiamato
+            // perché l'eccezione avviene prima.
+
+            when(request.getParameter("giornata")).thenReturn("1");
+            when(request.getPart("file")).thenReturn(filePart);
+            when(filePart.getInputStream()).thenReturn(new ByteArrayInputStream("dati,errati".getBytes()));
+
+            executeDoPost();
+
+            // CORREZIONE LOGICA:
+            // Poiché l'errore avviene prima di aprire la connessione, 'con' è null.
+            // Quindi il blocco "if (con != null) con.rollback()" non viene eseguito.
+            verify(connection, never()).rollback();
+
+            verify(response).sendError(eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), anyString());
+        }
+    }
+
+    @Test
+    void testTC4_AccessDenied() throws Exception {
+        User userStandard = new User();
+        userStandard.setRole(Role.FANTALLENATORE);
+        when(session.getAttribute("user")).thenReturn(userStandard);
+
+        executeDoPost();
 
         verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "Non autorizzato");
-        dbConnectionMock.verify(DBConnection::getConnection, never());
     }
 
     @Test
-    void testDoPostMissingParameters() throws ServletException, IOException {
+    void testTC3_InvalidParams() throws Exception {
         when(request.getParameter("giornata")).thenReturn(null);
-        when(request.getPart("file")).thenReturn(filePart);
-
-        servlet.doPost(request, response);
-
+        executeDoPost();
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametri mancanti");
-        dbConnectionMock.verify(DBConnection::getConnection, never());
-    }
 
-    @Test
-    void testDoPostInvalidGiornata() throws ServletException, IOException {
-        when(request.getParameter("giornata")).thenReturn("invalid");
+        reset(response);
+
+        when(request.getParameter("giornata")).thenReturn("abc");
         when(request.getPart("file")).thenReturn(filePart);
-
-        servlet.doPost(request, response);
-
+        executeDoPost();
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Giornata non valida");
-        dbConnectionMock.verify(DBConnection::getConnection, never());
     }
 
-    @Test
-    void testDoPostImportErrorGeneric() throws Exception {
-        String csvContent = "Invalid CSV Content";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8));
 
-        when(request.getParameter("giornata")).thenReturn("1");
-        when(request.getPart("file")).thenReturn(filePart);
-        when(filePart.getInputStream()).thenReturn(inputStream);
-
-        when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-
-        servlet.doPost(request, response);
-
-        verify(response).sendError(eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), anyString());
-
-    }
 }

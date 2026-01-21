@@ -5,7 +5,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.annotation.WebListener;
 import observer_pattern.LogObserver;
 import observer_pattern.SecurityEmailObserver;
-import subsystems.access_profile.service.ChangePasswordService;
+import service.ChangePasswordService;
 import subsystems.team_management.model.Player;
 import subsystems.team_management.model.PlayerDAO;
 
