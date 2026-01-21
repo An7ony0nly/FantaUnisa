@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             if (!user.is_Active()) {
                 request.setAttribute("error", "Account non attivo. Controlla la mail.");
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                request.getRequestDispatcher("view/login.jsp").forward(request, response);
                 return;
             }
             session = request.getSession();
@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
             NavigationUtils.redirectBasedOnRole(user.getRole(), request, response);
         } else {
             request.setAttribute("error", "Email o Password errati.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("view/login.jsp").forward(request, response);
         }
     }
 }
