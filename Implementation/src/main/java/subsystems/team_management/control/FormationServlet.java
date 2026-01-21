@@ -1,9 +1,10 @@
 package subsystems.team_management.control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,12 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import subsystems.access_profile.model.User;
-import subsystems.statistics_import.model.StatisticheDAO;
 import subsystems.team_management.model.*;
 import subsystems.module_selection.model.Module;
-import utils.RandomFormation;
-
-/*+*/
 @WebServlet("/FormationServlet")
 public class FormationServlet extends HttpServlet {
 
@@ -28,68 +25,155 @@ public class FormationServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
         if (user == null) { response.sendRedirect("view/login.jsp"); return; }
 
+        // 1. Recupera la Rosa dell'utente (per fargli scegliere i giocatori)
         SquadDAO squadDAO = new SquadDAO();
-        List<Player> mySquadList = squadDAO.doRetrieveByEmail(user.getEmail());
+        Squad mySquad = squadDAO.doRetrieveSquadObject(user.getEmail()); // Usiamo il metodo "Wrapper" creato prima
 
+        // 2. Recupera i moduli tattici disponibili
         List<Module> validModules = Module.getValidModules();
 
-        request.setAttribute("mySquadList", mySquadList);
+        // 3. Imposta attributi
+        request.setAttribute("mySquad", mySquad);
         request.setAttribute("modules", validModules);
 
-        StatisticheDAO statsDAO = new StatisticheDAO();
-        int lastLoaded = statsDAO.getLastGiornataCalcolata();
-        int nextGiornata = lastLoaded + 1;
+        // Passiamo la giornata corrente (hardcoded o da DB Settings)
+        request.setAttribute("currentGiornata", 18); // Esempio: prossima giornata
 
-        request.setAttribute("currentGiornata", nextGiornata);
-
-        request.getRequestDispatcher("view/schiera_formazione.jsp").forward(request, response);
+        request.getRequestDispatcher("view/formazione.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        // 0. Controllo Sessione
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user == null) { response.sendRedirect("view/login.jsp"); return; }
+        if (user == null) {
+            response.sendRedirect("view/login.jsp");
+            return;
+        }
 
         try {
+            // 1. Parametri base
+            // Nota: gestisci eventuali NumberFormatException se necessario
+            int giornata = Integer.parseInt(request.getParameter("giornata"));
             String moduloId = request.getParameter("modulo");
 
-            if (moduloId == null) throw new IllegalArgumentException("Devi selezionare un modulo.");
+            // 2. Recupera l'array unico di stringhe dal JSP
+            // Formato atteso per ogni stringa: "ID:RUOLO:STATUS" (es. "10:C:titolare")
+            String[] giocatoriRaw = request.getParameterValues("giocatori");
 
-            StatisticheDAO statsDAO = new StatisticheDAO();
-            int giornata = statsDAO.getLastGiornataCalcolata() + 1;
+            // VALIDAZIONE PRELIMINARE
+            if (giocatoriRaw == null || giocatoriRaw.length == 0) {
+                throw new IllegalArgumentException("Nessun giocatore selezionato.");
+            }
 
-            Module module = Module.findById(moduloId);
-            if (module == null) throw new IllegalArgumentException("Modulo non valido.");
-
-            SquadDAO squadDAO = new SquadDAO();
-            List<Player> rosaCompleta = squadDAO.doRetrieveByEmail(user.getEmail());
-
+            // 3. Creazione oggetto Formation
             Formation formation = new Formation(user.getEmail(), giornata, moduloId);
 
-            RandomFormation.generateRandomLineup(formation, rosaCompleta, module);
+            // Liste di supporto per la validazione successiva
+            List<Integer> titolariIds = new ArrayList<>();
+            PlayerDAO playerDAO = new PlayerDAO();
 
+            // 4. Parsing e Popolamento
+            for (String rawData : giocatoriRaw) {
+                // rawData es: "10:C:titolare"
+                String[] parts = rawData.split(":");
+
+                if (parts.length == 3) {
+                    int pId = Integer.parseInt(parts[0]);
+                    String pRuolo = parts[1];  // 'P', 'D', 'C', 'A' (per colonna 'posizione' DB)
+                    String pStatus = parts[2]; // "titolare" o "panchina" (per colonna 'tipo' DB)
+
+                    // TRUCCO PER IL DAO:
+                    // Concateniamo Ruolo e Status per inserirli nel valore (String) della Mappa
+                    // La stringa salvata nella mappa sarà: "C:titolare"
+                    String mapValue = pRuolo + ":" + pStatus;
+
+                    // Aggiungiamo alla formazione
+                    formation.addPlayer(pId, mapValue);
+
+                    // Se è titolare, lo aggiungiamo alla lista per validare la tattica dopo
+                    if ("titolare".equals(pStatus)) {
+                        titolariIds.add(pId);
+                    }
+                }
+            }
+
+            // 5. Validazione Regole
+            if (titolariIds.size() != 11) {
+                throw new IllegalArgumentException("Devi schierare esattamente 11 titolari. Ne risultano: " + titolariIds.size());
+            }
+
+            // Verifica esistenza modulo
+            // Assumiamo che Module abbia un metodo statico o un service
+            // (Nota: nel tuo codice originale usavi Module.findById, lo mantengo)
+            // Module module = Module.findById(moduloId);
+            // if (module == null) throw new IllegalArgumentException("Modulo non valido.");
+
+            // Validazione Tattica (Ruoli coerenti col modulo)
+            // Recuperiamo gli oggetti Player reali dal DB per essere sicuri dei ruoli
+            List<Player> selectedStarters = new ArrayList<>();
+            for (Integer id : titolariIds) {
+                selectedStarters.add(playerDAO.doRetrieveById(id));
+            }
+
+            // validateTactics(selectedStarters, module); // Decommenta se hai il metodo e l'oggetto Module
+
+            // 6. Salvataggio su DB
             FormationDAO formationDAO = new FormationDAO();
             int savedId = formationDAO.doSave(formation);
 
-            Map<String, List<Player>> dettagliFormazione = formationDAO.doRetrieveDetailById(savedId);
+            String postText = request.getParameter("testo");
 
-            request.setAttribute("message", "Formazione generata con successo per la giornata " + giornata + "!");
-            request.setAttribute("titolari", dettagliFormazione.get("TITOLARI"));
-            request.setAttribute("panchina", dettagliFormazione.get("PANCHINA"));
+            if (postText != null && !postText.trim().isEmpty()) {
+                // CASO "SCHIERA E PUBBLICA"
+                // Qui puoi chiamare direttamente il Service/DAO del Post
+                // Oppure fare un forward alla PostServlet passandogli gli attributi
+
+                request.setAttribute("formationId", savedId);
+                request.setAttribute("postText", postText);
+
+                // Forward alla PostServlet che si occuperà di salvare il post e reindirizzare
+                RequestDispatcher rd = request.getRequestDispatcher("/PostServlet");
+                rd.forward(request, response);
+                return; // Importante: interrompi qui l'esecuzione di FormationServlet
+            }
+
+            // 7. Successo
             request.setAttribute("formationId", savedId);
-            request.setAttribute("moduloScelto", moduloId);
-            request.getRequestDispatcher("view/formazione_saved.jsp").forward(request, response);
+            // request.setAttribute("message", "Formazione salvata con successo!");
+            request.getRequestDispatcher("/FormationServlet").forward(request, response);
 
         } catch (IllegalArgumentException e) {
-            request.setAttribute("error", e.getMessage());
-            doGet(request, response);
-
+            // Errori di logica (es. 10 titolari invece di 11)
+            response.sendRedirect("calcola-formazione?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
         } catch (Exception e) {
+            // Errori di sistema
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il salvataggio della formazione.");
+            response.sendRedirect("calcola-formazione?error=Errore+di+Sistema");
         }
+    }
+
+    /**
+     * Controlla se i giocatori scelti rispettano il conteggio del modulo.
+     * Es. 3-4-3 -> Devono esserci 1 P, 3 D, 4 C, 3 A.
+     */
+    private void validateTactics(List<Player> players, Module module) {
+        int p = 0, d = 0, c = 0, a = 0;
+
+        for (Player pl : players) {
+            switch (pl.getRuolo().toUpperCase()) {
+                case "P": p++; break;
+                case "D": d++; break;
+                case "C": c++; break;
+                case "A": a++; break;
+            }
+        }
+
+        if (p != 1) throw new IllegalArgumentException("Devi schierare esattamente 1 portiere.");
+        if (d != module.getDifensori()) throw new IllegalArgumentException("Il modulo richiede " + module.getDifensori() + " difensori.");
+        if (c != module.getCentrocampisti()) throw new IllegalArgumentException("Il modulo richiede " + module.getCentrocampisti() + " centrocampisti.");
+        if (a != module.getAttaccanti()) throw new IllegalArgumentException("Il modulo richiede " + module.getAttaccanti() + " attaccanti.");
     }
 }

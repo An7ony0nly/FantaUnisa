@@ -12,7 +12,7 @@ import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.UserDAO;
 import utils.NavigationUtils;
 import utils.PasswordHasher;
-/*+*/
+
 /**
  * Descrizione: Gestisce esclusivamente l'autenticazione dell'utente nel sistema.
  */
@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         // Utente già loggato
         if (session != null && session.getAttribute("user") != null) {
             Role role = (Role) session.getAttribute("role");
-           NavigationUtils.redirectBasedOnRole(role, response);
+           NavigationUtils.redirectBasedOnRole(role, request, response);
             return;
         }
 
@@ -45,17 +45,17 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             if (!user.is_Active()) {
                 request.setAttribute("error", "Account non attivo. Controlla la mail.");
-                request.getRequestDispatcher("view/login.jsp").forward(request, response);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
             session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("role", user.getRole());
 
-            NavigationUtils.redirectBasedOnRole(user.getRole(), response);
+            NavigationUtils.redirectBasedOnRole(user.getRole(), request, response);
         } else {
             request.setAttribute("error", "Email o Password errati.");
-            request.getRequestDispatcher("view/login.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 }

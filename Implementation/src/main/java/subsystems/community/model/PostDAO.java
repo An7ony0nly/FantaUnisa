@@ -1,14 +1,13 @@
 package subsystems.community.model;
 
 import connection.DBConnection;
+import subsystems.team_management.model.Formation;
 import subsystems.team_management.model.FormationDAO;
-import subsystems.team_management.model.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-/*+*/
+
 public class PostDAO {
 
     public void doSave(Post post) {
@@ -24,7 +23,7 @@ public class PostDAO {
             if (post.getFormationId() != null) {
                 ps.setInt(4, post.getFormationId());
             } else {
-                ps.setNull(4, java.sql.Types.INTEGER);
+                ps.setNull(4, Types.INTEGER);
             }
 
             ps.executeUpdate();
@@ -37,7 +36,7 @@ public class PostDAO {
 
     public List<Post> doRetrieveAll() {
         List<Post> posts = new ArrayList<>();
-        String query = "SELECT * FROM post ORDER BY data_ora DESC";
+        String query = "SELECT * FROM post ORDER BY data_ora DESC"; // O la tua query
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(query);
@@ -50,20 +49,26 @@ public class PostDAO {
                 post.setTesto(rs.getString("testo"));
                 post.setDataOra(rs.getTimestamp("data_ora"));
 
-                int formationId = rs.getInt("formation_id");
-                if (!rs.wasNull()) {
-                    post.setFormationId(formationId);
-                    FormationDAO fDao = new FormationDAO();
-                    Map<String, List<Player>> details = fDao.doRetrieveDetailById(formationId);
-                    post.setFormationDetails(details);
+                // 1. Leggi l'ID formazione
+                int fId = rs.getInt("formation_id");
+
+                // 2. SE C'È UNA FORMAZIONE, CARICALA!
+                if (fId > 0) { // rs.getInt restituisce 0 se null, ma controlla bene il tuo DB
+                    post.setFormationId(fId);
+
+                    // --- QUESTA PARTE MANCAVA? ---
+                    FormationDAO formationDAO = new FormationDAO();
+                    // Questo metodo deve essere quello che fa la JOIN (vedi punto sotto)
+                    Formation fullFormation = formationDAO.doRetrieveById(fId);
+
+                    post.setFormation(fullFormation);
+                    // -----------------------------
                 }
 
                 posts.add(post);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Errore recupero posts", e);
         }
         return posts;
     }

@@ -1,9 +1,11 @@
 package utils;
 
 import java.io.IOException;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import subsystems.access_profile.model.Role;
-/*+*/
+
 /**
  * Classe di utilità per gestire il routing e i reindirizzamenti in base ai ruoli.
  */
@@ -15,7 +17,7 @@ public class NavigationUtils {
      * @param response L'oggetto HttpServletResponse necessario per il sendRedirect
      * @throws IOException Se il reindirizzamento fallisce
      */
-    public static void redirectBasedOnRole(Role role, HttpServletResponse response) throws IOException {
+    public static void redirectBasedOnRole(Role role, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (role == null) {
             response.sendRedirect("login.jsp"); // Fallback di sicurezza
             return;
@@ -23,11 +25,11 @@ public class NavigationUtils {
 
         switch (role) {
             case FANTALLENATORE:
-                response.sendRedirect("view/formazione.jsp");
+                response.sendRedirect(request.getContextPath()+"/FormationServlet");
                 break;
 
             case GESTORE_UTENTI:
-                response.sendRedirect("view/admin_moderation.jsp");
+                response.sendRedirect(request.getContextPath()+"/ReportServlet");
                 break;
 
             case GESTORE_DATI:

@@ -265,7 +265,7 @@
 
     <div class="hero-content">
         <div class="badge-new">Edizione 2026/2027</div>
-        <h1>Il tuo tool preferito <br><span>tutte le tue formazioni</span></h1>
+        <h1>Il tuo tool preferito <br><span>per tutte le tue formazioni</span></h1>
         <p>Crea la tua rosa, confrontati con i tuoi amici e metti alla prova le tue previsioni!</p>
 
         <div class="cta-group">
@@ -286,12 +286,14 @@
             </div>
         </div>
     </div>
+
+
 </section>
 
 <!-- FEATURES -->
 <section class="features">
     <div class="section-header">
-        <h2>Tutto ciò che ti serve</h2>
+        <h2>Tutto ciò che ti serve per vincere</h2>
         <p>Una piattaforma completa pensata per aiutarti nella scelta della formazione.</p>
     </div>
 
@@ -300,14 +302,14 @@
         <div class="feature-card">
             <div class="icon-box"><i class="fas fa-tshirt"></i></div>
             <h3>Gestione Rosa</h3>
-            <p>Inserisci la formazione, confrontati con la community.</p>
+            <p>Inserisci la formazione, schiera i tuoi campioni.</p>
         </div>
 
         <!-- Card 3 -->
         <div class="feature-card">
-            <div class="icon-box"><i class="fas fa-trophy"></i></div>
-            <h3>Classifiche</h3>
-            <p>Competi con gli altri utenti e diventa il più apprezzato.</p>
+            <div class="icon-box"><i class="fas fa-users"></i></div>
+            <h3>Community</h3>
+            <p>Confrontati con gli altri utenti e diventa il più apprezzato.</p>
         </div>
     </div>
 </section>

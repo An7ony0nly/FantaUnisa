@@ -14,7 +14,7 @@ import subsystems.access_profile.model.User;
 import subsystems.community.model.*;
 import utils.ReactionUtils;
 
-/*+*/
+
 @WebServlet("/PostServlet")
 public class PostServlet extends HttpServlet {
 
@@ -31,22 +31,44 @@ public class PostServlet extends HttpServlet {
 
         User user = (User) session.getAttribute("user");
 
-        String testo = request.getParameter("testo");
-        String formationIdStr = request.getParameter("formationId");
+        // --- LOGICA DI RECUPERO DATI (IBRIDA: ATTRIBUTI O PARAMETRI) ---
+
+        // 1. Recupero TESTO
+        // Prima controlla se è stato passato come attributo (dal forward), altrimenti dal form parameter
+        Object testoAttr = request.getAttribute("testo");
+        String testo = (testoAttr != null) ? (String) testoAttr : request.getParameter("testo");
+
+        // 2. Recupero ID FORMAZIONE
+        // Prima controlla attributi (nuova formazione appena creata), altrimenti parameter
+        Object formationIdAttr = request.getAttribute("formationId");
+        String formationIdParam = request.getParameter("formationId");
 
         Integer formationId = null;
-        if (formationIdStr != null && !formationIdStr.trim().isEmpty()) {
-            try {
-                formationId = Integer.parseInt(formationIdStr);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Errore acquisizione formazione");
+
+        // Caso A: Arrivo da FormationServlet (è un Integer nell'attributo)
+        if (formationIdAttr != null) {
+            if (formationIdAttr instanceof Integer) {
+                formationId = (Integer) formationIdAttr;
+            } else {
+                // Caso raro: è una stringa nell'attributo
+                try { formationId = Integer.parseInt(formationIdAttr.toString()); } catch (Exception e) {}
             }
         }
+        // Caso B: Arrivo da form normale (è una Stringa nel parametro)
+        else if (formationIdParam != null && !formationIdParam.trim().isEmpty()) {
+            try {
+                formationId = Integer.parseInt(formationIdParam);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // --- VALIDAZIONE ---
 
         boolean hasText = (testo != null && !testo.trim().isEmpty());
         boolean hasFormation = (formationId != null);
 
+        // Se non c'è né testo né formazione, è un errore
         if (!hasText && !hasFormation) {
             response.sendRedirect("view/community.jsp?error=EmptyContent");
             return;
@@ -54,12 +76,15 @@ public class PostServlet extends HttpServlet {
 
         if (testo == null) testo = "";
 
+        // --- SALVATAGGIO ---
+
         Post post = new Post(user.getEmail(), testo, formationId);
         PostDAO postDAO = new PostDAO();
 
         try {
             postDAO.doSave(post);
-            response.sendRedirect("PostServlet"); // Redirect al doGet per ricaricare la lista
+            // Redirect pulito alla pagina community/feed
+            response.sendRedirect("/PostServlet");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore pubblicazione post");

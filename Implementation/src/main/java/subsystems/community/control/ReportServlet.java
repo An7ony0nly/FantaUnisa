@@ -12,7 +12,7 @@ import subsystems.access_profile.model.Role;
 import subsystems.access_profile.model.User;
 import subsystems.community.model.Report;
 import subsystems.community.model.ReportDAO;
-/*+*/
+
 @WebServlet("/ReportServlet")
 public class ReportServlet extends HttpServlet {
 
@@ -25,7 +25,7 @@ public class ReportServlet extends HttpServlet {
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect("view/login.jsp");
+            response.sendRedirect("login.jsp");
             return;
         }
 
@@ -48,7 +48,7 @@ public class ReportServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        response.sendRedirect("view/community.jsp?error=ReportFailed");
+        response.sendRedirect("community.jsp?error=ReportFailed");
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ReportServlet extends HttpServlet {
         } else {
             List<Report> reports = reportDAO.doRetrieveAll();
             request.setAttribute("reports", reports);
-            request.getRequestDispatcher(request.getContextPath()+"view/admin_moderation.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/admin_moderation.jsp").forward(request, response);
         }
     }
 }
