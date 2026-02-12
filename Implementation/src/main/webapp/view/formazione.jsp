@@ -41,7 +41,7 @@
     .list-header { background: #E3F6FA; color: var(--bg-dark); padding: 15px; border-radius: 10px; text-align: center; font-weight: 800; text-transform: uppercase; flex-shrink: 0; }
     .sidebar-list { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 10px; overflow-y: auto; flex-grow: 1; }
 
-    /* FIX DRAG: I figli non catturano il mouse, solo il genitore */
+    /* FIX DRAG */
     .player-row {
       background: var(--panel-bg); margin-bottom: 8px; padding: 10px;
       border-radius: 10px; display: flex; align-items: center; gap: 10px;
@@ -49,7 +49,7 @@
       cursor: grab; transition: background 0.2s;
       user-select: none;
     }
-    .player-row * { pointer-events: none; } /* Trucco magico per il Drag */
+    .player-row * { pointer-events: none; }
     .player-row:hover { background: #303846; }
     .player-row:active { cursor: grabbing; }
 
@@ -67,17 +67,15 @@
     .mid-line { position: absolute; top: 50%; width: 100%; height: 2px; background: rgba(255,255,255,0.6); }
     .center-circle { position: absolute; top: 50%; left: 50%; width: 100px; height: 100px; border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; transform: translate(-50%, -50%); }
 
-    /* SLOT GIOCATORE: Z-INDEX ALTO */
+    /* SLOT GIOCATORE */
     .field-player {
       position: absolute; display: none;
       flex-direction: column; align-items: center;
       transform: translate(-50%, -50%);
       width: 70px; height: 70px; justify-content: center;
-      z-index: 100; /* Assicura che sia sopra a tutto */
+      z-index: 100;
     }
     .drop-zone { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
-
-    /* Le icone dentro il campo non devono bloccare il drop */
     .drop-zone * { pointer-events: none; }
 
     .shirt { font-size: 2.2rem; color: rgba(255,255,255,0.4); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); transition: color 0.3s; }
@@ -99,7 +97,7 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       position: relative;
     }
-    .bench-slot * { pointer-events: none; } /* Anche qui, i figli non bloccano il drop */
+    .bench-slot * { pointer-events: none; }
     .bench-slot .shirt { font-size: 1.8rem; }
 
     /* --- SIDEBAR DX --- */
@@ -115,7 +113,28 @@
     select { background: transparent; color: var(--bg-dark); border: none; font-size: 1.1rem; font-weight: 800; outline: none; width: 100%; cursor: pointer; }
 
     .btn-genera { width: 100%; background: linear-gradient(90deg, #d35400, #e67e22); border: none; padding: 15px; color: white; font-size: 1rem; font-weight: 800; border-radius: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(245, 132, 40, 0.4); text-transform: uppercase; }
-    .btn-ai { width: 100%; background: linear-gradient(135deg, #8e44ad, #9b59b6); border: none; padding: 15px; color: white; font-size: 1rem; font-weight: 800; border-radius: 15px; cursor: not-allowed; box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4); text-transform: uppercase; margin-top: 10px; opacity: 0.7; display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+    .btn-ai {
+      width: 100%;
+      background: linear-gradient(135deg, #8e44ad, #9b59b6);
+      border: none;
+      padding: 15px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 800;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+      text-transform: uppercase;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .btn-ai:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(142, 68, 173, 0.6); }
+
     .btn-pubblica { width: 100%; background: linear-gradient(135deg, #2980b9, #3498db); border: none; padding: 15px; color: white; font-size: 1rem; font-weight: 800; border-radius: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(41, 128, 185, 0.4); text-transform: uppercase; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.2s; }
     .btn-pubblica:hover { transform: translateY(-2px); }
 
@@ -143,7 +162,12 @@
       <div class="list-header">ROSA COMPLETA</div>
       <div class="sidebar-list">
         <c:forEach var="player" items="${mySquad.players}">
+          <c:set var="pStats" value="${statsMap[player.id]}" />
+          <c:set var="mediaVoto" value="${not empty pStats ? pStats.mediaVoto : '0.0'}" />
+          <c:set var="fantaMedia" value="${not empty pStats ? pStats.fantaMedia : '0.0'}" />
+
           <div class="player-row"
+               id="row_${player.id}"
                draggable="true"
                ondragstart="drag(event)"
                onclick="showDetailsFromData(this)"
@@ -153,7 +177,9 @@
                data-ruolo="${player.ruolo}"
                data-gf="${player.golFatti}"
                data-gs="${player.golSubiti}"
-               data-ass="${player.assist}">
+               data-ass="${player.assist}"
+               data-mv="${mediaVoto}"
+               data-fm="${fantaMedia}">
             <div class="role-badge r-${fn:toLowerCase(player.ruolo)}">${player.ruolo}</div>
             <span>${player.nome}</span>
           </div>
@@ -202,7 +228,11 @@
         <div class="detail-info" id="detailPanel">
           <div class="detail-name" id="det_name">--</div>
           <div class="detail-team" id="det_team">Seleziona un giocatore</div>
+
           <div class="stat-row"><span>Ruolo</span><span class="stat-val" id="det_role">-</span></div>
+          <div class="stat-row"><span>Media Voto</span><span class="stat-val" id="det_mv">-</span></div>
+          <div class="stat-row"><span>FantaMedia</span><span class="stat-val" id="det_fm">-</span></div>
+
           <div class="stat-row"><span>Gol Fatti</span><span class="stat-val" id="det_gf">-</span></div>
           <div class="stat-row"><span>Gol Subiti</span><span class="stat-val" id="det_gs">-</span></div>
           <div class="stat-row"><span>Assist</span><span class="stat-val" id="det_ass">-</span></div>
@@ -211,14 +241,12 @@
 
       <div class="controls-container">
 
-        <div class="module-selector">
-          <select name="giornata" required>
-            <option value="" disabled selected>Giornata...</option>
-            <c:forEach begin="1" end="38" var="g">
-              <option value="${g}" ${g == currentGiornata ? 'selected' : ''}>Giornata ${g}</option>
-            </c:forEach>
-          </select>
-          <i class="fas fa-calendar-alt" style="color:#2c3e50"></i>
+        <div class="module-selector" style="background-color: #e9ecef; cursor: not-allowed; justify-content: space-between;">
+            <span style="font-size: 1.1rem; font-weight: 800; color: #2c3e50;">
+                Giornata ${currentGiornata}
+            </span>
+          <input type="hidden" name="giornata" value="${currentGiornata}">
+          <i class="fas fa-lock" style="color:#7f8c8d" title="Giornata calcolata automaticamente dal calendario"></i>
         </div>
 
         <div class="module-selector">
@@ -235,16 +263,12 @@
           <i class="fas fa-chevron-down" style="color:#2c3e50"></i>
         </div>
 
-        <button type="submit" class="btn-genera">
-          SCHIERA <i class="fas fa-paper-plane" style="margin-left:8px;"></i>
-        </button>
-
-        <button type="button" class="btn-ai" title="Funzionalità in arrivo">
+        <a href="${pageContext.request.contextPath}/FormationServlet?ai=true" class="btn-ai" title="Calcola la formazione migliore">
           GENERA CON AI <i class="fas fa-robot"></i>
-        </button>
+        </a>
 
         <button type="button" class="btn-pubblica" onclick="openPublishModal()">
-          SCHIERA E PUBBLICA <i class="fas fa-share-alt"></i>
+          PUBBLICA <i class="fas fa-share-alt"></i>
         </button>
       </div>
     </div>
@@ -266,9 +290,105 @@
 </form>
 
 <script>
+  // =========================================================
+  // LOGICA AI: Recupero dati dal server e popolamento campo
+  // =========================================================
+  const aiData = {
+    active: ${not empty aiSuggestion},
+    P: [
+      <c:if test="${not empty aiSuggestion['P']}">
+      <c:forEach var="p" items="${aiSuggestion['P']}" varStatus="loop">
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      </c:forEach>
+      </c:if>
+    ],
+    D: [
+      <c:if test="${not empty aiSuggestion['D']}">
+      <c:forEach var="p" items="${aiSuggestion['D']}" varStatus="loop">
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      </c:forEach>
+      </c:if>
+    ],
+    C: [
+      <c:if test="${not empty aiSuggestion['C']}">
+      <c:forEach var="p" items="${aiSuggestion['C']}" varStatus="loop">
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      </c:forEach>
+      </c:if>
+    ],
+    A: [
+      <c:if test="${not empty aiSuggestion['A']}">
+      <c:forEach var="p" items="${aiSuggestion['A']}" varStatus="loop">
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      </c:forEach>
+      </c:if>
+    ]
+  };
+
   document.addEventListener("DOMContentLoaded", function() {
-    changeModule();
+    if (aiData.active) {
+      applyAIFormation();
+      setTimeout(() => alert("${aiMessage}"), 100);
+    } else {
+      changeModule();
+    }
+
+    <c:if test="${not empty aiError}">
+    alert("${aiError}");
+    </c:if>
   });
+
+  function applyAIFormation() {
+    const nDif = aiData.D.length;
+    const nCen = aiData.C.length;
+    const nAtt = aiData.A.length;
+
+    if(nDif === 0 || nCen === 0 || nAtt === 0) {
+      changeModule();
+      return;
+    }
+
+    const moduloStr = nDif + "-" + nCen + "-" + nAtt;
+
+    const select = document.getElementById('modSelect');
+    let found = false;
+    for(let i=0; i<select.options.length; i++){
+      if(select.options[i].value === moduloStr) {
+        select.selectedIndex = i;
+        found = true;
+        break;
+      }
+    }
+
+    changeModule();
+
+    if(aiData.P.length > 0) fillSlot('slot_GK', aiData.P[0]);
+    aiData.D.forEach((p, idx) => fillSlot('slot_D' + (idx+1), p));
+    aiData.C.forEach((p, idx) => fillSlot('slot_C' + (idx+1), p));
+    aiData.A.forEach((p, idx) => fillSlot('slot_A' + (idx+1), p));
+  }
+
+  function fillSlot(slotId, pData) {
+    const slot = document.getElementById(slotId);
+    if(!slot) return;
+
+    const shirt = slot.querySelector('.shirt');
+    const nameLabel = slot.querySelector('.p-name-field');
+
+    if(shirt) shirt.classList.add('filled');
+    if(nameLabel) nameLabel.textContent = pData.nome;
+
+    slot.dataset.playerId = pData.id;
+    slot.dataset.fullData = JSON.stringify(pData);
+
+    // NASCONDI DALLA LISTA A SINISTRA
+    const sidebarRow = document.getElementById('row_' + pData.id);
+    if(sidebarRow) sidebarRow.style.display = 'none';
+  }
+
+  // =========================================================
+  // LOGICA STANDARD (Drag & Drop)
+  // =========================================================
 
   const formations = {
     "3-4-3": { show: ['GK', 'D1', 'D2', 'D3', 'C1', 'C2', 'C3', 'C4', 'A1', 'A2', 'A3'], pos: { D1: {t:'30%', l:'20%'}, D2: {t:'30%', l:'50%'}, D3: {t:'30%', l:'80%'}, C1: {t:'55%', l:'15%'}, C2: {t:'55%', l:'38%'}, C3: {t:'55%', l:'62%'}, C4: {t:'55%', l:'85%'}, A1: {t:'80%', l:'20%'}, A2: {t:'85%', l:'50%'}, A3: {t:'80%', l:'80%'} } },
@@ -286,7 +406,12 @@
     if (!config) return;
 
     document.querySelectorAll('.field-player').forEach(el => {
-      if (el.id !== 'slot_GK') el.style.display = 'none';
+      if (el.id !== 'slot_GK') {
+        if (el.style.display === 'flex' && !config.show.includes(el.id.replace('slot_', ''))) {
+          clearSlot(el);
+        }
+        el.style.display = 'none';
+      }
     });
 
     config.show.forEach(slotId => {
@@ -304,12 +429,11 @@
   function allowDrop(ev) { ev.preventDefault(); }
 
   function drag(ev) {
-    // Ora che abbiamo messo pointer-events:none ai figli, ev.target E' SEMPRE .player-row
     const d = ev.target.dataset;
-    if (!d || !d.id) return; // Sicurezza
+    if (!d || !d.id) return;
 
-    const pData = { id: d.id, nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass };
-    ev.dataTransfer.setData("text/plain", JSON.stringify(pData)); // text/plain è più robusto
+    const pData = { id: d.id, nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm };
+    ev.dataTransfer.setData("text/plain", JSON.stringify(pData));
     ev.dataTransfer.effectAllowed = "copyMove";
   }
 
@@ -321,17 +445,19 @@
     try {
       const p = JSON.parse(data);
 
-      // --- CONTROLLO DUPLICATI ---
       const allSlots = document.querySelectorAll('.field-player, .bench-slot');
       allSlots.forEach(slot => {
         if (slot.dataset.playerId == p.id) {
           if (slot !== slotElement) {
-            clearSlot(slot);
+            clearSlotDOMOnly(slot);
           }
         }
       });
 
-      // Inserisci nel nuovo slot
+      if (slotElement.dataset.playerId) {
+        clearSlot(slotElement);
+      }
+
       const shirt = slotElement.querySelector('.shirt');
       const nameLabel = slotElement.querySelector('.p-name-field');
 
@@ -342,21 +468,30 @@
       slotElement.dataset.fullData = JSON.stringify(p);
       updateDetailPanel(p);
 
+      const sidebarRow = document.getElementById('row_' + p.id);
+      if(sidebarRow) sidebarRow.style.display = 'none';
+
     } catch (e) {
       console.error("Errore drop:", e);
     }
   }
 
   function clearSlot(slot) {
+    const oldId = slot.dataset.playerId;
+    if (oldId) {
+      const sidebarRow = document.getElementById('row_' + oldId);
+      if(sidebarRow) sidebarRow.style.display = 'flex';
+    }
+    clearSlotDOMOnly(slot);
+  }
+
+  function clearSlotDOMOnly(slot) {
     delete slot.dataset.playerId;
     delete slot.dataset.fullData;
-
     const shirt = slot.querySelector('.shirt');
     if(shirt) shirt.classList.remove('filled');
-
     const nameLabel = slot.querySelector('.p-name-field');
     const id = slot.id;
-
     if(nameLabel) {
       if (id.includes('GK')) nameLabel.textContent = 'PT';
       else if (id.includes('slot_D')) nameLabel.textContent = 'D';
@@ -368,7 +503,7 @@
 
   function showDetailsFromData(el) {
     const d = el.dataset;
-    updateDetailPanel({ nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass });
+    updateDetailPanel({ nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm });
   }
 
   function showDetailsFromSlot(slotElement) {
@@ -385,9 +520,11 @@
     document.getElementById('det_name').textContent = p.nome;
     document.getElementById('det_team').textContent = p.squadra;
     document.getElementById('det_role').textContent = p.ruolo;
-    document.getElementById('det_gf').textContent = p.gf;
-    document.getElementById('det_gs').textContent = p.gs;
-    document.getElementById('det_ass').textContent = p.ass;
+    document.getElementById('det_gf').textContent = p.gf || '0';
+    document.getElementById('det_gs').textContent = p.gs || '0';
+    document.getElementById('det_ass').textContent = p.ass || '0';
+    document.getElementById('det_mv').textContent = p.mv || '-';
+    document.getElementById('det_fm').textContent = p.fm || '-';
   }
 
   function resetStats() {
@@ -395,6 +532,8 @@
     document.getElementById('det_gf').textContent = "-";
     document.getElementById('det_gs').textContent = "-";
     document.getElementById('det_ass').textContent = "-";
+    document.getElementById('det_mv').textContent = "-";
+    document.getElementById('det_fm').textContent = "-";
   }
 
   function prepareSubmission() {

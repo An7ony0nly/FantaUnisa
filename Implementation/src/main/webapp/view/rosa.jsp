@@ -26,13 +26,12 @@
       min-height: 100vh;
     }
 
-    /* Modifica Top Bar per allineare search e bottone */
     .top-bar {
       display: flex;
       justify-content: center;
-      align-items: flex-end; /* Allinea in basso per pareggiare col margine */
+      align-items: flex-end;
       margin-bottom: 30px;
-      gap: 15px; /* Spazio tra search e bottone */
+      gap: 15px;
     }
 
     .search-container {
@@ -55,7 +54,6 @@
     }
     .search-icon { color: #7f8c8d; }
 
-    /* Stile del nuovo bottone Submit */
     .btn-save {
       background-color: var(--orange);
       color: white;
@@ -67,7 +65,7 @@
       text-transform: uppercase;
       box-shadow: 0 4px 15px rgba(245, 132, 40, 0.3);
       transition: transform 0.2s, background-color 0.2s;
-      height: 45px; /* Stessa altezza visuale della searchbar */
+      height: 45px;
       display: flex;
       align-items: center;
     }
@@ -111,7 +109,6 @@
     .h-c { color: var(--col-c); }
     .h-a { color: var(--col-a); }
 
-    /* Player Card ora è un DIV, non un FORM */
     .player-card {
       background: #252B36;
       margin-bottom: 10px;
@@ -122,10 +119,15 @@
       gap: 15px;
       transition: transform 0.2s;
       cursor: pointer;
+      position: relative;
     }
 
-    /* Effetto hover per tutta la card */
     .player-card:hover { transform: translateY(-3px); background: #303846; }
+
+    /* Stile per i giocatori già in rosa */
+    .player-card.already-owned {
+      border: 1px solid rgba(46, 204, 113, 0.4);
+    }
 
     .p-avatar {
       width: 40px;
@@ -151,12 +153,18 @@
       margin-right: 10px;
     }
 
-    /* Stile Checkbox più grande e visibile */
     .p-check {
       width: 20px;
       height: 20px;
       accent-color: var(--orange);
       cursor: pointer;
+    }
+
+    /* Icona check rosa */
+    .in-squad-icon {
+      color: #2ecc71;
+      font-size: 0.8rem;
+      margin-left: 5px;
     }
 
   </style>
@@ -172,107 +180,72 @@
       <input type="text" id="searchInput" placeholder="Cerca giocatore..." onkeydown="return event.key != 'Enter';">
     </div>
     <button type="submit" class="btn-save">
-      <i class="fas fa-save" style="margin-right: 8px;"></i> Crea Rosa
+      <i class="fas fa-save" style="margin-right: 8px;"></i> Salva Rosa
     </button>
   </div>
 
   <div class="grid-roles">
-    <div class="role-column col-p">
-      <div class="role-header h-p">Portieri</div>
-      <c:forEach var="player" items="${allPlayers}">
-        <c:if test="${player.ruolo eq 'P'}">
-          <div class="player-card">
-            <div class="p-avatar"><i class="fas fa-user"></i></div>
-            <div class="p-info">
-              <span class="p-name"><c:out value="${player.nome}"/></span>
-              <span class="p-team"><c:out value="${player.squadra}"/></span>
-            </div>
-            <div class="p-price"><c:out value="${player.fantamedia}"/></div>
-            <input type="checkbox" name="selectedPlayers" value="${player.id}" class="p-check"/>
-          </div>
-        </c:if>
-      </c:forEach>
-    </div>
+    <c:set var="roles" value="${fn:split('P,D,C,A', ',')}" />
+    <c:set var="roleLabels" value="${fn:split('Portieri,Difensori,Centrocampisti,Attaccanti', ',')}" />
+    <c:set var="roleClasses" value="${fn:split('p,d,c,a', ',')}" />
 
-    <div class="role-column col-d">
-      <div class="role-header h-d">Difensori</div>
-      <c:forEach var="player" items="${allPlayers}">
-        <c:if test="${player.ruolo eq 'D'}">
-          <div class="player-card">
-            <div class="p-avatar"><i class="fas fa-user"></i></div>
-            <div class="p-info">
-              <span class="p-name"><c:out value="${player.nome}"/></span>
-              <span class="p-team"><c:out value="${player.squadra}"/></span>
-            </div>
-            <div class="p-price"><c:out value="${player.fantamedia}"/></div>
-            <input type="checkbox" name="selectedPlayers" value="${player.id}" class="p-check"/>
-          </div>
-        </c:if>
-      </c:forEach>
-    </div>
+    <c:forEach var="i" begin="0" end="3">
+      <div class="role-column col-${roleClasses[i]}">
+        <div class="role-header h-${roleClasses[i]}">${roleLabels[i]}</div>
 
-    <div class="role-column col-c">
-      <div class="role-header h-c">Centrocampisti</div>
-      <c:forEach var="player" items="${allPlayers}">
-        <c:if test="${player.ruolo eq 'C'}">
-          <div class="player-card">
-            <div class="p-avatar"><i class="fas fa-user"></i></div>
-            <div class="p-info">
-              <span class="p-name"><c:out value="${player.nome}"/></span>
-              <span class="p-team"><c:out value="${player.squadra}"/></span>
-            </div>
-            <div class="p-price"><c:out value="${player.fantamedia}"/></div>
-            <input type="checkbox" name="selectedPlayers" value="${player.id}" class="p-check"/>
-          </div>
-        </c:if>
-      </c:forEach>
-    </div>
+        <c:forEach var="player" items="${allPlayers}">
+          <c:if test="${player.ruolo eq roles[i]}">
 
-    <div class="role-column col-a">
-      <div class="role-header h-a">Attaccanti</div>
-      <c:forEach var="player" items="${allPlayers}">
-        <c:if test="${player.ruolo eq 'A'}">
-          <div class="player-card">
-            <div class="p-avatar"><i class="fas fa-user"></i></div>
-            <div class="p-info">
-              <span class="p-name"><c:out value="${player.nome}"/></span>
-              <span class="p-team"><c:out value="${player.squadra}"/></span>
+            <%-- Logica per controllare se il giocatore è già in rosa --%>
+            <c:set var="isOwned" value="false" />
+            <c:forEach var="owned" items="${mySquad.players}">
+              <c:if test="${owned.id == player.id}">
+                <c:set var="isOwned" value="true" />
+              </c:if>
+            </c:forEach>
+
+            <div class="player-card ${isOwned ? 'already-owned' : ''}">
+              <div class="p-avatar"><i class="fas fa-user"></i></div>
+              <div class="p-info">
+                <span class="p-name">
+                  <c:out value="${player.nome}"/>
+                  <c:if test="${isOwned}">
+                    <i class="fas fa-check-circle in-squad-icon" title="Già nella tua rosa"></i>
+                  </c:if>
+                </span>
+                <span class="p-team"><c:out value="${player.squadra}"/></span>
+              </div>
+              <div class="p-price"><c:out value="${player.fantamedia}"/></div>
+
+                <%-- La checkbox apparirà pre-selezionata se il giocatore è già in rosa --%>
+              <input type="checkbox" name="selectedPlayers" value="${player.id}" class="p-check"
+                ${isOwned ? 'checked' : ''} />
             </div>
-            <div class="p-price"><c:out value="${player.fantamedia}"/></div>
-            <input type="checkbox" name="selectedPlayers" value="${player.id}" class="p-check"/>
-          </div>
-        </c:if>
-      </c:forEach>
-    </div>
+          </c:if>
+        </c:forEach>
+      </div>
+    </c:forEach>
   </div>
 
-</form> <script>
+</form>
+
+<script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Seleziona l'input di ricerca e tutte le card dei giocatori
     const searchInput = document.getElementById('searchInput');
     const playerCards = document.querySelectorAll('.player-card');
 
     searchInput.addEventListener('input', function(e) {
       const searchText = e.target.value.toLowerCase();
-
       playerCards.forEach(card => {
         const name = card.querySelector('.p-name').textContent.toLowerCase();
         const team = card.querySelector('.p-team').textContent.toLowerCase();
-
-        if (name.includes(searchText) || team.includes(searchText)) {
-          card.style.display = "flex";
-        } else {
-          card.style.display = "none";
-        }
+        card.style.display = (name.includes(searchText) || team.includes(searchText)) ? "flex" : "none";
       });
     });
 
-    // Opzionale: Cliccare sulla card seleziona la checkbox
     playerCards.forEach(card => {
       card.addEventListener('click', function(e) {
-        // Se si clicca direttamente sulla checkbox, non fare nulla (lascia il comportamento default)
         if (e.target.tagName === 'INPUT') return;
-
         const checkbox = this.querySelector('input[type="checkbox"]');
         checkbox.checked = !checkbox.checked;
       });

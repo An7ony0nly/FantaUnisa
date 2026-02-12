@@ -33,19 +33,16 @@ public class AuthFilter implements Filter {
     // 3. RISORSE GESTORE UTENTI
     private static final String[] USER_ADMIN_URLS = {
             "/view/admin_moderation.jsp",
-            "/ReportServlet",
-            "/BanUserServlet",      // Se esiste
-            "/DeleteContentServlet" // Se esiste
+            "/BanUserServlet",
+            "/DeleteContentServlet"
     };
 
-    // 4. RISORSE FANTALLENATORE
+    // 4. RISORSE FANTALLENATORE (E GIOCO)
     private static final String[] GAME_URLS = {
             "/view/rosa.jsp",
             "/view/formazione.jsp",
-            "/view/community.jsp",
             "/SquadServlet",
             "/FormationServlet",
-            "/PostServlet",
             "/ModuleServlet",
             "/CommentServlet",
             "/ReactionServlet",
@@ -63,7 +60,7 @@ public class AuthFilter implements Filter {
         String uri = request.getRequestURI();
         String contextPath = request.getContextPath();
 
-
+        // 1. Controllo Risorse Pubbliche
         for (String publicUrl : PUBLIC_URLS) {
             if (uri.contains(publicUrl)) {
                 chain.doFilter(request, response);
@@ -71,7 +68,7 @@ public class AuthFilter implements Filter {
             }
         }
 
-
+        // 2. Controllo Login
         boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
         if (!isLoggedIn) {
             response.sendRedirect(contextPath + "/view/login.jsp");
@@ -81,7 +78,7 @@ public class AuthFilter implements Filter {
         User user = (User) session.getAttribute("user");
         Role role = user.getRole();
 
-
+        // 3. Controllo GESTORE DATI
         for (String url : DATA_ADMIN_URLS) {
             if (uri.contains(url)) {
                 if (!role.equals(Role.GESTORE_DATI)) {
@@ -91,7 +88,7 @@ public class AuthFilter implements Filter {
             }
         }
 
-
+        // 4. Controllo GESTORE UTENTI
         for (String url : USER_ADMIN_URLS) {
             if (uri.contains(url)) {
                 if (!role.equals(Role.GESTORE_UTENTI)) {
@@ -101,21 +98,19 @@ public class AuthFilter implements Filter {
             }
         }
 
-
+        /* 5. Controllo RISORSE GIOCO
+           MODIFICA: Ora permettiamo l'accesso anche agli Admin (Gestore Utenti e Dati)
+           invece di reindirizzarli altrove.
+        */
         for (String url : GAME_URLS) {
             if (uri.contains(url)) {
-                if (!role.equals(Role.FANTALLENATORE)) {
-                    System.out.println("Admin " + user.getEmail() + " ha tentato di accedere al gioco.");
-
-                    if(role.equals(Role.GESTORE_DATI)) {
-                        response.sendRedirect(contextPath + "/view/admin_upload.jsp");
-                    } else if (role.equals(Role.GESTORE_UTENTI)) {
-                        response.sendRedirect(contextPath + "/view/admin_moderation.jsp");
-                    } else {
-                        response.sendRedirect(contextPath + "/view/index.jsp");
-                    }
+                // Se NON sei nessuno dei tre ruoli autorizzati (quindi un ruolo sconosciuto o errato), via.
+                // In pratica qui lasciamo passare tutti i ruoli definiti (Fantallenatore, Gestore Utenti, Gestore Dati)
+                if (!role.equals(Role.FANTALLENATORE) && !role.equals(Role.GESTORE_UTENTI) && !role.equals(Role.GESTORE_DATI)) {
+                    response.sendRedirect(contextPath + "/view/index.jsp");
                     return;
                 }
+                // Se sei uno di questi tre, passi.
             }
         }
 

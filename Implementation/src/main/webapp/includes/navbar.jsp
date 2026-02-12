@@ -268,7 +268,7 @@
         ESCI <i class="fas fa-sign-out-alt"></i>
     </a>
     <%
-        }else{
+    }else{
     %>
     <a href="${pageContext.request.contextPath}/view/login.jsp" class="auth-btn-top">
         ACCEDI / REGISTRATI <i class="fas fa-user"></i>
@@ -286,6 +286,10 @@
 
         <div class="navbar-grid">
 
+            <%
+                Role role = (user != null) ? user.getRole() : null;
+            %>
+
             <a href="${pageContext.request.contextPath}/PostServlet" class="nav-btn level-low">
                 <span>Community</span>
             </a>
@@ -295,20 +299,19 @@
             </a>
 
             <%
-                Role role = (Role) session.getAttribute("role");
-                if (role==null || role==Role.FANTALLENATORE ){
+                if (role == null || role == Role.FANTALLENATORE) {
             %>
             <a href="${pageContext.request.contextPath}/view/index.jsp" class="logo-btn level-top">
                 <img class="palla" src="${pageContext.request.contextPath}/images/palla.png">
             </a>
             <%
-            }else if(role==Role.GESTORE_UTENTI){
+            } else if (role == Role.GESTORE_UTENTI) {
             %>
-            <a href="${pageContext.request.contextPath}/ReportServlet" class="logo-btn level-top">
+            <a href="${pageContext.request.contextPath}/view/admin_moderation.jsp" class="logo-btn level-top">
                 <img class="palla" src="${pageContext.request.contextPath}/images/palla.png">
             </a>
             <%
-            }else if(role==Role.GESTORE_DATI){
+            } else if (role == Role.GESTORE_DATI) {
             %>
             <a href="${pageContext.request.contextPath}/view/admin_upload.jsp" class="logo-btn level-top">
                 <img class="palla" src="${pageContext.request.contextPath}/images/palla.png">
@@ -316,6 +319,7 @@
             <%
                 }
             %>
+
             <a href="${pageContext.request.contextPath}/view/statistiche.jsp" class="nav-btn level-high">
                 <span>Statistiche</span>
             </a>
