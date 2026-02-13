@@ -43,7 +43,7 @@ public class FormationServlet extends HttpServlet {
         FormationAI aiEngine = new FormationAI();
         currentGiornata = aiEngine.findUpcomingGiornata(calendarFile);
 
-        // 2. Carica le statistiche per TUTTI i giocatori (per la sidebar)
+        // 2. Carica le statistiche complete
         String csvDirPath = getServletContext().getRealPath("/resources/csv/");
         File csvDir = new File(csvDirPath);
         Map<Integer, PlayerStats> statsMap = new HashMap<>();
@@ -52,20 +52,27 @@ public class FormationServlet extends HttpServlet {
         }
         request.setAttribute("statsMap", statsMap);
 
-        // 3. Esegui AI se richiesto (per il suggerimento formazione)
+        // 3. Esegui AI se richiesto (con Modulo Forzato)
         String aiParam = request.getParameter("ai");
+        String forcedModule = request.getParameter("modulo"); // LEGGE IL MODULO
+
         if ("true".equals(aiParam) && mySquad != null) {
             try {
                 List<Integer> playerIds = new ArrayList<>();
                 for (Player p : mySquad.getPlayers()) playerIds.add(p.getId());
 
                 if (csvDir.exists()) {
-                    Map<String, List<PlayerStats>> aiSuggestion = aiEngine.generateFormationWithMatchup(csvDir, calendarFile, playerIds);
+                    // Passa 'forcedModule' all'engine
+                    Map<String, List<PlayerStats>> aiSuggestion = aiEngine.generateFormationWithMatchup(csvDir, calendarFile, playerIds, forcedModule);
+
                     if (aiSuggestion.isEmpty()) {
-                        request.setAttribute("aiError", "Statistiche non trovate. Controlla i file CSV.");
+                        request.setAttribute("aiError", "Statistiche non trovate.");
                     } else {
                         request.setAttribute("aiSuggestion", aiSuggestion);
-                        request.setAttribute("aiMessage", "Formazione calcolata per la Giornata " + currentGiornata + "!");
+                        String msg = "Formazione calcolata";
+                        if(forcedModule != null) msg += " per modulo " + forcedModule;
+                        request.setAttribute("aiMessage", msg);
+                        request.setAttribute("selectedModule", forcedModule); // Mantiene la selezione
                     }
                 }
             } catch (Exception e) { e.printStackTrace(); request.setAttribute("aiError", "Errore AI: " + e.getMessage()); }

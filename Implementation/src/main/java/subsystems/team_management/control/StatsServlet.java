@@ -14,39 +14,41 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// Questo URL mappa la servlet quando clicchi "Statistiche"
 @WebServlet("/Statistiche")
 public class StatsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // 1. Recupera tutti i giocatori usando il motore AI esistente
+        // 1. Inizializza AI Engine e Trova CSV
         FormationAI aiEngine = new FormationAI();
         String csvDirPath = getServletContext().getRealPath("/resources/csv/");
         File csvDir = new File(csvDirPath);
 
-        // Otteniamo la mappa ID -> PlayerStats e la convertiamo in una Lista
+        // 2. Recupera Mappa Giocatori (ID -> Stats)
         Map<Integer, PlayerStats> statsMap = aiEngine.getAllPlayerStats(csvDir);
         List<PlayerStats> allPlayers = new ArrayList<>(statsMap.values());
 
+        // Controllo Sicurezza: Se non ci sono dati, non crashare
         if (allPlayers.isEmpty()) {
-            request.setAttribute("error", "Nessun dato statistico trovato.");
+            request.setAttribute("error", "Nessun dato trovato. Verifica i file CSV.");
             request.getRequestDispatcher("view/statistiche.jsp").forward(request, response);
             return;
         }
 
-        // ---------------------------------------------------
-        // LOGICA 1: TOP PLAYERS (Ordina per FantaMedia decrescente)
-        // ---------------------------------------------------
+        // =================================================================
+        // LOGICA 1: TOP 20 GIOCATORI (Ordinati per FantaMedia)
+        // =================================================================
         List<PlayerStats> topPlayers = allPlayers.stream()
-                .sorted((p1, p2) -> Double.compare(p2.getFantaMedia(), p1.getFantaMedia())) // Ordine decrescente
-                .limit(15) // Prendi solo i primi 15
+                .sorted((p1, p2) -> Double.compare(p2.getFantaMedia(), p1.getFantaMedia())) // Decrescente
+                .limit(20) // Mostra i primi 20
                 .collect(Collectors.toList());
 
-        // ---------------------------------------------------
-        // LOGICA 2: CLASSIFICA SQUADRE (Indice di Difficoltà)
-        // ---------------------------------------------------
+        // =================================================================
+        // LOGICA 2: CLASSIFICA SQUADRE (Con Bonus Attacco e Malus Difesa)
+        // =================================================================
+
+        // Raggruppa i giocatori per Squadra
         Map<String, List<PlayerStats>> playersByTeam = allPlayers.stream()
                 .collect(Collectors.groupingBy(PlayerStats::getSquadra));
 
@@ -56,29 +58,43 @@ public class StatsServlet extends HttpServlet {
             String teamName = entry.getKey();
             List<PlayerStats> roster = entry.getValue();
 
-            // Calcolo Indice: Media delle Fantamedie dei migliori 11 giocatori della squadra
-            // Moltiplichiamo per 10 per avere un indice su base 100 (es. media 6.5 -> Indice 65)
+            // A. Media Base (Top 14 giocatori)
+            // Prendiamo solo i giocatori che "giocano" davvero per valutare la forza della squadra
             double avgFantaMedia = roster.stream()
                     .mapToDouble(PlayerStats::getFantaMedia)
                     .sorted()
-                    .skip(Math.max(0, roster.size() - 14)) // Prendi i migliori 14 (titolari + riserve top)
+                    .skip(Math.max(0, roster.size() - 14)) // Salta i peggiori, tieni i migliori 14
                     .average()
                     .orElse(0.0);
 
-            double difficultyIndex = avgFantaMedia * 10;
+            // B. Bonus Gol Fatti (Attacco) - Somma GF di tutta la rosa
+            double totalGoals = roster.stream().mapToInt(PlayerStats::getGoalFatti).sum();
 
-            // Normalizziamo visivamente (se supera 100 lo tronchiamo, ma nel calcio è raro)
+            // C. Malus Gol Subiti (Difesa - Gs) - Somma GS di tutta la rosa
+            double totalConceded = roster.stream().mapToInt(PlayerStats::getGolSubiti).sum();
+
+            // --- FORMULA DELL'INDICE DI DIFFICOLTÀ ---
+            // Base: Media * 10 (es. 6.5 -> 65)
+            // Bonus: +0.2 per ogni gol fatto
+            // Malus: -0.5 per ogni gol subito (pesa di più per penalizzare le difese deboli)
+            double difficultyIndex = (avgFantaMedia * 10) + (totalGoals * 0.2) - (totalConceded * 0.5);
+
+            // Normalizzazione (minimo 0, massimo 100)
             if (difficultyIndex > 100) difficultyIndex = 100;
+            if (difficultyIndex < 0) difficultyIndex = 0; // Evita numeri negativi per squadre disastrose
 
-            teamRanking.add(new TeamStats(teamName, difficultyIndex));
+            // Aggiungi solo se il nome della squadra è valido
+            if (teamName != null && !teamName.isEmpty() && !teamName.equalsIgnoreCase("null")) {
+                teamRanking.add(new TeamStats(teamName, difficultyIndex));
+            }
         }
 
-        // Ordina le squadre per indice decrescente (più forte in alto)
+        // Ordina decrescente (Chi ha l'indice più alto è più forte)
         teamRanking.sort((t1, t2) -> Double.compare(t2.getIndiceDifficolta(), t1.getIndiceDifficolta()));
 
-        // ---------------------------------------------------
-        // INVIO ALLA JSP
-        // ---------------------------------------------------
+        // =================================================================
+        // INVIO DATI ALLA JSP
+        // =================================================================
         request.setAttribute("topPlayers", topPlayers);
         request.setAttribute("teamStats", teamRanking);
 

@@ -18,9 +18,11 @@ public class FormationAI {
     };
 
     private Map<String, String> opponentMap = new HashMap<>();
-    private Map<String, int[]> teamStrength = new HashMap<>();
 
-    // --- NUOVO METODO: Restituisce la mappa completa delle statistiche per la JSP ---
+    // Mappa per salvare l'Indice di Difficoltà (0-100) di ogni squadra
+    private Map<String, Double> teamDifficultyMap = new HashMap<>();
+
+    // --- 1. RECUPERA TUTTI I GIOCATORI ---
     public Map<Integer, PlayerStats> getAllPlayerStats(File csvDir) {
         Map<Integer, PlayerStats> map = new HashMap<>();
         if (csvDir == null || !csvDir.exists()) return map;
@@ -28,28 +30,175 @@ public class FormationAI {
         File[] files = csvDir.listFiles((dir, name) -> name.startsWith("Statistiche") && name.endsWith(".csv"));
         if (files == null || files.length == 0) return map;
 
-        // Prendi l'ultimo file disponibile (il più recente)
         Arrays.sort(files, (f1, f2) -> Integer.compare(extractGiornata(f1.getName()), extractGiornata(f2.getName())));
         File lastFile = files[files.length - 1];
 
+        // Carica calendario per le avversarie
+        File calendarFile = new File(csvDir, "Calendario.csv");
+        if(calendarFile.exists()) {
+            int day = findUpcomingGiornata(calendarFile);
+            loadCalendarForDay(calendarFile, day);
+        }
+
         List<PlayerStats> list = loadStatsFromCsv(lastFile.getAbsolutePath());
         for (PlayerStats p : list) {
+            String opp = opponentMap.getOrDefault(p.getSquadra(), "--");
+            p.setProssimaAvversaria(opp);
             map.put(p.getId(), p);
         }
         return map;
     }
 
-    // --- 1. TROVA GIORNATA ---
+    // --- 2. METODO PRINCIPALE GENERAZIONE (MODIFICATO) ---
+    public Map<String, List<PlayerStats>> generateFormationWithMatchup(File csvDir, File calendarFile, List<Integer> userSquadIds, String forcedModule) {
+        int targetDay = findUpcomingGiornata(calendarFile);
+
+        File[] files = csvDir.listFiles((dir, name) -> name.startsWith("Statistiche") && name.endsWith(".csv"));
+        if (files == null || files.length == 0) return new HashMap<>();
+
+        Arrays.sort(files, (f1, f2) -> Integer.compare(extractGiornata(f1.getName()), extractGiornata(f2.getName())));
+
+        List<PlayerStats> currentStats = loadStatsFromCsv(files[files.length - 1].getAbsolutePath());
+
+        // CALCOLA LA FORZA DI TUTTE LE SQUADRE (Per il fattore avversario)
+        calculateAllTeamDifficulties(currentStats);
+
+        loadCalendarForDay(calendarFile, targetDay);
+
+        // Storico per trend
+        Map<Integer, List<Double>> historyFm = new HashMap<>();
+        for (File f : files) {
+            List<PlayerStats> stats = loadStatsFromCsv(f.getAbsolutePath());
+            for (PlayerStats p : stats) historyFm.computeIfAbsent(p.getId(), k -> new ArrayList<>()).add(p.getFantaMedia());
+        }
+
+        List<PlayerStats> mySquadStats = currentStats.stream()
+                .filter(p -> userSquadIds.contains(p.getId()))
+                .collect(Collectors.toList());
+
+        // --- CUORE DEL CALCOLO PUNTEGGIO ---
+        for (PlayerStats p : mySquadStats) {
+
+            // 1. Punteggio Base: Mix FantaMedia (60%) e MediaVoto (40%)
+            //    Chi ha un'ottima media voto è più affidabile di chi ha solo fortuna coi bonus.
+            double basePerformance = (p.getFantaMedia() * 0.6) + (p.getMediaVoto() * 0.4);
+
+            // 2. Bonus Assist: Aggiungiamo valore per chi fa assist
+            //    Calcoliamo la media assist a partita e la moltiplichiamo per un peso (es. 2.0)
+            double assistFactor = 0;
+            if (p.getPartiteVoto() > 0) {
+                double avgAssist = (double) p.getAssist() / p.getPartiteVoto();
+                assistFactor = avgAssist * 2.0;
+            }
+
+            double scoreWithStats = basePerformance + assistFactor;
+
+            // 3. Trend Storico (Piccolo aggiustamento se è in forma)
+            double trendScore = applyTrend(scoreWithStats, historyFm.get(p.getId()), p.getFantaMedia());
+
+            // 4. Setta Avversaria
+            String oppTeamName = opponentMap.getOrDefault(p.getSquadra(), "Riposo");
+            p.setProssimaAvversaria(oppTeamName);
+
+            // 5. FATTORE AVVERSARIO (IL PIÙ IMPORTANTE)
+            //    Modifica drasticamente il voto in base alla forza dell'avversario
+            double finalScore = applyOpponentDifficultyFactor(p, trendScore, oppTeamName);
+
+            p.setAiScore(finalScore);
+        }
+
+        List<PlayerStats> por = getByRole(mySquadStats, "P");
+        List<PlayerStats> dif = getByRole(mySquadStats, "D");
+        List<PlayerStats> cen = getByRole(mySquadStats, "C");
+        List<PlayerStats> att = getByRole(mySquadStats, "A");
+
+        sortPlayers(por); sortPlayers(dif); sortPlayers(cen); sortPlayers(att);
+
+        if (forcedModule != null && !forcedModule.isEmpty()) {
+            return generateForSpecificModule(por, dif, cen, att, forcedModule);
+        } else {
+            return selectBestModule(por, dif, cen, att);
+        }
+    }
+
+    // --- CALCOLO DIFFICOLTÀ SQUADRE (Identico alla Servlet Statistiche) ---
+    private void calculateAllTeamDifficulties(List<PlayerStats> allPlayers) {
+        teamDifficultyMap.clear();
+        Map<String, List<PlayerStats>> byTeam = allPlayers.stream().collect(Collectors.groupingBy(PlayerStats::getSquadra));
+
+        for (Map.Entry<String, List<PlayerStats>> entry : byTeam.entrySet()) {
+            List<PlayerStats> roster = entry.getValue();
+            // Media top 14
+            double avgFm = roster.stream().mapToDouble(PlayerStats::getFantaMedia)
+                    .sorted().skip(Math.max(0, roster.size() - 14)).average().orElse(0.0);
+
+            double gf = roster.stream().mapToInt(PlayerStats::getGoalFatti).sum();
+            double gs = roster.stream().mapToInt(PlayerStats::getGolSubiti).sum();
+
+            // Indice 0-100
+            double index = (avgFm * 10) + (gf * 0.2) - (gs * 0.5);
+            teamDifficultyMap.put(entry.getKey(), index);
+        }
+    }
+
+    // --- CALCOLO FATTORE AVVERSARIO (IMPORTANTE) ---
+    private double applyOpponentDifficultyFactor(PlayerStats p, double currentScore, String opponentName) {
+        if (opponentName.equals("Riposo") || opponentName.equals("--")) return currentScore * 0.5; // Malus se riposa
+
+        // Recupera la forza dell'avversario (Default 50 se non trovata)
+        double oppStrength = teamDifficultyMap.getOrDefault(opponentName, 50.0);
+
+        // Normalizziamo la forza (0 = debolissimo, 100 = fortissimo)
+        // Creiamo un moltiplicatore.
+        // Se avversario è forte (80), fattore < 1 (Malus).
+        // Se avversario è debole (20), fattore > 1 (Bonus).
+
+        double difficultyImpact = 0.0;
+
+        // Logica Differenziata per Ruolo
+        if (p.getRuolo().equalsIgnoreCase("P") || p.getRuolo().equalsIgnoreCase("D")) {
+            // DIFENSORI/PORTIERI: Soffrono avversari forti
+            // Esempio: OppStrength 80 -> (50 - 80) = -30 -> Impact negativo
+            difficultyImpact = (50.0 - oppStrength) / 100.0;
+        } else {
+            // ATTACCANTI/CENTROCAMPISTI: Soffrono difese forti?
+            // Qui assumiamo che Indice Alto = Squadra Forte in generale (difesa e attacco).
+            // Quindi giocare contro una squadra con indice alto è sempre difficile.
+            difficultyImpact = (50.0 - oppStrength) / 100.0;
+        }
+
+        // PESO DELL'AVVERSARIO
+        // Hai chiesto "un po' più importante". Moltiplichiamo l'impatto per 1.5
+        // Esempio: Contro l'Inter (Forte, 85): (50-85)/100 = -0.35 * 1.5 = -0.52.
+        // Il giocatore perde il 52% del suo valore!
+        double weight = 1.5;
+        double multiplier = 1.0 + (difficultyImpact * weight);
+
+        // Evitiamo moltiplicatori negativi
+        if (multiplier < 0.1) multiplier = 0.1;
+
+        return currentScore * multiplier;
+    }
+
+    private double applyTrend(double score, List<Double> history, double currentFm) {
+        if (history == null || history.isEmpty()) return score;
+        double pastAvg = 0; int count = 0;
+        for (int i = 0; i < history.size() - 1; i++) { pastAvg += history.get(i); count++; }
+        if (count > 0) pastAvg /= count; else pastAvg = currentFm;
+
+        double diff = currentFm - pastAvg;
+        // Trend pesa poco (0.1), giusto per favorire chi è in forma
+        return score * (1.0 + (diff * 0.1));
+    }
+
+    // --- METODI STANDARD E PARSER (INVARIATI) ---
     public int findUpcomingGiornata(File calendarFile) {
         if (calendarFile == null || !calendarFile.exists()) return 1;
-
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         TreeMap<LocalDate, Integer> schedule = new TreeMap<>();
-
         try (BufferedReader br = new BufferedReader(new FileReader(calendarFile))) {
-            String line;
-            br.readLine();
+            String line; br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length >= 3) {
@@ -61,149 +210,52 @@ public class FormationAI {
                     } catch(Exception e) { }
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
-
+        } catch (Exception e) { }
         for (Map.Entry<LocalDate, Integer> entry : schedule.entrySet()) {
-            if (entry.getKey().isEqual(today) || entry.getKey().isAfter(today)) {
-                return entry.getValue();
-            }
+            if (entry.getKey().isEqual(today) || entry.getKey().isAfter(today)) return entry.getValue();
         }
         return 38;
-    }
-
-    // --- 2. GENERA FORMAZIONE ---
-    public Map<String, List<PlayerStats>> generateFormationWithMatchup(File csvDir, File calendarFile, List<Integer> userSquadIds) {
-        int targetDay = findUpcomingGiornata(calendarFile);
-
-        File[] files = csvDir.listFiles((dir, name) -> name.startsWith("Statistiche") && name.endsWith(".csv"));
-        if (files == null || files.length == 0) return new HashMap<>();
-
-        Arrays.sort(files, (f1, f2) -> Integer.compare(extractGiornata(f1.getName()), extractGiornata(f2.getName())));
-
-        List<PlayerStats> currentStats = loadStatsFromCsv(files[files.length - 1].getAbsolutePath());
-        calculateTeamStrengths(files);
-        loadCalendarForDay(calendarFile, targetDay);
-
-        Map<Integer, List<Double>> historyFm = new HashMap<>();
-        for (File f : files) {
-            List<PlayerStats> stats = loadStatsFromCsv(f.getAbsolutePath());
-            for (PlayerStats p : stats) historyFm.computeIfAbsent(p.getId(), k -> new ArrayList<>()).add(p.getFantaMedia());
-        }
-
-        List<PlayerStats> mySquadStats = currentStats.stream()
-                .filter(p -> userSquadIds.contains(p.getId()))
-                .collect(Collectors.toList());
-
-        for (PlayerStats p : mySquadStats) {
-            double baseScore = calculateTrendScore(p, historyFm.get(p.getId()));
-            double finalScore = applyMatchupFactor(p, baseScore);
-            p.setAiScore(finalScore);
-        }
-
-        List<PlayerStats> por = getByRole(mySquadStats, "P");
-        List<PlayerStats> dif = getByRole(mySquadStats, "D");
-        List<PlayerStats> cen = getByRole(mySquadStats, "C");
-        List<PlayerStats> att = getByRole(mySquadStats, "A");
-
-        sortPlayers(por); sortPlayers(dif); sortPlayers(cen); sortPlayers(att);
-
-        Map<String, List<PlayerStats>> result = selectBestModule(por, dif, cen, att);
-
-        if(!result.isEmpty()) {
-            result.put("NEXT_DAY_INFO", new ArrayList<>());
-            result.get("NEXT_DAY_INFO").add(new PlayerStats(targetDay, "", "", "", 0, 0, 0, 0, 0));
-        }
-        return result;
     }
 
     private void loadCalendarForDay(File calendarFile, int day) {
         opponentMap.clear();
         if (calendarFile == null || !calendarFile.exists()) return;
-
         try (BufferedReader br = new BufferedReader(new FileReader(calendarFile))) {
-            String line;
-            br.readLine();
+            String line; br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length >= 5) {
                     try {
                         int g = Integer.parseInt(parts[2].trim());
                         if (g == day) {
-                            String casa = parts[3].trim();
-                            String ospite = parts[4].trim();
-                            opponentMap.put(casa, ospite);
-                            opponentMap.put(ospite, casa);
+                            String casa = parts[3].trim(); String ospite = parts[4].trim();
+                            opponentMap.put(casa, ospite); opponentMap.put(ospite, casa);
                         }
                     } catch(NumberFormatException e) {}
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { }
     }
 
-    // --- HELPERS ---
-    private void calculateTeamStrengths(File[] files) {
-        if (files.length > 0) {
-            List<PlayerStats> lastStats = loadStatsFromCsv(files[files.length-1].getAbsolutePath());
-            teamStrength.clear();
-            for (PlayerStats p : lastStats) {
-                teamStrength.putIfAbsent(p.getSquadra(), new int[]{0, 0});
-                teamStrength.get(p.getSquadra())[0] += p.getGoalFatti();
-            }
-            for (String team : teamStrength.keySet()) {
-                int gf = teamStrength.get(team)[0];
-                teamStrength.get(team)[1] = 50 - (gf / 2);
-            }
-        }
-    }
-
-    private double calculateTrendScore(PlayerStats p, List<Double> history) {
-        if (history == null || history.isEmpty()) return p.getAiScore();
-        double currentFm = p.getFantaMedia();
-        double pastAvg = 0;
-        int count = 0;
-        for (int i = 0; i < history.size() - 1; i++) {
-            pastAvg += history.get(i);
-            count++;
-        }
-        if (count > 0) pastAvg /= count; else pastAvg = currentFm;
-        double diff = currentFm - pastAvg;
-        double trendFactor = 1.0 + (diff * 0.2);
-        return p.getAiScore() * trendFactor;
-    }
-
-    private double applyMatchupFactor(PlayerStats p, double score) {
-        String myTeam = p.getSquadra();
-        String opponent = null;
-        for(String k : opponentMap.keySet()) if(k.equalsIgnoreCase(myTeam)) opponent = opponentMap.get(k);
-        if (opponent == null) return score;
-
-        int[] oppStats = new int[]{20, 20}; // default
-        for(String k : teamStrength.keySet()) if(k.equalsIgnoreCase(opponent)) oppStats = teamStrength.get(k);
-
-        int oppGoalsScored = oppStats[0];
-        int oppGoalsConceded = oppStats[1];
-        double modifier = 1.0;
-
-        if (p.getRuolo().equalsIgnoreCase("P") || p.getRuolo().equalsIgnoreCase("D")) {
-            if (oppGoalsScored > 35) modifier -= 0.15;
-            else if (oppGoalsScored > 25) modifier -= 0.05;
-            else if (oppGoalsScored < 15) modifier += 0.10;
-        } else if (p.getRuolo().equalsIgnoreCase("A")) {
-            if (oppGoalsConceded > 35) modifier += 0.15;
-            else if (oppGoalsConceded > 25) modifier += 0.05;
-            else if (oppGoalsConceded < 15) modifier -= 0.10;
-        }
-        if (p.getRuolo().equalsIgnoreCase("C")) {
-            if (oppGoalsConceded > 30) modifier += 0.05;
-            if (oppGoalsScored > 30) modifier -= 0.05;
-        }
-        return score * modifier;
+    private Map<String, List<PlayerStats>> generateForSpecificModule(List<PlayerStats> por, List<PlayerStats> dif, List<PlayerStats> cen, List<PlayerStats> att, String moduleStr) {
+        Map<String, List<PlayerStats>> f = new HashMap<>();
+        try {
+            String[] parts = moduleStr.split("-");
+            int nDif = Integer.parseInt(parts[0]);
+            int nCen = Integer.parseInt(parts[1]);
+            int nAtt = Integer.parseInt(parts[2]);
+            f.put("P", por.stream().limit(1).collect(Collectors.toList()));
+            f.put("D", dif.stream().limit(nDif).collect(Collectors.toList()));
+            f.put("C", cen.stream().limit(nCen).collect(Collectors.toList()));
+            f.put("A", att.stream().limit(nAtt).collect(Collectors.toList()));
+        } catch (Exception e) { return selectBestModule(por, dif, cen, att); }
+        return f;
     }
 
     private Map<String, List<PlayerStats>> selectBestModule(List<PlayerStats> por, List<PlayerStats> dif, List<PlayerStats> cen, List<PlayerStats> att) {
         int[] bestModule = null; double bestTotalScore = -Double.MAX_VALUE;
         for (int[] modulo : MODULI) {
-            int nDif = modulo[0]; int nCen = modulo[1]; int nAtt = modulo[2];
+            int nDif = modulo[0], nCen = modulo[1], nAtt = modulo[2];
             if (dif.size() >= nDif && cen.size() >= nCen && att.size() >= nAtt && !por.isEmpty()) {
                 double currentScore = por.get(0).getAiScore() + sumScore(dif, nDif) + sumScore(cen, nCen) + sumScore(att, nAtt);
                 if (currentScore > bestTotalScore) { bestTotalScore = currentScore; bestModule = modulo; }
@@ -224,21 +276,33 @@ public class FormationAI {
     public List<PlayerStats> loadStatsFromCsv(String path) {
         List<PlayerStats> stats = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line; br.readLine();
+            String line;
+            br.mark(4096);
+            String firstLine = br.readLine();
+            if (firstLine != null && (firstLine.toLowerCase().contains("ruolo") || firstLine.toLowerCase().contains("nome"))) { } else { br.reset(); }
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                if (values.length > 7) {
+                if (line.trim().isEmpty()) continue;
+                String[] values = line.contains(";") ? line.split(";") : line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                if (values.length > 8) {
                     try {
-                        int id = Integer.parseInt(values[0]); String ruolo = values[1]; String nome = values[2]; String squadra = values[3];
-                        int pv = Integer.parseInt(values[4]); double mv = parseDouble(values[5]); double fm = parseDouble(values[6]);
-                        int gf = Integer.parseInt(values[7]); int ass = 0;
-                        if(values.length > 13) ass = Integer.parseInt(values[13]);
-                        stats.add(new PlayerStats(id, ruolo, nome, squadra, pv, mv, fm, gf, ass));
+                        int id = parseIntSafe(values[0]);
+                        String ruolo = values[1].replace("\"", "").trim();
+                        String nome = values[2].replace("\"", "").trim();
+                        String squadra = values[3].replace("\"", "").trim();
+                        int pv = parseIntSafe(values[4]);
+                        double mv = parseDoubleSafe(values[5]);
+                        double fm = parseDoubleSafe(values[6]);
+                        int gf = parseIntSafe(values[7]);
+                        int gs = parseIntSafe(values[8]);
+                        int ass = 0;
+                        if(values.length > 13) ass = parseIntSafe(values[13]);
+                        stats.add(new PlayerStats(id, ruolo, nome, squadra, pv, mv, fm, gf, gs, ass));
                     } catch (Exception e) {}
                 }
             }
         } catch (Exception e) { e.printStackTrace(); }
         return stats;
     }
-    private double parseDouble(String val) { if (val == null || val.isEmpty()) return 0.0; return Double.parseDouble(val.replace(",", ".")); }
+    private double parseDoubleSafe(String val) { if (val == null) return 0.0; val = val.replace("\"", "").trim().replace(",", "."); if (val.isEmpty() || val.equals("-")) return 0.0; try { return Double.parseDouble(val); } catch (Exception e) { return 0.0; } }
+    private int parseIntSafe(String val) { if (val == null) return 0; val = val.replace("\"", "").trim(); if (val.isEmpty() || val.equals("-")) return 0; try { return Integer.parseInt(val); } catch (Exception e) { return 0; } }
 }

@@ -320,7 +320,7 @@
                 }
             %>
 
-            <a href="${pageContext.request.contextPath}/view/statistiche.jsp" class="nav-btn level-high">
+            <a href="${pageContext.request.contextPath}/Statistiche" class="nav-btn level-high">
                 <span>Statistiche</span>
             </a>
 

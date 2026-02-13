@@ -165,6 +165,11 @@
           <c:set var="pStats" value="${statsMap[player.id]}" />
           <c:set var="mediaVoto" value="${not empty pStats ? pStats.mediaVoto : '0.0'}" />
           <c:set var="fantaMedia" value="${not empty pStats ? pStats.fantaMedia : '0.0'}" />
+          <c:set var="golFatti" value="${not empty pStats ? pStats.goalFatti : 0}" />
+          <c:set var="golSubiti" value="${not empty pStats ? pStats.golSubiti : 0}" />
+          <c:set var="assist" value="${not empty pStats ? pStats.assist : 0}" />
+
+          <c:set var="nextOpp" value="${not empty pStats.prossimaAvversaria ? pStats.prossimaAvversaria : '--'}" />
 
           <div class="player-row"
                id="row_${player.id}"
@@ -175,13 +180,14 @@
                data-nome="${player.nome}"
                data-squadra="${player.squadra}"
                data-ruolo="${player.ruolo}"
-               data-gf="${player.golFatti}"
-               data-gs="${player.golSubiti}"
-               data-ass="${player.assist}"
+               data-gf="${golFatti}"
+               data-gs="${golSubiti}"
+               data-ass="${assist}"
                data-mv="${mediaVoto}"
-               data-fm="${fantaMedia}">
+               data-fm="${fantaMedia}"
+               data-opp="${nextOpp}">
             <div class="role-badge r-${fn:toLowerCase(player.ruolo)}">${player.ruolo}</div>
-            <span>${player.nome}</span>
+            <span>${player.nome} <i class="fas fa-check-circle" style="color: #2ecc71; margin-left: 5px; font-size: 0.75rem;" title="In rosa"></i></span>
           </div>
         </c:forEach>
       </div>
@@ -229,6 +235,10 @@
           <div class="detail-name" id="det_name">--</div>
           <div class="detail-team" id="det_team">Seleziona un giocatore</div>
 
+          <div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem;">
+            Prossima: <strong id="det_opp" style="color: #f1c40f;">--</strong>
+          </div>
+
           <div class="stat-row"><span>Ruolo</span><span class="stat-val" id="det_role">-</span></div>
           <div class="stat-row"><span>Media Voto</span><span class="stat-val" id="det_mv">-</span></div>
           <div class="stat-row"><span>FantaMedia</span><span class="stat-val" id="det_fm">-</span></div>
@@ -252,20 +262,20 @@
         <div class="module-selector">
           <select name="modulo" id="modSelect" required onchange="changeModule()">
             <option value="" disabled>Modulo...</option>
-            <option value="3-4-3">3-4-3</option>
-            <option value="3-5-2">3-5-2</option>
-            <option value="4-3-3">4-3-3</option>
-            <option value="4-4-2" selected>4-4-2</option>
-            <option value="4-5-1">4-5-1</option>
-            <option value="5-3-2">5-3-2</option>
-            <option value="5-4-1">5-4-1</option>
+            <option value="3-4-3" ${selectedModule == '3-4-3' ? 'selected' : ''}>3-4-3</option>
+            <option value="3-5-2" ${selectedModule == '3-5-2' ? 'selected' : ''}>3-5-2</option>
+            <option value="4-3-3" ${selectedModule == '4-3-3' ? 'selected' : ''}>4-3-3</option>
+            <option value="4-4-2" ${selectedModule == '4-4-2' || empty selectedModule ? 'selected' : ''}>4-4-2</option>
+            <option value="4-5-1" ${selectedModule == '4-5-1' ? 'selected' : ''}>4-5-1</option>
+            <option value="5-3-2" ${selectedModule == '5-3-2' ? 'selected' : ''}>5-3-2</option>
+            <option value="5-4-1" ${selectedModule == '5-4-1' ? 'selected' : ''}>5-4-1</option>
           </select>
           <i class="fas fa-chevron-down" style="color:#2c3e50"></i>
         </div>
 
-        <a href="${pageContext.request.contextPath}/FormationServlet?ai=true" class="btn-ai" title="Calcola la formazione migliore">
+        <button type="button" class="btn-ai" onclick="generateWithAI()" title="Calcola la formazione migliore per il modulo scelto">
           GENERA CON AI <i class="fas fa-robot"></i>
-        </a>
+        </button>
 
         <button type="button" class="btn-pubblica" onclick="openPublishModal()">
           PUBBLICA <i class="fas fa-share-alt"></i>
@@ -298,32 +308,39 @@
     P: [
       <c:if test="${not empty aiSuggestion['P']}">
       <c:forEach var="p" items="${aiSuggestion['P']}" varStatus="loop">
-      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "${p.golSubiti}", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}", opp: "${p.prossimaAvversaria}"}${!loop.last ? ',' : ''}
       </c:forEach>
       </c:if>
     ],
     D: [
       <c:if test="${not empty aiSuggestion['D']}">
       <c:forEach var="p" items="${aiSuggestion['D']}" varStatus="loop">
-      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "${p.golSubiti}", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}", opp: "${p.prossimaAvversaria}"}${!loop.last ? ',' : ''}
       </c:forEach>
       </c:if>
     ],
     C: [
       <c:if test="${not empty aiSuggestion['C']}">
       <c:forEach var="p" items="${aiSuggestion['C']}" varStatus="loop">
-      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "${p.golSubiti}", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}", opp: "${p.prossimaAvversaria}"}${!loop.last ? ',' : ''}
       </c:forEach>
       </c:if>
     ],
     A: [
       <c:if test="${not empty aiSuggestion['A']}">
       <c:forEach var="p" items="${aiSuggestion['A']}" varStatus="loop">
-      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "0", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}"}${!loop.last ? ',' : ''}
+      {id: "${p.id}", nome: "${p.nome}", squadra: "${p.squadra}", ruolo: "${p.ruolo}", gf: "${p.goalFatti}", gs: "${p.golSubiti}", ass: "${p.assist}", mv: "${p.mediaVoto}", fm: "${p.fantaMedia}", opp: "${p.prossimaAvversaria}"}${!loop.last ? ',' : ''}
       </c:forEach>
       </c:if>
     ]
   };
+
+  // NUOVA FUNZIONE PER LANCIARE AI CON MODULO
+  function generateWithAI() {
+    const selectedMod = document.getElementById('modSelect').value;
+    if (!selectedMod) { alert("Seleziona prima un modulo!"); return; }
+    window.location.href = '${pageContext.request.contextPath}/FormationServlet?ai=true&modulo=' + selectedMod;
+  }
 
   document.addEventListener("DOMContentLoaded", function() {
     if (aiData.active) {
@@ -339,27 +356,12 @@
   });
 
   function applyAIFormation() {
-    const nDif = aiData.D.length;
-    const nCen = aiData.C.length;
-    const nAtt = aiData.A.length;
+    showAllRows();
+    document.querySelectorAll('.field-player, .bench-slot').forEach(slot => {
+      clearSlotDOMOnly(slot);
+    });
 
-    if(nDif === 0 || nCen === 0 || nAtt === 0) {
-      changeModule();
-      return;
-    }
-
-    const moduloStr = nDif + "-" + nCen + "-" + nAtt;
-
-    const select = document.getElementById('modSelect');
-    let found = false;
-    for(let i=0; i<select.options.length; i++){
-      if(select.options[i].value === moduloStr) {
-        select.selectedIndex = i;
-        found = true;
-        break;
-      }
-    }
-
+    // Usa il modulo passato dal server
     changeModule();
 
     if(aiData.P.length > 0) fillSlot('slot_GK', aiData.P[0]);
@@ -381,7 +383,6 @@
     slot.dataset.playerId = pData.id;
     slot.dataset.fullData = JSON.stringify(pData);
 
-    // NASCONDI DALLA LISTA A SINISTRA
     const sidebarRow = document.getElementById('row_' + pData.id);
     if(sidebarRow) sidebarRow.style.display = 'none';
   }
@@ -432,7 +433,7 @@
     const d = ev.target.dataset;
     if (!d || !d.id) return;
 
-    const pData = { id: d.id, nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm };
+    const pData = { id: d.id, nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm, opp: d.opp };
     ev.dataTransfer.setData("text/plain", JSON.stringify(pData));
     ev.dataTransfer.effectAllowed = "copyMove";
   }
@@ -458,18 +459,8 @@
         clearSlot(slotElement);
       }
 
-      const shirt = slotElement.querySelector('.shirt');
-      const nameLabel = slotElement.querySelector('.p-name-field');
-
-      if(shirt) shirt.classList.add('filled');
-      if(nameLabel) nameLabel.textContent = p.nome;
-
-      slotElement.dataset.playerId = p.id;
-      slotElement.dataset.fullData = JSON.stringify(p);
+      fillSlot(slotElement.id, p);
       updateDetailPanel(p);
-
-      const sidebarRow = document.getElementById('row_' + p.id);
-      if(sidebarRow) sidebarRow.style.display = 'none';
 
     } catch (e) {
       console.error("Errore drop:", e);
@@ -479,8 +470,7 @@
   function clearSlot(slot) {
     const oldId = slot.dataset.playerId;
     if (oldId) {
-      const sidebarRow = document.getElementById('row_' + oldId);
-      if(sidebarRow) sidebarRow.style.display = 'flex';
+      showRow(oldId);
     }
     clearSlotDOMOnly(slot);
   }
@@ -501,9 +491,18 @@
     }
   }
 
+  function showRow(id) {
+    const row = document.getElementById('row_' + id);
+    if(row) row.style.display = 'flex';
+  }
+
+  function showAllRows() {
+    document.querySelectorAll('.player-row').forEach(r => r.style.display = 'flex');
+  }
+
   function showDetailsFromData(el) {
     const d = el.dataset;
-    updateDetailPanel({ nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm });
+    updateDetailPanel({ nome: d.nome, squadra: d.squadra, ruolo: d.ruolo, gf: d.gf, gs: d.gs, ass: d.ass, mv: d.mv, fm: d.fm, opp: d.opp });
   }
 
   function showDetailsFromSlot(slotElement) {
@@ -525,6 +524,7 @@
     document.getElementById('det_ass').textContent = p.ass || '0';
     document.getElementById('det_mv').textContent = p.mv || '-';
     document.getElementById('det_fm').textContent = p.fm || '-';
+    document.getElementById('det_opp').textContent = p.opp || '--';
   }
 
   function resetStats() {
@@ -534,6 +534,7 @@
     document.getElementById('det_ass').textContent = "-";
     document.getElementById('det_mv').textContent = "-";
     document.getElementById('det_fm').textContent = "-";
+    document.getElementById('det_opp').textContent = "--";
   }
 
   function prepareSubmission() {
