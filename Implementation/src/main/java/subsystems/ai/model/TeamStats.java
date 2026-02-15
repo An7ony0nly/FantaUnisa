@@ -12,7 +12,7 @@ public class TeamStats {
     public String getNomeSquadra() { return nomeSquadra; }
     public double getIndiceDifficolta() { return indiceDifficolta; }
 
-    // Formatta il numero per non avere troppi decimali (es. 75.4)
+    // Formatta il numero per non avere troppi decimali
     public String getIndiceFormatted() {
         return String.format("%.1f", indiceDifficolta);
     }

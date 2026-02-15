@@ -49,7 +49,7 @@ public class FormationAI {
         return map;
     }
 
-    // --- 2. METODO PRINCIPALE GENERAZIONE (MODIFICATO) ---
+    // --- 2. METODO PRINCIPALE GENERAZIONE---
     public Map<String, List<PlayerStats>> generateFormationWithMatchup(File csvDir, File calendarFile, List<Integer> userSquadIds, String forcedModule) {
         int targetDay = findUpcomingGiornata(calendarFile);
 
@@ -60,7 +60,7 @@ public class FormationAI {
 
         List<PlayerStats> currentStats = loadStatsFromCsv(files[files.length - 1].getAbsolutePath());
 
-        // CALCOLA LA FORZA DI TUTTE LE SQUADRE (Per il fattore avversario)
+        // CALCOLA LA FORZA DI TUTTE LE SQUADRE
         calculateAllTeamDifficulties(currentStats);
 
         loadCalendarForDay(calendarFile, targetDay);
@@ -79,12 +79,10 @@ public class FormationAI {
         // --- CUORE DEL CALCOLO PUNTEGGIO ---
         for (PlayerStats p : mySquadStats) {
 
-            // 1. Punteggio Base: Mix FantaMedia (60%) e MediaVoto (40%)
-            //    Chi ha un'ottima media voto è più affidabile di chi ha solo fortuna coi bonus.
+            // 1. Punteggio Base:
             double basePerformance = (p.getFantaMedia() * 0.6) + (p.getMediaVoto() * 0.4);
 
-            // 2. Bonus Assist: Aggiungiamo valore per chi fa assist
-            //    Calcoliamo la media assist a partita e la moltiplichiamo per un peso (es. 2.0)
+            // 2. Bonus Assist:
             double assistFactor = 0;
             if (p.getPartiteVoto() > 0) {
                 double avgAssist = (double) p.getAssist() / p.getPartiteVoto();
@@ -93,15 +91,14 @@ public class FormationAI {
 
             double scoreWithStats = basePerformance + assistFactor;
 
-            // 3. Trend Storico (Piccolo aggiustamento se è in forma)
+            // 3. Trend Storico
             double trendScore = applyTrend(scoreWithStats, historyFm.get(p.getId()), p.getFantaMedia());
 
             // 4. Setta Avversaria
             String oppTeamName = opponentMap.getOrDefault(p.getSquadra(), "Riposo");
             p.setProssimaAvversaria(oppTeamName);
 
-            // 5. FATTORE AVVERSARIO (IL PIÙ IMPORTANTE)
-            //    Modifica drasticamente il voto in base alla forza dell'avversario
+            // 5. FATTORE AVVERSARIO
             double finalScore = applyOpponentDifficultyFactor(p, trendScore, oppTeamName);
 
             p.setAiScore(finalScore);
@@ -141,36 +138,26 @@ public class FormationAI {
         }
     }
 
-    // --- CALCOLO FATTORE AVVERSARIO (IMPORTANTE) ---
+
     private double applyOpponentDifficultyFactor(PlayerStats p, double currentScore, String opponentName) {
         if (opponentName.equals("Riposo") || opponentName.equals("--")) return currentScore * 0.5; // Malus se riposa
 
-        // Recupera la forza dell'avversario (Default 50 se non trovata)
+        // Recupera la forza dell'avversario
         double oppStrength = teamDifficultyMap.getOrDefault(opponentName, 50.0);
 
-        // Normalizziamo la forza (0 = debolissimo, 100 = fortissimo)
-        // Creiamo un moltiplicatore.
-        // Se avversario è forte (80), fattore < 1 (Malus).
-        // Se avversario è debole (20), fattore > 1 (Bonus).
 
         double difficultyImpact = 0.0;
 
         // Logica Differenziata per Ruolo
         if (p.getRuolo().equalsIgnoreCase("P") || p.getRuolo().equalsIgnoreCase("D")) {
-            // DIFENSORI/PORTIERI: Soffrono avversari forti
-            // Esempio: OppStrength 80 -> (50 - 80) = -30 -> Impact negativo
+
             difficultyImpact = (50.0 - oppStrength) / 100.0;
         } else {
-            // ATTACCANTI/CENTROCAMPISTI: Soffrono difese forti?
-            // Qui assumiamo che Indice Alto = Squadra Forte in generale (difesa e attacco).
-            // Quindi giocare contro una squadra con indice alto è sempre difficile.
+
             difficultyImpact = (50.0 - oppStrength) / 100.0;
         }
 
-        // PESO DELL'AVVERSARIO
-        // Hai chiesto "un po' più importante". Moltiplichiamo l'impatto per 1.5
-        // Esempio: Contro l'Inter (Forte, 85): (50-85)/100 = -0.35 * 1.5 = -0.52.
-        // Il giocatore perde il 52% del suo valore!
+
         double weight = 1.5;
         double multiplier = 1.0 + (difficultyImpact * weight);
 
@@ -191,7 +178,7 @@ public class FormationAI {
         return score * (1.0 + (diff * 0.1));
     }
 
-    // --- METODI STANDARD E PARSER (INVARIATI) ---
+
     public int findUpcomingGiornata(File calendarFile) {
         if (calendarFile == null || !calendarFile.exists()) return 1;
         LocalDate today = LocalDate.now();

@@ -25,28 +25,25 @@ public class StatsServlet extends HttpServlet {
         String csvDirPath = getServletContext().getRealPath("/resources/csv/");
         File csvDir = new File(csvDirPath);
 
-        // 2. Recupera Mappa Giocatori (ID -> Stats)
+        // 2. Recupera Mappa Giocatori
         Map<Integer, PlayerStats> statsMap = aiEngine.getAllPlayerStats(csvDir);
         List<PlayerStats> allPlayers = new ArrayList<>(statsMap.values());
 
-        // Controllo Sicurezza: Se non ci sono dati, non crashare
+
         if (allPlayers.isEmpty()) {
             request.setAttribute("error", "Nessun dato trovato. Verifica i file CSV.");
             request.getRequestDispatcher("view/statistiche.jsp").forward(request, response);
             return;
         }
 
-        // =================================================================
-        // LOGICA 1: TOP 20 GIOCATORI (Ordinati per FantaMedia)
-        // =================================================================
+
         List<PlayerStats> topPlayers = allPlayers.stream()
                 .sorted((p1, p2) -> Double.compare(p2.getFantaMedia(), p1.getFantaMedia())) // Decrescente
                 .limit(20) // Mostra i primi 20
                 .collect(Collectors.toList());
 
-        // =================================================================
-        // LOGICA 2: CLASSIFICA SQUADRE (Con Bonus Attacco e Malus Difesa)
-        // =================================================================
+
+        // LOGICA 2: CLASSIFICA SQUADRE
 
         // Raggruppa i giocatori per Squadra
         Map<String, List<PlayerStats>> playersByTeam = allPlayers.stream()
@@ -58,8 +55,8 @@ public class StatsServlet extends HttpServlet {
             String teamName = entry.getKey();
             List<PlayerStats> roster = entry.getValue();
 
-            // A. Media Base (Top 14 giocatori)
-            // Prendiamo solo i giocatori che "giocano" davvero per valutare la forza della squadra
+            // A. Media Base
+
             double avgFantaMedia = roster.stream()
                     .mapToDouble(PlayerStats::getFantaMedia)
                     .sorted()
@@ -67,16 +64,14 @@ public class StatsServlet extends HttpServlet {
                     .average()
                     .orElse(0.0);
 
-            // B. Bonus Gol Fatti (Attacco) - Somma GF di tutta la rosa
+            // B. Bonus Gol Fatti
             double totalGoals = roster.stream().mapToInt(PlayerStats::getGoalFatti).sum();
 
-            // C. Malus Gol Subiti (Difesa - Gs) - Somma GS di tutta la rosa
+            // C. Malus Gol Subiti
             double totalConceded = roster.stream().mapToInt(PlayerStats::getGolSubiti).sum();
 
             // --- FORMULA DELL'INDICE DI DIFFICOLTÀ ---
-            // Base: Media * 10 (es. 6.5 -> 65)
-            // Bonus: +0.2 per ogni gol fatto
-            // Malus: -0.5 per ogni gol subito (pesa di più per penalizzare le difese deboli)
+
             double difficultyIndex = (avgFantaMedia * 10) + (totalGoals * 0.2) - (totalConceded * 0.5);
 
             // Normalizzazione (minimo 0, massimo 100)
@@ -92,9 +87,6 @@ public class StatsServlet extends HttpServlet {
         // Ordina decrescente (Chi ha l'indice più alto è più forte)
         teamRanking.sort((t1, t2) -> Double.compare(t2.getIndiceDifficolta(), t1.getIndiceDifficolta()));
 
-        // =================================================================
-        // INVIO DATI ALLA JSP
-        // =================================================================
         request.setAttribute("topPlayers", topPlayers);
         request.setAttribute("teamStats", teamRanking);
 
