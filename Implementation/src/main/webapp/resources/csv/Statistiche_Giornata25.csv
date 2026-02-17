@@ -1,0 +1,656 @@
+﻿Id;R;Nome;Squadra;Pv;Mv;Fm;Gf;Gs;Ass;Amm;Esp;Au
+4431;P;Carnesecchi;Atalanta;25;6,44;5,84;0;21;0;0;0;0
+4312;P;Maignan;Milan;23;6,39;5,8;0;18;0;3;0;0
+5841;P;Svilar;Roma;25;6,3;5,66;0;16;0;0;0;0
+6966;P;Butez;Como;24;6,1;5,44;0;18;0;2;0;0
+2170;P;Milinkovic-Savic V.;Napoli;18;6,17;5,67;0;15;0;0;0;0
+2814;P;Provedel;Lazio;25;6,28;5,38;0;25;0;1;0;0
+2134;P;Falcone;Lecce;25;6,44;5,4;0;31;0;2;0;0
+761;P;Audero;Cremonese;21;6,26;5,17;0;26;0;0;0;0
+5876;P;Di Gregorio;Juventus;22;6,11;5,18;0;20;0;1;0;0
+2428;P;Sommer;Inter;23;5,91;5,04;0;20;0;0;0;0
+4360;P;Caprile;Cagliari;25;6,28;4,84;0;35;0;2;0;0
+2521;P;De Gea;Fiorentina;25;6,18;4,74;0;39;0;0;0;0
+6662;P;Corvi;Parma;13;6,12;4,77;0;17;0;1;0;0
+6462;P;Okoye;Udinese;17;5,94;4,76;0;22;0;0;1;0
+133;P;Skorupski;Bologna;12;6,08;5,12;0;10;0;1;1;0
+188;P;Leali;Genoa;20;6,15;4,8;0;25;0;2;1;0
+4957;P;Montipò;Verona;22;6,16;4,66;0;36;0;0;0;0
+4236;P;Muric;Sassuolo;24;6,04;4,58;0;33;0;4;0;0
+2722;P;Ravaglia F.;Bologna;13;6,27;4,46;0;22;0;3;0;0
+5320;P;Paleari;Torino;16;6,19;4,53;0;26;0;1;0;0
+7332;P;Bijlow;Genoa;4;6;4;0;8;0;0;0;0
+572;P;Meret;Napoli;7;6,14;4,79;0;10;1;1;0;0
+6641;P;Suzuki;Parma;11;6;4,95;0;14;0;1;0;0
+2861;P;Semper;Pisa;17;6,18;4,71;0;25;0;0;0;0
+574;P;Scuffet;Pisa;7;6,21;4,07;0;15;0;0;0;0
+543;P;Padelli;Udinese;2;6,25;5,25;0;2;0;0;0;0
+5135;P;Guaita;Parma;0;0;0;0;0;0;0;0;0
+218;P;Perin;Juventus;3;6;5;0;3;0;0;0;0
+5338;P;Rinaldi;Parma;1;7;6,5;0;0;0;1;0;0
+511;P;Perilli;Verona;3;6,17;3,83;0;7;0;0;0;0
+2297;P;Rossi F.;Atalanta;0;0;0;0;0;0;0;0;0
+4;P;Sportiello;Atalanta;0;0;0;0;0;0;0;0;0
+7172;P;Pessina Mas.;Bologna;1;6;6;0;0;0;0;0;0
+4929;P;Ciocci;Cagliari;0;0;0;0;0;0;0;0;0
+3;P;Radunovic;Cagliari;0;0;0;0;0;0;0;0;0
+2809;P;Vigorito;Como;0;0;0;0;0;0;0;0;0
+6505;P;Nava;Cremonese;0;0;0;0;0;0;0;0;0
+6403;P;Christensen O.;Fiorentina;0;0;0;0;0;0;0;0;0
+6184;P;Martinelli T.;Fiorentina;0;0;0;0;0;0;0;0;0
+6991;P;Siegrist;Genoa;0;0;0;0;0;0;0;0;0
+219;P;Sommariva;Genoa;2;5,75;3,75;0;4;0;0;0;0
+1926;P;Di Gennaro;Inter;0;0;0;0;0;0;0;0;0
+5116;P;Martinez Jo.;Inter;2;6,25;5,75;0;1;0;0;0;0
+1930;P;Pinsoglio;Juventus;0;0;0;0;0;0;0;0;0
+6417;P;Furlanetto;Lazio;0;0;0;0;0;0;0;0;0
+6482;P;Mandas;Lazio;0;0;0;0;0;0;0;0;0
+2401;P;Fruchtl;Lecce;0;0;0;0;0;0;0;0;0
+6523;P;Samooja;Lecce;0;0;0;0;0;0;0;0;0
+2815;P;Terracciano;Milan;2;6;6;0;0;0;0;0;0
+6813;P;Torriani;Milan;0;0;0;0;0;0;0;0;0
+2845;P;Contini;Napoli;0;0;0;0;0;0;0;0;0
+2271;P;Nicolas;Pisa;1;6;4;0;2;0;0;0;0
+7169;P;Zelezny;Roma;0;0;0;0;0;0;0;0;0
+610;P;Gollini;Roma;0;0;0;0;0;0;0;0;0
+4518;P;Russo A.;Sassuolo;0;0;0;0;0;0;0;0;0
+2127;P;Satalino;Sassuolo;0;0;0;0;0;0;0;0;0
+4867;P;Turati;Sassuolo;1;5,5;3,5;0;2;0;0;0;0
+216;P;Donnarumma An.;Torino;0;0;0;0;0;0;0;0;0
+7179;P;Israel;Torino;9;5,89;3,83;0;18;0;1;0;0
+6210;P;Popa;Torino;0;0;0;0;0;0;0;0;0
+6842;P;Sava;Udinese;7;5,57;3,5;0;14;0;1;0;0
+6125;P;Vasquez D.;Roma;0;0;0;0;0;0;0;0;0
+7185;P;Nunziante;Udinese;0;0;0;0;0;0;0;0;0
+158;P;Lezzerini;Fiorentina;0;0;0;0;0;0;0;0;0
+2211;P;Silvestri;Cremonese;4;6,38;4,62;0;7;0;0;0;0
+7236;P;Toniolo;Verona;0;0;0;0;0;0;0;0;0
+7261;P;Cavlina;Como;0;0;0;0;0;0;0;0;0
+7285;P;Ferrante;Napoli;0;0;0;0;0;0;0;0;0
+7042;P;Calligaris;Inter;0;0;0;0;0;0;0;0;0
+7301;P;Tornqvist;Como;0;0;0;0;0;0;0;0;0
+6650;P;Sherri;Cagliari;0;0;0;0;0;0;0;0;0
+7337;P;Motta;Lazio;0;0;0;0;0;0;0;0;0
+7363;P;Siviero;Torino;0;0;0;0;0;0;0;0;0
+254;D;Dimarco;Inter;23;6,78;7,96;5;0;13;2;0;0
+1852;D;Spinazzola;Napoli;20;6,32;6,9;3;0;3;1;0;0
+2788;D;Bremer;Juventus;15;6,43;7,13;3;0;2;1;0;0
+2120;D;Bastoni;Inter;22;6,27;6,5;1;0;4;4;0;0
+6832;D;Palestra;Cagliari;24;6,38;6,62;1;0;4;2;0;0
+6893;D;Kempf;Como;16;6,19;6,69;3;0;0;2;0;0
+6217;D;Bisseck;Inter;14;6,25;6,75;2;0;2;2;0;0
+5526;D;Scalvini;Atalanta;12;6,21;6,62;2;0;0;2;0;0
+5022;D;Pavlovic;Milan;20;6,25;6,5;2;0;0;2;0;0
+7181;D;Wesley;Roma;23;6,13;6,43;3;0;0;4;0;0
+4976;D;Kalulu;Juventus;25;6,14;6,44;2;0;3;1;1;0
+4657;D;Celik;Roma;20;6,22;6,4;1;0;2;1;1;0
+6956;D;Solet;Udinese;25;6,08;6,4;3;0;1;0;0;1
+5750;D;Ostigard;Genoa;19;6,05;6,53;4;0;0;6;0;0
+5877;D;Carlos Augusto;Inter;17;6,21;6,35;1;0;1;3;0;0
+6496;D;Bartesaghi;Milan;19;6,11;6,37;2;0;0;2;0;0
+4159;D;Akanji;Inter;22;6,25;6,32;1;0;0;3;0;0
+4994;D;Vojvoda;Como;20;6,05;6,2;1;0;1;2;0;0
+2593;D;Martin;Genoa;21;5,98;6,26;1;0;4;2;0;0
+5835;D;Baschirotto;Cremonese;25;5,96;6,16;2;0;0;2;0;0
+4409;D;Rrahmani;Napoli;16;6,16;6,25;1;0;0;3;0;0
+6869;D;Ramon;Como;21;6,24;6,33;2;0;0;6;1;0
+5678;D;Holm;Juventus;11;6,09;6,59;1;0;4;1;1;0
+6766;D;Kelly L.;Juventus;22;6,05;6,11;1;0;0;3;0;0
+5812;D;Terracciano F.;Cremonese;24;5,96;6,04;2;0;0;4;0;1
+2816;D;Di Lorenzo;Napoli;23;6,07;6,22;1;0;1;1;0;0
+2296;D;Mancini;Roma;24;6,19;6,08;0;0;2;9;0;0
+6642;D;Coco;Torino;22;5,91;6,05;1;0;1;2;0;0
+4665;D;Maripan;Torino;23;5,96;6,15;2;0;0;3;0;0
+4263;D;Kabasele;Udinese;16;6,06;6,34;2;0;0;3;0;0
+554;D;Zappacosta;Atalanta;22;6,02;6,11;1;0;0;2;0;0
+4734;D;Miranda J.;Bologna;20;5,95;5,98;1;0;0;5;0;0
+393;D;Luperto;Cremonese;21;5,93;6,05;1;0;1;3;0;0
+6867;D;Valle;Como;18;6,08;6,14;0;0;2;2;0;0
+5514;D;Vasquez;Genoa;25;6,06;6,02;0;0;0;2;0;0
+5513;D;Dumfries;Inter;11;6;6,23;1;0;0;1;0;0
+6989;D;Tiago Gabriel;Lecce;24;6;5,98;1;0;0;3;0;1
+5527;D;Zanoli;Udinese;19;6,05;6,29;1;0;2;1;0;0
+5862;D;Valeri;Parma;21;6,02;6,02;0;0;1;2;0;0
+7219;D;Bernasconi;Atalanta;14;6,18;6,25;0;0;2;2;0;0
+7220;D;Belghali;Verona;16;6,25;6,47;2;0;0;5;0;0
+6066;D;Posch;Como;8;6,06;6,38;1;0;0;1;0;0
+7125;D;Idrissi R.;Cagliari;16;5,81;6,09;2;0;0;3;0;0
+5435;D;Moreno Alb.;Como;9;6,06;6,33;1;0;0;1;0;0
+6013;D;Barbieri;Cremonese;18;6,08;6;0;0;1;5;0;0
+2160;D;Gosens;Fiorentina;16;5,94;6,25;2;0;0;2;0;0
+6039;D;Cabal;Juventus;9;5,94;6,56;2;0;0;1;0;0
+5520;D;Cambiaso;Juventus;23;5,8;5,96;2;0;3;1;1;2
+2724;D;Buongiorno;Napoli;20;5,92;5,92;0;0;1;2;0;0
+6663;D;Circati;Parma;20;6;6,02;1;0;0;5;0;0
+6664;D;Delprato;Parma;24;5,9;5,94;1;0;0;4;0;0
+7143;D;Angori;Pisa;22;5,98;6;0;0;1;1;0;0
+4807;D;Hermoso;Roma;17;6,15;6,15;1;0;0;6;0;0
+4210;D;Mina;Cagliari;16;6;6,09;1;0;0;3;0;0
+4433;D;Zortea;Bologna;19;5,84;5,87;0;0;1;1;0;0
+7130;D;Folino;Cremonese;6;6;6,5;1;0;0;0;0;0
+5885;D;Dodò;Fiorentina;25;5,9;5,9;0;0;2;4;0;0
+5739;D;De Winter;Milan;14;5,93;6,11;1;0;0;1;0;0
+6814;D;Norton-Cuffy;Genoa;23;5,89;5,96;1;0;1;3;1;0
+4177;D;Pavard;Inter;1;6,5;6,5;0;0;0;0;0;0
+5833;D;Gila;Lazio;24;5,98;5,9;0;0;0;2;1;0
+460;D;Romagnoli;Lazio;21;6,02;5,9;0;0;0;5;0;0
+4502;D;Gallo;Lecce;25;5,94;5,9;0;0;0;2;0;0
+4401;D;Gabbia;Milan;22;5,95;5,89;0;0;0;3;0;0
+4751;D;Tomori;Milan;20;6,02;5,98;0;0;1;4;0;0
+6480;D;Tchatchoua;Verona;0;0;0;0;0;0;0;0;0
+6672;D;Idzes;Sassuolo;24;5,92;5,9;0;0;0;1;0;0
+6046;D;Hien;Atalanta;20;5,88;5,85;1;0;0;3;0;1
+5578;D;Kossounou;Atalanta;12;6;6,21;1;0;0;1;0;0
+5701;D;Obert;Cagliari;22;5,86;5,8;0;0;2;7;0;0
+4461;D;Zappa;Cagliari;20;5,92;6,02;0;0;3;2;0;0
+6660;D;Marcandalli;Genoa;18;5,94;5,89;0;0;1;4;0;0
+2188;D;Marusic;Lazio;23;5,85;5,83;0;0;1;1;1;0
+6202;D;Beukema;Napoli;13;5,92;6,08;1;0;0;2;0;0
+6887;D;Leoni;Parma;0;0;0;0;0;0;0;0;0
+4317;D;N'Dicka;Roma;20;6,08;5,98;0;0;0;4;0;0
+4772;D;Angelino;Roma;5;5,8;5,7;0;0;0;1;0;0
+7155;D;Muharemovic;Sassuolo;22;5,8;5,82;2;0;1;5;0;2
+6485;D;Kristensen T.;Udinese;15;5,83;5,97;1;0;0;2;0;0
+6631;D;Ghilardi;Roma;9;6,06;6,06;0;0;0;0;0;0
+697;D;Cuadrado;Pisa;9;6,11;6,33;1;0;0;2;0;0
+7212;D;Heggem;Bologna;21;5,86;5,81;0;0;0;0;1;0
+787;D;Djimsiti;Atalanta;22;5,82;5,77;0;0;0;2;0;0
+4887;D;Bellanova;Atalanta;14;5,93;5,96;0;0;1;1;0;0
+6042;D;Lucumì;Bologna;16;5,81;5,91;1;0;0;3;0;0
+6495;D;Comuzzo;Fiorentina;18;5,72;5,83;1;0;0;2;0;0
+5449;D;Parisi;Fiorentina;16;6,06;5,88;0;0;1;4;0;1
+5620;D;Tavares N.;Lazio;11;5,68;5,64;0;0;0;1;0;0
+6990;D;Veiga D.;Lecce;23;5,85;5,72;0;0;0;6;0;0
+2273;D;Caracciolo A.;Pisa;23;5,93;5,74;0;0;0;5;0;1
+5851;D;Doig;Sassuolo;23;5,87;5,78;0;0;0;4;0;0
+5820;D;Bertola;Udinese;20;5,82;5,8;0;0;1;3;0;0
+7211;D;Athekame;Milan;7;6;6,36;1;0;1;3;0;0
+5427;D;Gutierrez;Napoli;10;5,8;6,1;1;0;0;0;0;0
+7255;D;Britschgi;Parma;20;5,82;5,82;0;0;2;4;0;0
+4137;D;Diego Carlos;Como;15;6,13;5,97;0;0;0;5;0;0
+7329;D;Obrador;Torino;3;5,83;5,83;0;0;0;0;0;0
+2640;D;Kolasinac;Atalanta;7;6,21;6,07;0;0;0;2;0;0
+612;D;Bianchetti;Cremonese;19;5,79;5,79;0;0;1;2;0;0
+5603;D;Pongracic;Fiorentina;23;5,76;5,59;0;0;0;8;0;0
+4378;D;Ranieri L.;Fiorentina;19;5,82;5,82;1;0;0;6;0;0
+7069;D;Fortini;Fiorentina;12;5,96;5,96;0;0;0;0;0;0
+513;D;Acerbi;Inter;11;6,05;5,95;0;0;0;2;0;0
+5831;D;Gatti;Juventus;11;5,91;6,05;1;0;0;3;0;0
+7012;D;Provstgaard;Lazio;10;6,05;6;0;0;0;1;0;0
+2728;D;Pellegrini Lu.;Lazio;19;5,87;5,74;0;0;0;5;0;0
+6632;D;Gaspar K.;Lecce;21;5,83;5,64;0;0;0;6;1;0
+6531;D;Jimenez A.;Milan;1;5,5;5;0;0;0;1;0;0
+5307;D;Valenti;Parma;18;5,94;5,83;0;0;0;4;0;0
+7139;D;Canestrelli;Pisa;25;5,74;5,7;0;0;0;2;0;0
+6986;D;Rensch;Roma;8;6,06;6,19;0;0;1;0;0;0
+4374;D;Walukiewicz;Sassuolo;24;5,77;5,73;0;0;1;4;0;0
+5010;D;Ismajli;Torino;15;5,83;5,87;0;0;2;3;0;0
+4385;D;Lazaro;Torino;24;5,71;5,73;0;0;2;3;0;0
+5555;D;Kamara H.;Udinese;15;5,87;5,83;0;0;1;3;0;0
+6916;D;Ahanor;Atalanta;15;5,73;5,63;0;0;0;1;1;0
+7068;D;Vitik;Bologna;12;5,92;5,79;0;0;0;3;0;0
+7014;D;Smolcic I.;Como;15;5,9;5,67;0;0;0;7;0;0
+7131;D;Floriani Mussolini;Cremonese;15;5,73;5,67;0;0;0;2;0;0
+2263;D;Lazzari;Lazio;13;5,81;5,73;0;0;0;2;0;0
+6055;D;Thiaw;Milan;0;0;0;0;0;0;0;0;0
+2745;D;Calabresi;Pisa;16;5,84;5,69;0;0;0;5;0;0
+7020;D;Salah-Eddine;Roma;0;0;0;0;0;0;0;0;0
+6426;D;Pedersen;Torino;18;5,75;5,67;0;0;0;3;0;0
+7011;D;Slotsager;Verona;5;5,7;5,7;0;0;0;0;0;0
+6894;D;Unai Nunez;Verona;17;5,85;5,59;0;0;0;5;0;1
+6639;D;Frese;Verona;19;5,79;5,71;1;0;0;5;0;1
+5532;D;Bradaric;Verona;20;5,75;5,7;0;0;0;2;0;0
+7018;D;Nelsson;Verona;24;5,62;5,48;0;0;0;3;0;1
+7253;D;Bella-Kotchap;Verona;14;5,89;5,79;0;0;0;3;0;0
+5168;D;Tsimikas;Roma;9;5,83;5,78;0;0;0;1;0;0
+7274;D;Zè Pedro;Cagliari;10;5,6;5,55;0;0;0;1;0;0
+2006;D;Lirola;Verona;4;5,62;5,5;0;0;0;1;0;0
+7352;D;Edmundsson;Verona;2;6,75;6,75;0;0;0;0;0;0
+6550;D;Garcia U.;Sassuolo;2;6,25;6,75;0;0;1;0;0;0
+4982;D;Erlic;Bologna;0;0;0;0;0;0;0;0;0
+6231;D;Azzi;Cremonese;0;0;0;0;0;0;0;0;0
+770;D;Pezzella Giu.;Cremonese;19;5,68;5,55;0;0;1;7;0;0
+6245;D;Vogliacco;Genoa;0;0;0;0;0;0;0;0;0
+322;D;De Vrij;Inter;3;6,17;6,17;0;0;0;0;0;0
+2525;D;Darmian;Inter;2;6;6;0;0;0;0;0;0
+6802;D;Savona;Juventus;0;0;0;0;0;0;0;0;0
+7175;D;Joao Mario;Bologna;6;5,83;5,92;0;0;1;1;0;0
+5273;D;Estupinan;Milan;9;5,67;5,56;0;0;1;2;1;0
+6809;D;Marianucci;Torino;5;5,6;5,7;0;0;1;1;0;0
+256;D;Juan Jesus;Napoli;15;5,8;5,53;0;0;0;6;1;0
+5840;D;Olivera;Napoli;12;5,62;5,54;0;0;0;2;0;0
+5353;D;Balogh;Parma;0;0;0;0;0;0;0;0;0
+6533;D;Giannetti L.;Udinese;0;0;0;0;0;0;0;0;0
+6047;D;Ehizibue;Udinese;14;5,64;5,57;0;0;0;2;0;0
+6211;D;Zemura;Udinese;11;5,86;5,73;0;0;0;3;0;0
+7240;D;Siebert;Lecce;6;5,5;5,5;0;0;0;0;0;0
+7260;D;Ziolkowski;Roma;7;6,07;5,93;0;0;0;2;0;0
+7268;D;Rodriguez Ju.;Cagliari;7;5,64;5,5;0;0;0;2;0;0
+7326;D;Helland;Bologna;0;0;0;0;0;0;0;0;0
+7335;D;Zatterstrom;Genoa;0;0;0;0;0;0;0;0;0
+7356;D;Mlacic;Udinese;0;0;0;0;0;0;0;0;0
+6444;D;Bonfanti;Pisa;9;5,61;5,56;0;0;0;1;0;0
+5498;D;Casale;Bologna;8;5,56;5,56;0;0;0;0;0;0
+2653;D;Lykogiannis;Bologna;8;5,62;5,56;0;0;1;3;0;0
+5406;D;Di Pardo;Cagliari;1;5,5;5,5;0;0;0;0;0;0
+6944;D;Jack;Como;0;0;0;0;0;0;0;0;0
+6896;D;Van Der Brempt;Como;6;6;5,83;0;0;0;2;0;0
+5860;D;Ravanelli;Cremonese;0;0;0;0;0;0;0;0;0
+1891;D;Ceccherini;Cremonese;7;5,5;5,29;0;0;0;1;1;0
+4904;D;Marì;Fiorentina;10;5,45;5,3;0;0;0;3;0;0
+5718;D;Viti;Fiorentina;6;5,58;5,33;0;0;0;1;1;0
+294;D;Rugani;Fiorentina;4;5,88;5,88;0;0;0;0;0;0
+327;D;Patric;Lazio;2;5,75;5,75;0;0;0;0;0;0
+7182;D;Ndaba;Lecce;6;5,83;5,83;0;0;0;0;0;0
+5481;D;Mazzocchi;Napoli;4;5,75;5,5;0;0;0;0;1;0
+6821;D;Hainaut;Parma;0;0;0;0;0;0;0;0;0
+6965;D;Lovik;Parma;6;5,58;5,58;0;0;0;0;0;0
+7140;D;Coppola F.;Pisa;3;5;4,67;0;0;0;3;0;0
+6411;D;Mateus Lusuardi;Pisa;3;5,83;5,67;0;0;0;1;0;0
+7141;D;Rus;Pisa;0;0;0;0;0;0;0;0;0
+4495;D;Kumbulla;Roma;0;0;0;0;0;0;0;0;0
+6189;D;Missori;Sassuolo;0;0;0;0;0;0;0;0;0
+49;D;Masina;Torino;4;5,38;5,62;0;0;1;0;0;0
+252;D;Biraghi;Torino;9;5,56;5,56;0;0;0;0;0;0
+6925;D;Palma;Udinese;4;5,5;5,5;0;0;0;0;0;0
+6957;D;Valentini N.;Verona;11;5,68;5,59;0;0;0;2;0;0
+5994;D;Ebosse;Torino;3;5,5;5,5;0;0;0;1;0;0
+6537;D;Goglichidze;Udinese;6;5,75;5,58;0;0;0;2;0;0
+6985;D;Candè;Sassuolo;8;5,69;5,56;0;0;0;2;0;0
+7222;D;Cham;Verona;3;5,17;5,17;0;0;0;0;0;0
+6870;D;Faye;Cremonese;6;5,75;5,67;0;0;0;1;0;0
+6665;D;Coulibaly W.;Sassuolo;8;5,44;5,38;0;0;0;1;0;0
+388;D;Albiol;Pisa;6;5,83;5,75;0;0;0;1;0;0
+7325;D;Bozhinov;Pisa;3;5,33;5,17;0;0;0;1;0;0
+7336;D;Tchoca;Torino;0;0;0;0;0;0;0;0;0
+6551;D;Ilic M.;Bologna;0;0;0;0;0;0;0;0;0
+487;D;De Silvestri;Bologna;5;6,1;5,9;0;0;0;2;0;0
+6464;D;Wieteska;Cagliari;0;0;0;0;0;0;0;0;0
+6636;D;Veroli;Cagliari;0;0;0;0;0;0;0;0;0
+6230;D;Dossena;Cagliari;1;5;4,5;0;0;0;1;0;0
+418;D;Goldaniga;Como;0;0;0;0;0;0;0;0;0
+5891;D;Quagliata;Cremonese;0;0;0;0;0;0;0;0;0
+2847;D;Sernicola;Cremonese;0;0;0;0;0;0;0;0;0
+6977;D;Otoa;Genoa;7;5,57;5,21;0;0;0;1;0;1
+791;D;Sabelli;Genoa;5;5,8;5,4;0;0;0;0;0;1
+6803;D;Rouhi;Juventus;0;0;0;0;0;0;0;0;0
+5899;D;Gigot;Lazio;0;0;0;0;0;0;0;0;0
+140;D;Hysaj;Lazio;2;5,5;5,5;0;0;0;0;0;0
+6883;D;Jean;Lecce;0;0;0;0;0;0;0;0;0
+7164;D;Perez M.;Lecce;1;5;5;0;0;0;0;0;0
+7136;D;Kouassi;Lecce;4;5,5;5,5;0;0;0;0;0;0
+7170;D;Mbambi;Pisa;0;0;0;0;0;0;0;0;0
+7142;D;Esteves T.;Pisa;0;0;0;0;0;0;0;0;0
+6885;D;Abdulhamid;Roma;0;0;0;0;0;0;0;0;0
+7154;D;Odenthal;Sassuolo;0;0;0;0;0;0;0;0;0
+2279;D;Romagna;Sassuolo;3;5,5;5,5;0;0;0;0;0;0
+6431;D;Paz Y.;Sassuolo;0;0;0;0;0;0;0;0;0
+7156;D;Pieragnolo;Sassuolo;0;0;0;0;0;0;0;0;0
+6041;D;Schuurs;Torino;0;0;0;0;0;0;0;0;0
+6826;D;Dembelè A.;Torino;1;5;5;0;0;0;0;0;0
+6900;D;Rui Modesto;Udinese;2;5,75;6,25;0;0;1;0;0;0
+6992;D;Oyegoke;Verona;2;5;5;0;0;0;0;0;0
+7196;D;Denoon;Pisa;2;5,5;5,25;0;0;0;1;0;0
+7202;D;Ndiaye;Parma;7;5,36;5,07;0;0;0;2;1;0
+5324;D;Godfrey;Atalanta;0;0;0;0;0;0;0;0;0
+7235;D;Troilo;Parma;9;5,44;5,11;0;0;0;2;2;0
+7238;D;Kouadio;Fiorentina;1;6;6;0;0;0;0;0;0
+6351;D;Lamptey;Fiorentina;1;6;6;0;0;0;0;0;0
+5156;D;Nkounkou;Torino;6;5,75;5,75;0;0;1;2;0;0
+7271;D;Odogu;Milan;0;0;0;0;0;0;0;0;0
+6874;D;Palacios T.;Inter;0;0;0;0;0;0;0;0;0
+7312;D;Arizala;Udinese;0;0;0;0;0;0;0;0;0
+6149;D;Carboni F.;Parma;0;0;0;0;0;0;0;0;0
+7346;D;Raterink;Cagliari;0;0;0;0;0;0;0;0;0
+7353;D;Pedro Felipe;Sassuolo;0;0;0;0;0;0;0;0;0
+2423;C;Pulisic;Milan;15;6,53;8,07;8;0;2;0;0;0
+6875;C;Paz N.;Como;24;6,38;7,25;8;0;5;4;0;0
+2194;C;Calhanoglu;Inter;17;6,5;7,53;7;0;2;5;0;0
+152;C;Zielinski;Inter;18;6,47;7,33;5;0;1;1;0;0
+4777;C;McTominay;Napoli;23;6,41;7,26;6;0;2;1;0;0
+2379;C;Rabiot;Milan;17;6,5;7,29;4;0;4;3;1;0
+2167;C;Orsolini;Bologna;22;6,11;6,93;7;0;1;2;0;0
+2606;C;Modric;Milan;22;6,52;6,86;2;0;3;3;0;0
+1933;C;Mandragora;Fiorentina;25;6,08;6,74;6;0;1;5;0;0
+2766;C;Zaniolo;Udinese;20;6,25;6,92;5;0;1;5;0;0
+5564;C;Ndoye;Bologna;0;0;0;0;0;0;0;0;0
+4973;C;McKennie;Juventus;22;6,25;6,89;4;0;4;4;0;0
+2517;C;De Bruyne;Napoli;8;6,38;7,81;4;0;0;1;0;0
+4892;C;Saelemaekers;Milan;22;6,27;6,64;2;0;3;2;0;0
+6908;C;Atta;Udinese;20;6,45;6,82;2;0;3;3;0;0
+7126;C;Baturina;Como;12;6,29;7,54;4;0;3;0;0;0
+5800;C;Gudmundsson A.;Fiorentina;22;5,98;6,59;4;0;3;3;0;0
+4427;C;Malinovskyi;Genoa;23;6,13;6,74;5;0;3;8;0;0
+4220;C;Zambo Anguissa;Napoli;11;6,5;7,64;4;0;1;1;0;0
+6666;C;Bernabè;Parma;25;6,18;6,58;3;0;1;0;0;0
+5687;C;Vlasic;Torino;24;6;6,75;6;0;3;6;0;0
+2765;C;Odgaard;Bologna;16;5,91;6,69;4;0;1;1;0;0
+4404;C;Thorsby;Cremonese;14;6,25;6,89;3;0;1;2;0;0
+5422;C;Zalewski;Atalanta;19;6,21;6,66;2;0;3;1;0;0
+5589;C;Konè M.;Roma;22;6,34;6,61;2;0;1;2;0;0
+6717;C;Konè I.;Sassuolo;22;6,16;6,61;4;0;0;2;1;0
+6151;C;Perrone;Como;22;6,23;6,48;2;0;3;7;0;0
+1870;C;Barella;Inter;23;6,17;6,41;1;0;5;5;0;0
+827;C;Locatelli;Juventus;24;6,35;6,44;1;0;1;4;0;0
+333;C;Cataldi;Lazio;22;6,07;6,5;3;0;3;5;0;0
+6398;C;Isaksen;Lazio;16;6,09;6,72;3;0;1;0;0;0
+4199;C;Loftus-Cheek;Milan;19;6,18;6,68;3;0;1;1;0;0
+6831;C;Neres;Napoli;16;6,19;6,84;3;0;3;3;0;0
+6884;C;Conceicao;Juventus;17;6,18;6,53;2;0;1;2;0;0
+5504;C;Coulibaly L.;Lecce;21;6,12;6,38;2;0;1;3;0;0
+5453;C;Ricci S.;Milan;18;6,14;6,42;1;0;2;1;0;0
+530;C;Pellegrini Lo.;Roma;17;6,06;6,53;3;0;0;2;0;0
+1976;C;Mazzitelli;Cagliari;11;6,18;6,82;2;0;2;3;0;0
+7314;C;Taylor K.;Lazio;6;5,92;6,25;1;0;0;2;0;0
+4364;C;Gaetano;Cagliari;22;6,02;6,34;2;0;3;4;0;0
+449;C;Vazquez;Cremonese;13;6,15;6,54;1;0;2;1;0;0
+4711;C;Kostic;Juventus;10;6,2;7,2;3;0;1;0;0;0
+5562;C;Thuram K.;Juventus;22;6,14;6,32;1;0;1;0;0;0
+4186;C;Guendouzi;Lazio;16;6,16;6,31;2;0;0;5;1;0
+632;C;Zaccagni;Lazio;19;6;6,26;3;0;0;6;1;0
+6684;C;Ekkelenkamp;Udinese;21;6;6,4;3;0;0;1;0;0
+5792;C;Ederson D.S.;Atalanta;21;6,17;6,29;1;0;0;1;0;0
+2077;C;Pasalic;Atalanta;19;5,97;6,39;2;0;3;2;0;0
+5036;C;Caqueret;Como;17;6,15;6,41;1;0;2;1;0;0
+5559;C;Da Cunha;Como;22;6,14;6,36;2;0;1;4;0;0
+7133;C;Vandeputte;Cremonese;21;6,12;6,26;0;0;4;2;0;0
+7070;C;Sucic P.;Inter;18;6,14;6,33;1;0;2;3;0;0
+5813;C;Miretti;Juventus;10;6,15;6,5;1;0;1;1;0;0
+5674;C;Basic;Lazio;16;6,09;6,34;1;0;2;0;1;0
+779;C;Cristante;Roma;24;6,12;6,15;1;0;0;5;0;0
+2839;C;Sottil;Lecce;19;6,05;6,29;1;0;2;1;0;0
+4947;C;Brescianini;Fiorentina;10;6;6,55;2;0;0;1;0;0
+6020;C;Ellertsson;Genoa;23;5,91;6,07;1;0;1;1;0;0
+6015;C;Berisha M.;Lecce;12;6,17;6,92;2;0;3;0;0;0
+5393;C;Man;Parma;0;0;0;0;0;0;0;0;0
+2334;C;Leris;Pisa;21;6;6,26;1;0;3;1;0;0
+5844;C;Thorstvedt;Sassuolo;19;6,05;6,26;2;0;1;6;0;0
+5735;C;Volpato;Sassuolo;12;6,25;6,75;1;0;4;2;0;0
+5119;C;Samardzic;Atalanta;14;6;6,32;1;0;2;1;0;0
+6640;C;Felici;Cagliari;11;6,05;6,55;2;0;1;3;0;0
+4486;C;Strefezza;Parma;2;6,25;6,25;0;0;0;0;0;0
+4465;C;Fagioli;Fiorentina;22;6,02;6,2;1;0;3;4;0;0
+5791;C;Frendrup;Genoa;24;6;6,06;1;0;0;3;0;0
+2529;C;Mkhitaryan;Inter;18;6,14;6,25;1;0;0;2;0;0
+4686;C;Fofana Y.;Milan;20;5,9;6,05;1;0;2;4;0;0
+4287;C;Lobotka;Napoli;20;6,1;6,22;1;0;0;1;0;0
+6815;C;Fadera;Sassuolo;21;5,9;6,17;2;0;1;4;0;0
+6680;C;Karlstrom;Udinese;25;5,94;5,98;1;0;0;4;0;0
+6458;C;Serdar;Verona;18;5,97;6,22;2;0;0;3;0;0
+2528;C;Matic;Sassuolo;23;6,02;6,07;1;0;1;4;1;0
+7318;C;Gandelman;Lecce;6;6,25;7,25;2;0;0;0;0;0
+5651;C;Harrison;Fiorentina;3;6;6,33;0;0;1;0;0;0
+22;C;De Roon;Atalanta;21;6,05;6,07;1;0;1;5;1;0
+5298;C;Pobega;Bologna;17;5,76;6,09;2;0;1;1;1;0
+4970;C;Messias;Genoa;9;6,11;6,44;1;0;0;0;0;0
+5301;C;Luis Henrique;Inter;18;5,92;6,17;1;0;2;1;0;0
+536;C;Politano;Napoli;21;6;6,12;0;0;3;1;0;0
+6898;C;Keita M.;Parma;23;5,98;6;0;0;1;1;0;0
+7146;C;Tourè I.;Pisa;23;5,91;5,93;1;0;0;3;1;0
+5888;C;Casadei;Torino;22;5,89;6,18;3;0;0;5;0;0
+6844;C;Rowe;Bologna;16;6,16;6,22;0;0;2;2;0;0
+5761;C;Zhegrova;Juventus;8;6;6;0;0;0;0;0;0
+6054;C;Moro N.;Bologna;17;5,91;6,24;2;0;0;1;0;0
+5318;C;Tramoni M.;Pisa;20;5,72;6,08;2;0;2;3;0;0
+7028;C;Bernede;Verona;24;5,85;6,04;1;0;2;1;0;0
+7223;C;Vergara;Napoli;5;6,3;6,8;1;0;0;1;0;0
+2670;C;Bailey;Roma;5;5,7;5,7;0;0;0;0;0;0
+801;C;Gagliardini;Verona;18;5,97;5,97;1;0;0;6;0;0
+7331;C;Loyola;Pisa;3;6,17;7,17;1;0;0;0;0;0
+6575;C;Zaragoza;Roma;2;6;6,25;0;0;1;1;0;0
+7351;C;Santos A.;Napoli;1;7,5;10,5;1;0;0;0;0;0
+5784;C;Aebischer;Pisa;24;5,81;5,85;1;0;0;4;0;0
+6206;C;Fabbian;Fiorentina;15;5,83;6,2;2;0;0;1;0;0
+4870;C;Adopo;Cagliari;25;5,74;5,82;1;0;0;2;0;0
+6252;C;Folorunsho;Cagliari;16;6,03;6,12;1;0;0;3;0;0
+4662;C;Weah;Juventus;0;0;0;0;0;0;0;0;0
+6394;C;Ramadani;Lecce;24;5,9;5,88;1;0;0;7;0;0
+6190;C;Pisilli;Roma;9;6,06;6,17;0;0;1;0;0;0
+795;C;El Shaarawy;Roma;11;6,09;6,23;0;0;2;2;0;0
+6481;C;Payero;Cremonese;17;6;6;1;0;0;6;0;0
+7198;C;Piotrowski;Udinese;20;5,9;6;1;0;0;2;0;0
+7209;C;Sorensen O.;Parma;22;5,82;5,91;1;0;0;2;0;0
+4479;C;Elmas;Napoli;20;5,78;5,85;0;0;2;1;0;0
+6024;C;Sulemana I.;Cagliari;6;5,75;6,17;1;0;0;1;0;0
+788;C;Freuler;Bologna;17;6,06;5,88;0;0;1;4;0;1
+5858;C;Ferguson;Bologna;16;5,91;5,97;1;0;0;4;0;0
+184;C;Bernardeschi;Bologna;14;5,86;6,07;1;0;1;2;0;0
+6424;C;Prati;Torino;21;5,88;5,9;1;0;0;5;0;0
+6294;C;Ndour;Fiorentina;17;5,74;5,88;1;0;0;1;0;0
+181;C;Vecino;Lazio;12;5,92;5,96;0;0;1;1;0;0
+6549;C;Pierotti;Lecce;24;5,79;5,77;0;0;0;1;0;0
+5992;C;Bondo;Cremonese;20;5,9;5,8;0;0;0;4;0;0
+5998;C;Zerbin;Cremonese;18;5,81;5,89;0;0;2;1;0;0
+5131;C;Gilmour;Napoli;6;6;6,42;1;0;0;1;0;0
+6593;C;Akinsanmiro;Pisa;14;5,96;5,96;0;0;1;2;0;0
+5823;C;Baldanzi;Genoa;10;6;6,2;1;0;0;2;0;0
+7254;C;Lorran;Pisa;4;5,88;6,62;1;0;0;0;0;0
+1871;C;Deiola;Cagliari;12;6,04;6;0;0;1;3;0;0
+27;C;Grassi;Cremonese;18;5,75;5,69;0;0;0;2;0;0
+2842;C;Zanimacchia;Cremonese;0;0;0;0;0;0;0;0;0
+6917;C;Masini;Genoa;16;5,94;5,81;0;0;0;4;0;0
+6984;C;Ondrejka;Parma;12;5,67;5,62;0;0;0;1;0;0
+6271;C;El Aynaoui;Roma;11;6;5,95;0;0;1;3;0;0
+6246;C;Lipani;Sassuolo;11;5,82;5,82;0;0;0;0;0;0
+5688;C;Harroui;Verona;9;5,78;6,11;1;0;0;0;0;0
+6005;C;Ilkhan;Torino;9;5,78;5,83;0;0;1;1;0;0
+4349;C;Nicolussi Caviglia;Parma;11;5,77;5,95;0;0;3;4;0;0
+6112;C;Iling Junior;Pisa;1;6,5;6,5;0;0;0;0;0;0
+4896;C;Maldini;Lazio;9;5,89;5,94;0;0;1;1;0;0
+6106;C;Carboni V.;Genoa;10;5,7;5,6;0;0;0;2;0;0
+2848;C;Frattesi;Inter;8;6;6;0;0;0;0;0;0
+5685;C;Koopmeiners;Juventus;20;5,68;5,55;0;0;0;5;0;0
+4459;C;Rovella;Lazio;7;5,86;5,86;0;0;1;2;0;0
+5457;C;Maleh;Cremonese;11;5,77;5,68;0;0;0;2;0;0
+5295;C;Musah;Atalanta;11;5,95;5,91;0;0;0;1;0;0
+4856;C;Chukwueze;Milan;1;5,5;5,5;0;0;0;0;0;0
+5290;C;Estevez;Parma;14;5,79;5,71;0;0;0;2;0;0
+7138;C;Ordonez C.;Parma;10;5,75;5,85;1;0;0;2;1;0
+5319;C;Sohm;Bologna;15;5,6;5,57;0;0;1;3;0;0
+7145;C;Piccinini G.;Pisa;12;5,92;5,83;0;0;0;2;0;0
+7149;C;Marin M.;Pisa;17;5,85;5,71;0;0;0;5;0;0
+4930;C;Ghion;Sassuolo;0;0;0;0;0;0;0;0;0
+7157;C;Iannoni;Sassuolo;4;6;6,62;1;0;0;3;0;0
+4890;C;Tameze;Torino;17;5,65;5,59;0;0;0;2;0;0
+6170;C;Gineitis;Torino;15;5,73;5,73;0;0;1;2;0;0
+6889;C;Anjorin;Torino;7;5,71;5,64;0;0;0;1;0;0
+5540;C;Niasse;Verona;15;5,77;5,8;0;0;1;1;0;0
+7203;C;Jashari;Milan;5;5,9;5,9;0;0;0;0;0;0
+7208;C;Miller L.;Udinese;10;5,85;5,75;0;0;0;2;0;0
+6218;C;Oristanio;Parma;14;5,68;5,64;0;0;0;1;0;0
+7010;C;Al-Musrati;Verona;10;5,75;5,7;0;0;1;3;0;0
+7341;C;Amorim;Genoa;0;0;0;0;0;0;0;0;0
+6225;C;El Azzouzi;Bologna;0;0;0;0;0;0;0;0;0
+4284;C;Sergi Roberto;Como;7;5,93;5,79;0;0;0;2;0;0
+5863;C;Castagnetti;Cremonese;0;0;0;0;0;0;0;0;0
+4911;C;Douglas Luiz;Juventus;0;0;0;0;0;0;0;0;0
+6629;C;Dele-Bashiru;Lazio;9;5,61;5,61;0;0;0;0;0;0
+6410;C;Kaba;Lecce;11;5,77;5,73;0;0;0;1;0;0
+6634;C;Tete Morente;Lecce;15;5,57;5,57;0;0;1;2;0;0
+5850;C;Lovric;Verona;5;5,7;5,8;0;0;1;1;0;0
+6677;C;Adzic;Juventus;4;6,12;6,88;1;0;0;0;0;0
+6274;C;Diouf;Inter;5;5,9;5,9;0;0;0;0;0;0
+6528;C;Sarmiento J.;Cremonese;5;5,9;5,9;0;0;0;0;0;0
+7036;C;Bakola;Sassuolo;0;0;0;0;0;0;0;0;0
+6676;C;Engelhardt;Como;0;0;0;0;0;0;0;0;0
+7132;C;Collocolo;Cremonese;4;6;5,88;0;0;0;1;0;0
+5857;C;Pickel;Cremonese;0;0;0;0;0;0;0;0;0
+6804;C;Richardson;Fiorentina;1;5,5;5,5;0;0;0;0;0;0
+6010;C;Fazzini;Fiorentina;8;5,81;5,81;0;0;0;0;0;0
+5788;C;Sabiri;Fiorentina;1;5,5;5,5;0;0;0;0;0;0
+6980;C;Venturino;Roma;3;5,67;5,67;0;0;0;0;0;0
+6722;C;Gronbaek;Genoa;2;5,5;5,25;0;0;0;1;0;0
+5719;C;Asllani;Torino;14;5,57;5,25;0;0;0;3;0;0
+6191;C;Belahyane;Lazio;8;5,75;5,69;0;0;1;1;1;0
+5872;C;Helgason;Lecce;3;5,5;5,5;0;0;0;0;0;0
+4423;C;Hernani;Parma;3;5,67;5,67;0;0;0;0;0;0
+7150;C;Vural;Pisa;8;5,81;5,62;0;0;0;3;0;0
+6219;C;Boloca;Sassuolo;2;5,75;5,75;0;0;0;0;0;0
+5007;C;Ilic;Torino;7;6;5,86;0;0;0;2;0;0
+6212;C;Zarraga;Udinese;5;5,7;5,6;0;0;0;1;0;0
+6506;C;Fini;Genoa;1;5,5;5,5;0;0;0;0;0;0
+5610;C;Vranckx;Sassuolo;12;5,62;5,54;0;0;0;2;0;0
+7248;C;Gorter;Lecce;1;5,5;5,5;0;0;0;0;0;0
+6538;C;Onana J.;Genoa;1;5,5;5,5;0;0;0;0;0;0
+4677;C;Cornet;Genoa;5;5,1;4,5;0;0;0;0;0;0
+5286;C;Akpa Akpro;Verona;10;5,9;5,65;0;0;0;5;0;0
+7357;C;Lahdo;Como;0;0;0;0;0;0;0;0;0
+7165;C;Liteta;Cagliari;2;5,75;5,75;0;0;0;0;0;0
+6656;C;Braunoder;Como;0;0;0;0;0;0;0;0;0
+2553;C;Alli;Como;0;0;0;0;0;0;0;0;0
+2274;C;Valoti;Cremonese;0;0;0;0;0;0;0;0;0
+5516;C;Bianco;Fiorentina;0;0;0;0;0;0;0;0;0
+7135;C;Stanciu;Genoa;4;5,5;4,75;0;0;0;0;0;0
+6633;C;Pierret;Lecce;1;6;6;0;0;0;0;0;0
+6222;C;Rafia;Lecce;0;0;0;0;0;0;0;0;0
+6645;C;Marchwinski;Lecce;0;0;0;0;0;0;0;0;0
+6678;C;Liberali;Milan;0;0;0;0;0;0;0;0;0
+7147;C;Hojholt;Pisa;6;5,67;5,58;0;0;0;1;0;0
+7151;C;Arena;Pisa;0;0;0;0;0;0;0;0;0
+5824;C;Pafundi;Udinese;0;0;0;0;0;0;0;0;0
+7177;C;Santiago;Verona;0;0;0;0;0;0;0;0;0
+2117;C;Kastanos;Verona;1;6;6;0;0;0;0;0;0
+6618;C;Cissè A.;Verona;0;0;0;0;0;0;0;0;0
+6486;C;Suslov;Verona;0;0;0;0;0;0;0;0;0
+2076;C;Rog;Cagliari;0;0;0;0;0;0;0;0;0
+7025;C;Cuenca H.;Genoa;0;0;0;0;0;0;0;0;0
+7246;C;Sala A.;Lecce;4;5,75;6;0;0;1;0;0;0
+5561;C;Stengs;Pisa;0;0;0;0;0;0;0;0;0
+7276;C;Cremaschi;Parma;0;0;0;0;0;0;0;0;0
+7319;C;Fofana Sa.;Lecce;0;0;0;0;0;0;0;0;0
+7322;C;Ngom;Lecce;0;0;0;0;0;0;0;0;0
+7345;C;Przyborek;Lazio;0;0;0;0;0;0;0;0;0
+2764;A;Martinez L.;Inter;25;6,4;8,18;14;0;4;3;0;0
+4871;A;Thuram;Inter;19;6,39;7,61;7;0;3;2;0;0
+6434;A;Yildiz;Juventus;24;6,48;7,48;8;0;4;2;0;0
+4510;A;Leao;Milan;17;6,09;7,41;7;0;2;1;0;0
+6052;A;Hojlund;Napoli;21;6,1;7,31;8;0;2;1;0;0
+7017;A;Douvikas;Como;22;6,14;7,23;8;0;0;0;0;0
+6435;A;Krstovic;Atalanta;20;6,12;7,32;7;0;4;2;0;0
+5734;A;Soulè;Roma;24;6,12;7,02;6;0;4;1;0;0
+531;A;Berardi;Sassuolo;15;6,4;7,53;5;0;3;2;0;0
+6572;A;Castro S.;Bologna;22;6,11;7,09;7;0;1;1;0;0
+5637;A;Davis K.;Udinese;22;6,27;7,27;7;0;3;4;0;0
+2137;A;Scamacca;Atalanta;15;6,17;7,37;6;0;1;2;0;0
+7071;A;Esposito F.P.;Inter;19;6,37;7,13;4;0;3;1;0;0
+7023;A;Pellegrino M.;Parma;25;6,04;6,82;7;0;0;3;0;0
+505;A;Bonazzoli;Cremonese;22;6,09;6,8;5;0;2;3;0;0
+2097;A;Kean;Fiorentina;22;5,91;6,84;7;0;1;3;0;0
+6060;A;Laurientè;Sassuolo;24;6,15;6,73;4;0;3;2;0;0
+6552;A;Orban G.;Verona;22;5,91;6,77;7;0;1;4;1;0
+4728;A;Nkunku;Milan;16;6;7,06;5;0;2;0;0;0
+6226;A;Castellanos;Lazio;11;6,09;6,82;2;0;3;2;0;0
+2499;A;Vardy;Cremonese;21;5,93;6,55;5;0;0;4;0;0
+5585;A;Malen;Roma;5;6,7;9,7;5;0;0;0;0;0
+5995;A;De Ketelaere;Atalanta;21;6,17;6,69;3;0;3;2;0;0
+2061;A;Simeone;Torino;19;6;6,79;5;0;0;0;0;0
+5455;A;Moreo;Pisa;22;6,07;6,7;5;0;0;2;0;0
+4463;A;Esposito Se.;Cagliari;24;6,17;6,62;3;0;4;4;0;0
+6669;A;Bonny;Inter;14;6,32;7,61;5;0;3;0;0;0
+4371;A;Raspadori;Atalanta;4;6,38;7,38;1;0;1;0;0;0
+6646;A;Adams C.;Torino;23;5,93;6,5;4;0;1;0;0;0
+2369;A;Thauvin;Udinese;0;0;0;0;0;0;0;0;0
+7162;A;Giovane;Napoli;24;6,02;6,56;3;0;5;2;0;0
+7199;A;Kilicsoy;Cagliari;12;6,21;7,21;4;0;0;1;0;0
+4436;A;Cambiaghi;Bologna;18;6,06;6,64;3;0;4;3;1;0
+4923;A;Colombo;Genoa;24;5,9;6,54;6;0;1;1;0;0
+2531;A;Lukaku;Napoli;0;0;0;0;0;0;0;0;0
+6365;A;Ferguson E.;Roma;14;6,11;6,86;3;0;2;1;0;0
+2038;A;Pinamonti;Sassuolo;24;5,85;6,46;5;0;3;1;0;0
+7316;A;Durosinmi;Pisa;4;6,12;7,12;1;0;1;0;0;0
+4730;A;Lookman;Atalanta;10;5,8;6,4;2;0;0;0;0;0
+5544;A;David;Juventus;21;5,81;6,48;5;0;2;0;0;0
+7313;A;Ratkov;Lazio;5;5,7;5,7;0;0;0;0;0;0
+6243;A;Borrelli;Cagliari;21;5,95;6,36;3;0;1;3;0;0
+6164;A;Vitinha O.;Genoa;21;6;6,4;3;0;1;3;0;0
+2841;A;Vlahovic;Juventus;13;5,96;6,65;3;0;0;0;0;0
+5500;A;Cancellieri;Lazio;17;6;6,41;3;0;0;4;0;0
+7120;A;Lang;Napoli;14;6,04;6,32;1;0;2;2;0;0
+309;A;Dybala;Roma;17;6,09;6,44;2;0;3;0;0;0
+6675;A;Dovbyk;Roma;12;6;6,83;3;0;1;0;0;0
+2678;A;Fullkrug;Milan;7;5,86;5,86;1;0;0;0;0;0
+7129;A;Rodriguez Je.;Como;20;6,12;6,28;0;0;5;2;1;0
+6001;A;Banda;Lecce;19;6,03;6,42;3;0;2;5;1;0
+7008;A;Gimenez;Milan;9;5,56;5,5;0;0;0;1;0;0
+5918;A;Sulemana K.;Atalanta;15;6,03;6,4;2;0;1;3;0;0
+4179;A;Gonzalez N.;Juventus;0;0;0;0;0;0;0;0;0
+2489;A;Pedro;Lazio;14;6,11;6,75;3;0;1;2;0;0
+7127;A;Addai;Como;12;5,96;6,54;3;0;0;4;0;0
+5506;A;Ekuban;Genoa;19;5,95;6,32;2;0;1;0;0;0
+6556;A;Noslin;Lazio;12;5,71;6,12;2;0;0;0;1;0
+5336;A;Nzola;Sassuolo;18;5,92;6,17;3;0;0;1;1;0
+6380;A;Solomon;Fiorentina;7;6,21;7,07;2;0;0;0;0;0
+6822;A;Ekhator;Genoa;16;5,94;6,25;2;0;0;3;0;0
+7001;A;N'Dri;Lecce;10;5,95;6,45;2;0;0;2;0;0
+6145;A;Ngonge;Torino;17;5,82;6;1;0;1;2;0;0
+6981;A;Vaz;Roma;3;5,67;5,67;0;0;0;0;0;0
+4359;A;Piccoli;Fiorentina;18;5,72;6,06;2;0;0;0;0;0
+6667;A;Benedyczak;Parma;10;5,95;6,3;1;0;1;1;0;0
+6229;A;Tourè E.;Atalanta;0;0;0;0;0;0;0;0;0
+5496;A;Johnsen;Cremonese;9;5,83;6,28;1;0;1;0;0;0
+6836;A;Meister;Pisa;19;5,71;6;2;0;0;1;0;0
+6630;A;Mosquera;Verona;12;5,96;6,08;0;0;2;1;0;0
+6439;A;Cheddira;Lecce;11;5,77;6,05;1;0;0;1;0;0
+7249;A;Buksa;Udinese;13;5,88;6,08;1;0;0;1;0;0
+7252;A;Stulic;Lecce;22;5,7;5,95;2;0;0;1;0;0
+6314;A;Openda;Juventus;13;5,85;6,08;1;0;0;0;0;0
+441;A;Belotti;Cagliari;3;6,33;8,33;2;0;0;0;0;0
+2832;A;Boga;Juventus;2;6,25;6,75;0;0;1;0;0;0
+6643;A;Dallinga;Bologna;16;5,75;5,97;1;0;1;1;0;0
+7128;A;Kuhn;Como;12;5,96;6,21;1;0;0;0;0;0
+2155;A;Cutrone;Parma;14;5,71;5,93;1;0;0;0;0;0
+6409;A;Beltran L.;Fiorentina;0;0;0;0;0;0;0;0;0
+479;A;Sanabria;Cremonese;16;5,84;6,03;1;0;1;2;0;0
+2475;A;Sanchez;Udinese;0;0;0;0;0;0;0;0;0
+7347;A;Bowie;Verona;2;5,75;5,75;0;0;0;0;0;0
+6895;A;Dominguez B.;Bologna;10;5,9;6,15;0;0;3;1;0;0
+6215;A;Lucca;Napoli;9;5,72;6;1;0;0;1;0;0
+6205;A;Mulattieri;Sassuolo;0;0;0;0;0;0;0;0;0
+6827;A;Njie;Torino;4;5,75;6,75;1;0;1;1;0;0
+608;A;Zapata D.;Torino;14;5,68;5,68;1;0;0;0;0;0
+6159;A;Sarr A.;Verona;23;5,7;5,65;0;0;0;0;1;0
+7349;A;Kulenovic;Torino;1;5,5;5,5;0;0;0;0;0;0
+785;A;Immobile;Bologna;6;5,58;5,5;0;0;0;1;0;0
+6628;A;Taremi;Inter;0;0;0;0;0;0;0;0;0
+5672;A;Dia;Lazio;14;5,57;5,79;1;0;0;0;0;0
+6519;A;Camarda;Lecce;16;5,66;5,62;1;0;0;1;0;0
+6227;A;Okafor;Milan;0;0;0;0;0;0;0;0;0
+5471;A;Djuric;Cremonese;4;6;5,88;0;0;0;1;0;0
+7153;A;Lind;Pisa;0;0;0;0;0;0;0;0;0
+6653;A;Bravo;Udinese;4;6;6,62;1;0;0;1;0;0
+7344;A;Stojilkovic;Pisa;3;5,5;5,5;0;0;0;0;0;0
+6459;A;Karlsson;Bologna;0;0;0;0;0;0;0;0;0
+5297;A;Luvumbo;Cagliari;10;5,8;5,8;0;0;0;0;0;0
+6967;A;Diao;Como;6;5,75;5,75;0;0;0;0;0;0
+5512;A;De Luca;Cremonese;1;7;10;1;0;0;0;0;0
+647;A;Dzeko;Fiorentina;8;5,62;5,56;0;0;0;1;0;0
+6207;A;Almqvist;Parma;8;5,88;5,88;0;0;0;0;0;0
+6213;A;Brenner;Udinese;0;0;0;0;0;0;0;0;0
+7161;A;Bayo V.;Udinese;10;5,7;5,8;0;0;1;0;0;0
+6644;A;Rocha Livramento;Verona;0;0;0;0;0;0;0;0;0
+7183;A;Aboukhlal;Torino;11;5,77;5,64;0;0;0;4;0;0
+313;A;Morata;Como;13;5,46;5,12;0;0;0;1;1;0
+247;A;Pavoletti;Cagliari;5;5,8;5,7;0;0;0;1;0;0
+1842;A;Pierini;Sassuolo;4;6;5,88;0;0;0;1;0;0
+5845;A;Alvarez A.;Sassuolo;0;0;0;0;0;0;0;0;0
+7264;A;Ambrosino;Napoli;1;5,5;5,5;0;0;0;0;0;0
+6555;A;Moumbagna;Cremonese;5;5,6;5,6;0;0;0;0;0;0
+7317;A;Trepy;Cagliari;1;5,5;5,5;0;0;0;0;0;0
+7027;A;Azon;Como;0;0;0;0;0;0;0;0;0
+6657;A;Gabrielloni;Como;0;0;0;0;0;0;0;0;0
+5515;A;Okereke;Cremonese;2;6;6;0;0;0;0;0;0
+7134;A;Nasti;Cremonese;0;0;0;0;0;0;0;0;0
+2012;A;Milik;Juventus;0;0;0;0;0;0;0;0;0
+7171;A;Buffon L.;Pisa;0;0;0;0;0;0;0;0;0
+7152;A;Bonfanti N.;Pisa;0;0;0;0;0;0;0;0;0
+7158;A;Moro L.;Sassuolo;5;5,7;5,6;0;0;0;1;0;0
+7159;A;Skjellerup;Sassuolo;0;0;0;0;0;0;0;0;0
+6635;A;Pizarro;Udinese;0;0;0;0;0;0;0;0;0
+7213;A;Frigan;Parma;0;0;0;0;0;0;0;0;0
+2762;A;Kouamè;Fiorentina;1;6;6;0;0;0;0;0;0
+7262;A;Balentien;Milan;0;0;0;0;0;0;0;0;0
+7272;A;Gueye;Udinese;6;5,58;5,42;0;0;0;2;0;0
+7277;A;Arena A.;Roma;0;0;0;0;0;0;0;0;0
+7309;A;Isaac;Verona;1;6;6;0;0;0;0;0;0
+7338;A;Albarracin;Cagliari;0;0;0;0;0;0;0;0;0
+7342;A;Elphege;Parma;0;0;0;0;0;0;0;0;0
